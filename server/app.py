@@ -1,6 +1,7 @@
+
 from flask import Flask
 import pika
-
+import monitor
 
 #!/usr/bin/python3
 """ Demonstrating Flask, using APScheduler. """
@@ -9,8 +10,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 
 def sensor():
-    """ Function for test purposes. """
-    print("Scheduler is alive!")
+    print(monitor.getRunningProcesses())
+    print("POLLING ")
 
 sched = BackgroundScheduler(daemon=True)
 sched.add_job(sensor,'interval',minutes=.5)

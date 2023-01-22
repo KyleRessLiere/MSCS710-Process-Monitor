@@ -8,8 +8,9 @@ COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
 
 RUN pip3 install pika && \
-    pip3 install APScheduler && \
     pip3 install apscheduler && \
+    pip3 install PrettyTable && \
+    pip3 install psutil && \
     pip3 install -r requirements.txt
 
 COPY . /app
