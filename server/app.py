@@ -10,11 +10,15 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 
 def sensor():
-    print(monitor.getRunningProcesses())
-    print("POLLING ")
+    try:
+        print(monitor.getRunningProcesses())
+        print("POLLING ")
+    except Exception:
+        print("monitor fail")
+        pass
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(sensor,'interval',minutes=.3)
+sched.add_job(sensor,'interval',minutes=.1)
 sched.start()
 app = Flask(__name__)
 
