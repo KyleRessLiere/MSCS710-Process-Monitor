@@ -50,7 +50,10 @@ def getRunningProcesses():
     top10.reverse()
     top10 = str(top10)
     print(top10)
-    add(top10)
+    try:
+        add(top10)
+    except Exception:
+        pass
     
     return top10
 
