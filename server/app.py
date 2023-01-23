@@ -14,7 +14,7 @@ def sensor():
     print("POLLING ")
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(sensor,'interval',minutes=.5)
+sched.add_job(sensor,'interval',minutes=.3)
 sched.start()
 app = Flask(__name__)
 
