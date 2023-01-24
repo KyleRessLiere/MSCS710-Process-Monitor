@@ -6,6 +6,25 @@ from subprocess import call
 from prettytable import PrettyTable
 
 
+def add(cmd):
+    """
+    Input is command to added to the queue
+    Returns a confirmation of item being added to queue. 
+
+    """
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+    channel = connection.channel()
+    channel.queue_declare(queue='task_queue', durable=True)
+    channel.basic_publish(
+        exchange='',
+        routing_key='task_queue',
+        body=cmd,
+        properties=pika.BasicProperties(
+            delivery_mode=2,  # make message persistent
+        ))
+    connection.close()
+    return " [x] Sent: %s" % cmd
+
 def getRunningProcesses():
     proc = []
     # get the pids from last which mostly are user processes
@@ -30,5 +49,12 @@ def getRunningProcesses():
     top10 = top_list
     top10.reverse()
     top10 = str(top10)
+    print(top10)
+    try:
+        add(top10)
+    except Exception:
+        pass
+    
     return top10
 
+print(getRunningProcesses())
