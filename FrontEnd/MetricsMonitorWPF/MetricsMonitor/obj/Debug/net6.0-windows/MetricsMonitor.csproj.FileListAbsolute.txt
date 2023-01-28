@@ -26,3 +26,4 @@ C:\SANDBOX\mcapping\MSCS710-Process-Monitor\FrontEnd\MetricsMonitorWPF\MetricsMo
 C:\SANDBOX\mcapping\MSCS710-Process-Monitor\FrontEnd\MetricsMonitorWPF\MetricsMonitor\obj\Debug\net6.0-windows\ref\MetricsMonitor.dll
 C:\SANDBOX\mcapping\MSCS710-Process-Monitor\FrontEnd\MetricsMonitorWPF\MetricsMonitor\obj\Debug\net6.0-windows\Views\MainWindow.g.cs
 C:\SANDBOX\mcapping\MSCS710-Process-Monitor\FrontEnd\MetricsMonitorWPF\MetricsMonitor\obj\Debug\net6.0-windows\Views\MainWindow.baml
+C:\SANDBOX\mcapping\MSCS710-Process-Monitor\FrontEnd\MetricsMonitorWPF\MetricsMonitor\obj\Debug\net6.0-windows\GeneratedInternalTypeHelper.g.cs

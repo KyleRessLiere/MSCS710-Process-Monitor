@@ -53,7 +53,7 @@ namespace MetricsMonitor {
         /// </summary>
         [System.STAThreadAttribute()]
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "7.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "6.0.13.0")]
         public static void Main() {
             MetricsMonitor.App app = new MetricsMonitor.App();
             app.Run();
