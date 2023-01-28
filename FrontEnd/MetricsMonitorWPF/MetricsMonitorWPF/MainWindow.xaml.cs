@@ -19,10 +19,7 @@ namespace MetricsMonitorWPF {
     /// </summary>
     public partial class MainWindow : Window {
         public MainWindow() {
-            var viewModel = new ViewModel();
-            viewModel.FirstName = "Kevin";
-
-            DataContext = viewModel;
+          
             InitializeComponent();
         }
     }

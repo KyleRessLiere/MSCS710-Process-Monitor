@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\SANDBOX\mcapping\MSCS710-Process-Monitor\FrontEnd\MetricsMonitorWPF\MetricsMonitorWPF\App.xaml
-356752587
+11407045341
 
-5-1619087129
-194237474483
-Client\UserInterface\Views\ShellView.xaml;Client\UserInterface\Views\test.xaml;MainWindow.xaml;
+5-1354650586
+204-1497418148
+MainWindow.xaml;
 
-False
+True
 
