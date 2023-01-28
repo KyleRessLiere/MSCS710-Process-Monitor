@@ -13,16 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MetricsMonitorWPF {
+namespace MetricsMonitorWPF.Client.UserInterface.Views {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for View.xaml
     /// </summary>
-    public partial class MainWindow : Window {
-        public MainWindow() {
-            var viewModel = new ViewModel();
-            viewModel.FirstName = "Kevin";
-
-            DataContext = viewModel;
+    public partial class View : UserControl {
+        public View() {
             InitializeComponent();
         }
     }
