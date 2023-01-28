@@ -15,4 +15,8 @@
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Style\" />
+  </ItemGroup>
+
 </Project>
