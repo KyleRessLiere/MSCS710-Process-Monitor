@@ -3,29 +3,72 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MetricsMonitor" xmlns:tools="clr-namespace:MetricsMonitor.Views.Converters"
+        xmlns:local="clr-namespace:MetricsMonitor" xmlns:tools="clr-namespace:MetricsMonitor.Views.Converters" 
+        xmlns:uc="clr-namespace:MetricsMonitor.Views"
+        xmlns:viewmodels="clr-namespace:MetricsMonitor.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="Metrics Monitor" 
+        
       Height="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={tools:RatioConverter}, ConverterParameter='0.9' }" 
       Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={tools:RatioConverter}, ConverterParameter='0.9' }" 
         >
 
     <Window.Resources>
-        <Style x:Key="NavLabel" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="LightGray"/>
+        <Style x:Key="NavLabel" TargetType="Button" >
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="DarkSlateGray"/>
             <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
-            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontSize" Value="35"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontWeight" Value="ExtraLight"/>
+            <Setter Property="FontWeight" Value="Light"/>
+            <Setter Property="Background" Value="Transparent"/>
         </Style>
+
+
+        <Style x:Key="NavBar" TargetType="{x:Type ListBox}">
+            <Setter Property="ListBox.ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ToggleButton 
+                              IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
+
         <Style x:Key="NavTitle" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
-            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="FontSize" Value="60"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="FontWeight" Value="Light"/>
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="Padding" Value="0,10,0,10"/>
         </Style>
+
+        <Style x:Key="HeaderText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
+            <Setter Property="FontSize" Value="6000"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Thin"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0,10,0,10"/>
+        </Style>
+
+
+        <Style x:Key="NavCredits" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Light"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0,10,0,10"/>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
     
     
@@ -53,32 +96,44 @@
         <!--Navbar -->
         
         
-        <Grid  Grid.Column="0" Background="DarkSlateGray">
+        <Grid  Grid.Column="0" Background="WhiteSmoke">
             <Grid.RowDefinitions>
                 <RowDefinition Height="170"/>
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Style="{StaticResource NavTitle}" Grid.Row="0" Text="Metrics&#x0a;Monitor"/>
-            <TextBlock Style="{StaticResource NavLabel}" Grid.Row="2" Text="CPU"/>
-            <TextBlock Style="{StaticResource NavLabel}" Grid.Row="3" Text="Memory"/>
-            <TextBlock Style="{StaticResource NavLabel}" Grid.Row="5" Text="Storage"/>
-            <TextBlock Style="{StaticResource NavLabel}" Grid.Row="4" Text="Network"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBlock Style="{StaticResource NavTitle}" Grid.Row="0">Metrics <LineBreak /> Monitor</TextBlock>
+            <TextBlock Style="{StaticResource NavCredits}" Grid.Row="1" Text="Created by: Kyle R.L., Caleb R., and Sam A."/>
+            <Button Style="{StaticResource NavLabel}"  Command="{Binding SetActiveTabCommand}" CommandParameter="{Binding HomeScreenName}"  Grid.Column="0" Grid.Row="3">System Overview</Button>
+            <Button Style="{StaticResource NavLabel}" Command="{Binding SetActiveTabCommand}" CommandParameter="{Binding CPUTabName}"  Grid.Column="0" Grid.Row="4">CPU</Button>
+            <Button Style="{StaticResource NavLabel}" Command="{Binding SetActiveTabCommand}" CommandParameter="{Binding MemoryTabName}"  Grid.Column="0" Grid.Row="5">Memory</Button>
+            <Button Style="{StaticResource NavLabel}" Command="{Binding SetActiveTabCommand}" CommandParameter="{Binding StorageTabName}"  Grid.Column="0" Grid.Row="6">Storage</Button>
+            <Button Style="{StaticResource NavLabel}" Command="{Binding SetActiveTabCommand}" CommandParameter="{Binding NetworkTabName}" Grid.Column="0" Grid.Row="7">Network</Button>
         </Grid>
         <!--Main content area -->
 
         <Grid  Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="180"/>
-                <RowDefinition Height="400"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock HorizontalAlignment="Center" FontWeight="DemiBold" Grid.Row="0" Text="System Overview" FontSize="120"/>
-            <TextBlock TextWrapping="Wrap" Grid.Row="1" Height="400"/>
-            <TextBlock Grid.Row="2" Text="Testing Text"/>
+            <TextBlock HorizontalAlignment="Center" FontWeight="DemiBold" Grid.Row="0" Style="{StaticResource HeaderText}" Text="{Binding TitleText, UpdateSourceTrigger=PropertyChanged}" FontSize="120"/>
+            <uc:HomeView Grid.Row="1" Visibility="{Binding IsHomeViewActive, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+            <uc:CPUView Grid.Row="1" Visibility="{Binding IsCPUViewActive, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+            <uc:MemoryView Grid.Row="1" Visibility="{Binding IsMemoryViewActive, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+            <uc:StorageView Grid.Row="1" Visibility="{Binding IsStorageViewActive, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+            <uc:NetworkView Grid.Row="1" Visibility="{Binding IsNetworkViewActive, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
 

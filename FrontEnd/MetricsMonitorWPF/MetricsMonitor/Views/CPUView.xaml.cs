@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace MetricsMonitor.Views {
     /// </summary>
     public partial class CPUView : UserControl {
         public CPUView() {
+
             InitializeComponent();
         }
     }

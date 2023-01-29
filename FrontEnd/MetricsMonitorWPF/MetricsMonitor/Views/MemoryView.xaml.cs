@@ -15,15 +15,11 @@ using System.Windows.Shapes;
 
 namespace MetricsMonitor.Views {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MemoryView.xaml
     /// </summary>
-    public partial class MainWindow : Window {
-        public MainWindow() {
+    public partial class MemoryView : UserControl {
+        public MemoryView() {
             InitializeComponent();
-        }
-
-        private void Setter_Click(object sender, RoutedEventArgs e) {
-
         }
     }
 }

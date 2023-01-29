@@ -15,15 +15,11 @@ using System.Windows.Shapes;
 
 namespace MetricsMonitor.Views {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for NetworkView.xaml
     /// </summary>
-    public partial class MainWindow : Window {
-        public MainWindow() {
+    public partial class NetworkView : UserControl {
+        public NetworkView() {
             InitializeComponent();
-        }
-
-        private void Setter_Click(object sender, RoutedEventArgs e) {
-
         }
     }
 }
