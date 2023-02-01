@@ -18,10 +18,12 @@
     </Design.DataContext>
 
   <StackPanel>
-      <Grid Background="Red" Height="100" Width="50" HorizontalAlignment="Left">
-          
-      </Grid>
-      <Grid>
+      <Grid ShowGridLines="True"  Height="40"  ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+            
+         <Rectangle Grid.Column="0" Height = "40">
+             
+         </Rectangle>
+      
           
       </Grid>
   </StackPanel>
