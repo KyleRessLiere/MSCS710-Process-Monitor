@@ -6,7 +6,10 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="MetricsMonitorAvalonia.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="MetricsMonitorAvalonia">
+        Title="MetricsMonitorAvalonia"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -14,6 +17,13 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+  <StackPanel>
+      <Grid Background="Red" Height="100" Width="50" HorizontalAlignment="Left">
+          
+      </Grid>
+      <Grid>
+          
+      </Grid>
+  </StackPanel>
+    
 </Window>
