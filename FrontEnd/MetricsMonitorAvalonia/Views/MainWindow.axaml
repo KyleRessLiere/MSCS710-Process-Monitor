@@ -9,7 +9,8 @@
         Title="MetricsMonitorAvalonia"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
-        ExtendClientAreaToDecorationsHint="True">
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterScreen">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -17,21 +18,19 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <SplitView IsPaneOpen="True"
-               DisplayMode="Inline"
-               OpenPaneLength="200">
-        <SplitView.Pane>
-            <StackPanel>
-               
-            </StackPanel>
-        </SplitView.Pane>
-
-        <Grid>
-            <TextBlock Text="Content"
-                       FontSize="24"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"/>
-        </Grid>
-    </SplitView>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.6*" />
+            <ColumnDefinition Width="9*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Background="#253D52">
+           
+            <RadioButton x:Name="process_btn" Content="Window 1" Checked="process_btn_Checked" />
+            <RadioButton x:Name="memory_btn" Content="Window 2" Checked="memory_btn_Checked" />
+            <RadioButton x:Name="cpu_btn" Content="Window 2" Checked="cpu_btn_Checked"/>
+        </StackPanel>
+        <ContentControl x:Name="CC" Grid.Column="1" />
+    </Grid>
+ 
     
 </Window>

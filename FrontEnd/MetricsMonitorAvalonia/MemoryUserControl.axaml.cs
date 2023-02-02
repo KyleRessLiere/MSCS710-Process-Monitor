@@ -4,14 +4,11 @@ using Avalonia.Markup.Xaml;
 
 namespace MetricsMonitorAvalonia;
 
-public partial class MusicStoreWindow : Window
+public partial class MemoryUserControl : UserControl
 {
-    public MusicStoreWindow()
+    public MemoryUserControl()
     {
         InitializeComponent();
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     private void InitializeComponent()
