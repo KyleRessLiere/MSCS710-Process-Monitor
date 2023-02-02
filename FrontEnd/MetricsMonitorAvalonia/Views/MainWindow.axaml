@@ -35,9 +35,9 @@
             <Rectangle HorizontalAlignment="Stretch" Fill="White" Height="2"/>
 
 
-            <RadioButton x:Name="process_btn"  Content="Processes" Margin="0,10,0,0" Checked="process_btn_Checked" />
-            <RadioButton x:Name="memory_btn" Content="Memory" Checked="memory_btn_Checked" />
-            <RadioButton x:Name="cpu_btn" Content="CPU" Checked="cpu_btn_Checked"/>
+            <RadioButton x:Name="process_btn"  Content="Processes" Margin="0,10,0,0" Checked="nav_Checked" />
+            <RadioButton x:Name="memory_btn" Content="Memory" Checked="nav_Checked" />
+            <RadioButton x:Name="cpu_btn" Content="CPU" Checked="nav_Checked"/>
         </StackPanel>
         <ContentControl x:Name="CC" Grid.Column="1" />
     </Grid>

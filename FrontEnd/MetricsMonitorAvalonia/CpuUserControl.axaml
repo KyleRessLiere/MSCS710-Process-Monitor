@@ -11,7 +11,7 @@
             <Setter Property="Foreground" Value="White"/>
         </Style>
     </UserControl.Styles>
-    <Grid Background="Orange">
+    <Grid Background="Blue">
         <TextBlock Classes="h1" Margin="0,20,0,0" HorizontalAlignment="Center">CPU</TextBlock>
         <Separator/>
     </Grid>
