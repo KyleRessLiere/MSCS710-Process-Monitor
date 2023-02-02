@@ -17,15 +17,21 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-  <StackPanel>
-      <Grid ShowGridLines="True"  Height="40"  ColumnDefinitions="Auto,Auto,*,Auto,Auto">
-            
-         <Rectangle Grid.Column="0" Height = "40">
-             
-         </Rectangle>
-      
-          
-      </Grid>
-  </StackPanel>
+    <SplitView IsPaneOpen="True"
+               DisplayMode="Inline"
+               OpenPaneLength="200">
+        <SplitView.Pane>
+            <StackPanel>
+               
+            </StackPanel>
+        </SplitView.Pane>
+
+        <Grid>
+            <TextBlock Text="Content"
+                       FontSize="24"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Grid>
+    </SplitView>
     
 </Window>
