@@ -4,7 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MetricsMonitorAvalonia.ProcessUserControl">
-    <Grid Background="Black">
-        
+    <UserControl.Styles>
+        <Style Selector="TextBlock.h1">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </UserControl.Styles>
+    <Grid Background="Orange">
+        <TextBlock Classes="h1" Margin="0,20,0,0" HorizontalAlignment="Center">Process</TextBlock>
+    
     </Grid>
 </UserControl>

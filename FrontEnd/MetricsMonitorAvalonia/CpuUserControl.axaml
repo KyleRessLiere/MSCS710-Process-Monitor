@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="MetricsMonitorAvalonia.MemoryUserControl">
+             x:Class="MetricsMonitorAvalonia.CpuUserControl">
     <UserControl.Styles>
         <Style Selector="TextBlock.h1">
             <Setter Property="FontSize" Value="24"/>
@@ -11,8 +11,8 @@
             <Setter Property="Foreground" Value="White"/>
         </Style>
     </UserControl.Styles>
-    <Grid Background="Pink">
-        <TextBlock Classes="h1" Margin="0,20,0,0" HorizontalAlignment="Center">Memory</TextBlock>
-        
+    <Grid Background="Orange">
+        <TextBlock Classes="h1" Margin="0,20,0,0" HorizontalAlignment="Center">CPU</TextBlock>
+        <Separator/>
     </Grid>
 </UserControl>
