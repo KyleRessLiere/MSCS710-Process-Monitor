@@ -68,6 +68,25 @@ def getMemoryStats():
     }
     return memory
 
+def getNetworkStats():
+    networkList = []
+    for key in psutil.net_if_stats().keys():
+        networkList.append({
+        "network":  key,
+        "status":"Up" if psutil.net_if_stats()[key].isup else "Down",
+        "speed": psutil.net_if_stats()[key].speed
+    }  
+        )
+    return networkList
+
+def getBatteryStatus():
+    battery = psutil.sensors_battery()
+    batteryStats = {
+        "battery_percent":psutil.sensors_battery().percent,
+        "estimated_battery_seconds_remaining":battery.secsleft
+    }
+  
+    return batteryStats
 
 
-print(json.dumps(getMemoryStats()))
+print(json.dumps(getRunningProcesses()))
