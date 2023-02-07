@@ -1,0 +1,6 @@
+Flask==2.2.2
+Flask_Cors==3.0.10
+prettytable==3.6.0
+psutil==5.9.4
+db==0.1.1
+db-sqlite3==0.0.1
