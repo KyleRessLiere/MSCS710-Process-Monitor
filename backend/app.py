@@ -6,7 +6,8 @@ import sqlite3
 from sqlite3 import Error
 
 from api import polls
-from db import db_init
+import db_init
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -40,6 +41,5 @@ def api_delete_poll(poll_id):
 
 
 if __name__ == "__main__":
-    #exec(open('./db/db_init.py').read())
-    #db_init.main
+    db_init.main()
     app.run()

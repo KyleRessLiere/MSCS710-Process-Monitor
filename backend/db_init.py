@@ -24,7 +24,7 @@ def create_table(conn, create_table_sql):
 
 
 def main():
-    database = r"./sqlite-db/MMM-SQLite.db"
+    database = r"./db/MMM-SQLite.db"
 
     sql_create_polls_table = """ CREATE TABLE IF NOT EXISTS polls (
                                         id integer PRIMARY KEY,
@@ -104,4 +104,5 @@ def main():
 
 
 if __name__ == '__main__':
+  
     main()
