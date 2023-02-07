@@ -6,6 +6,7 @@ import sqlite3
 from sqlite3 import Error
 
 from api import polls
+from db import db_init
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -37,20 +38,8 @@ def api_delete_poll(poll_id):
     return jsonify(polls.delete_poll(poll_id))
 
 
-def verify_sqlite():
-    conn = None
-    try:
-        db_file = './db/sqlite-db/MMM-SQLite.db'  # Adjust Different Databases HERE
-        conn = sqlite3.connect(db_file)
-        print("-> MMM DB has been verified!")
-        print("-> SQLite version: " + sqlite3.version)
-    except Error as e:
-        print("[DB Error]:", e)
-    finally:
-        if conn:
-            conn.close()
-
 
 if __name__ == "__main__":
-    verify_sqlite()
+    #exec(open('./db/db_init.py').read())
+    #db_init.main
     app.run()

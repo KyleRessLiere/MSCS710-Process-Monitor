@@ -1,48 +1,47 @@
-#!/usr/bin/python
+import sqlite3
+from sqlite3 import Error
+
 
 def create_connection(db_file):
-    """ create a database connection to a SQLite database """
+    """ create a database connection to the SQLite database """
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
+        return conn
     except Error as e:
         print(e)
-    finally:
-        if conn:
-            conn.close()
+
+    return conn
 
 
-def create_polls_table(conn):
+def create_table(conn, create_table_sql):
+    """ create a table from the create_table_sql statement """
     try:
-        sql_create_polls_table = """ CREATE TABLE IF NOT EXISTS polls (
+        c = conn.cursor()
+        c.execute(create_table_sql)
+    except Error as e:
+        print(e)
+
+
+def main():
+    database = r"./sqlite-db/MMM-SQLite.db"
+
+    sql_create_polls_table = """ CREATE TABLE IF NOT EXISTS polls (
                                         id integer PRIMARY KEY,
                                         poll_rate integer,
                                         operating_system text,
                                         time text
                                     ); """
-        c = conn.cursor()
-        c.execute(sql_create_polls_table)
-    except Error as e:
-        print(e)
 
-def create_processes_table(conn):
-    try:
-        sql_create_processes_table = """CREATE TABLE IF NOT EXISTS processes (
-                                        process_id integer PRIMARY KEY,
-                                        poll_id integer NOT NULL,
-                                        thread_count integer,
-                                        memory integer,
-                                        FOREIGN KEY (poll_id) REFERENCES polls (id)
-                                    );"""
-        c = conn.cursor()
-        c.execute(sql_create_processes_table)
-    except Error as e:
-        print(e)
+    sql_create_processes_table = """CREATE TABLE IF NOT EXISTS processes (
+                                    process_id integer PRIMARY KEY,
+                                    poll_id integer NOT NULL,
+                                    thread_count integer,
+                                    memory integer,
+                                    FOREIGN KEY (poll_id) REFERENCES polls (id)
+                                );"""
 
-def create_cpu_table(conn):
-    try:
-        sql_create_cpu_table = """CREATE TABLE IF NOT EXISTS cpu (
+    sql_create_cpu_table = """CREATE TABLE IF NOT EXISTS cpu (
                                     cpu_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
                                     cpu_times integer,
@@ -53,14 +52,8 @@ def create_cpu_table(conn):
                                     cpu_freq integer,
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
-        c = conn.cursor()
-        c.execute(sql_create_cpu_table)
-    except Error as e:
-        print(e)
 
-def create_memory_table(conn):
-    try:
-        sql_create_memory_table = """CREATE TABLE IF NOT EXISTS memory (
+    sql_create_memory_table = """CREATE TABLE IF NOT EXISTS memory (
                                     memory_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
                                     total_memory integer,
@@ -72,14 +65,8 @@ def create_memory_table(conn):
                                     wired_memory integer,
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
-        c = conn.cursor()
-        c.execute(sql_create_memory_table)
-    except Error as e:
-        print(e)
 
-def create_disks_table(conn):
-    try:
-        sql_create_disks_table = """CREATE TABLE IF NOT EXISTS disks (
+    sql_create_disks_table = """CREATE TABLE IF NOT EXISTS disks (
                                     disk_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
                                     disk_partitions integer,
@@ -87,14 +74,8 @@ def create_disks_table(conn):
                                     disk_io_counters integer,
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
-        c = conn.cursor()
-        c.execute(sql_create_disks_table)
-    except Error as e:
-        print(e)
 
-def create_network_table(conn):
-    try:
-        sql_create_network_table = """CREATE TABLE IF NOT EXISTS network (
+    sql_create_network_table = """CREATE TABLE IF NOT EXISTS network (
                                     network_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
                                     net_io_counters integer,
@@ -103,18 +84,24 @@ def create_network_table(conn):
                                     net_if_stats integer,
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
-        c = conn.cursor()
-        c.execute(sql_create_network_table)
-    except Error as e:
-        print(e)
+
+
+    # create a database connection
+    conn = create_connection(database)
+
+    # create tables
+    if conn is not None:
+        create_table(conn, sql_create_polls_table)
+        create_table(conn, sql_create_processes_table)
+        create_table(conn, sql_create_cpu_table)
+        create_table(conn, sql_create_memory_table)
+        create_table(conn, sql_create_disks_table)
+        create_table(conn, sql_create_network_table)
+        print("-> MMM DB has been verified!")
+        print("-> SQLite version: " + sqlite3.version)
+    else:
+        print("[DB Error]: cannot create the database connection.")
 
 
 if __name__ == '__main__':
-    conn = create_connection(r"./sqlite-db/MMM-SQLite.db")
-    create_polls_table(conn)
-    create_processes_table(conn)
-    create_cpu_table(conn)
-    create_memory_table(conn)
-    create_disks_table(conn)
-    create_network_table(conn)
-    print("DB tables have been created/updated")
+    main()
