@@ -12,5 +12,11 @@ SQLite is cross-platform and less than 500kb in size. It integrates easily with 
 
 ## How To Use
 
-Database Initialization from terminal: cd 'db/' && 'python3 db_init.py'
-Start Flask server and create/verify SQLite DB from terminal: 'python3 app.py'
+Dependencies from terminal: 'pip install -r requirements.txt'
+In "backend" directory, run Flask server & SQLite Init from terminal: 'python3 app.py'
+
+## View DB
+
+Install VScode extension: "SQLite Viewer" by Florian Klampfer
+or
+Download "DB Browser for SQLite"

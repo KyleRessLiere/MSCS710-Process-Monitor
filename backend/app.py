@@ -41,8 +41,6 @@ def api_delete_poll(poll_id):
 
 
 if __name__ == "__main__":
-   
-    
     create_db()
     print(getMemoryStats)
     app.run()
