@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 import psutil
-
 import time
 from subprocess import call
 from prettytable import PrettyTable
-
 import json
-
 
 def getRunningProcesses():
     # List of current running process IDs.
@@ -57,7 +54,18 @@ def getRunningProcesses():
         print(x)
 
     return processList
-
+"""
+TODO:CPU stats
+"""
+def getCPUStats():
+    p = psutil
+    cpuPercentageByCore = p.cpu_percent(interval=None, percpu=True)
+    cpuStats ={
+        "cpuSumPercentage":p.cpu_percent(interval=None),
+        "cpuPercentageByCore" : cpuPercentageByCore,
+        
+    }
+    return cpuStats
 def getMemoryStats():
     vm = psutil.virtual_memory()
     memory = {
@@ -79,7 +87,13 @@ def getNetworkStats():
         )
     return networkList
 
-def getBatteryStatus():
+
+"""
+TODO:add other physcial stats such as temprature and fan speed
+https://psutil.readthedocs.io/en/latest/#disks
+"""
+def getBatteryStats():
+
     battery = psutil.sensors_battery()
     batteryStats = {
         "battery_percent":psutil.sensors_battery().percent,
@@ -101,7 +115,20 @@ def getDiskStats():
     }
     return diskStats
 
+"""
+Gather info about system stats and returns them together as a dictionary
+Stats include:Memory,processes,network,disk,
+"""
+def poll_system():
+    poll = {
+        "process":getRunningProcesses(),
+        "disk":getDiskStats(),
+        "network":getNetworkStats(),
+        "memory":getMemoryStats(),
+        "battery":getBatteryStats(),
+        "cpuStats":getCPUStats(),
+    }
+    return poll
 
 
-
-print(getDiskStats())
+print(json.dumps(poll_system(), indent=4, sort_keys=False))
