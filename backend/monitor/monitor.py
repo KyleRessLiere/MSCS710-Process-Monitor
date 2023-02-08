@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 import psutil
-
 import time
 from subprocess import call
 from prettytable import PrettyTable
-
 import json
-
 
 def getRunningProcesses():
     # List of current running process IDs.
@@ -57,7 +54,18 @@ def getRunningProcesses():
         print(x)
 
     return processList
-
+"""
+TODO:CPU stats
+"""
+def getCPUStats():
+    p = psutil
+    cpuPercentageByCore = p.cpu_percent(interval=None, percpu=True)
+    cpuStats ={
+        "cpuSumPercentage":p.cpu_percent(interval=None),
+        "cpuPercentageByCore" : cpuPercentageByCore,
+        
+    }
+    return cpuStats
 def getMemoryStats():
     vm = psutil.virtual_memory()
     memory = {
@@ -68,6 +76,59 @@ def getMemoryStats():
     }
     return memory
 
+def getNetworkStats():
+    networkList = []
+    for key in psutil.net_if_stats().keys():
+        networkList.append({
+        "network":  key,
+        "status":"Up" if psutil.net_if_stats()[key].isup else "Down",
+        "speed": psutil.net_if_stats()[key].speed
+    }  
+        )
+    return networkList
 
 
-print(json.dumps(getMemoryStats()))
+"""
+TODO:add other physcial stats such as temprature and fan speed
+https://psutil.readthedocs.io/en/latest/#disks
+"""
+def getBatteryStats():
+
+    battery = psutil.sensors_battery()
+    batteryStats = {
+        "battery_percent":psutil.sensors_battery().percent,
+        "estimated_battery_seconds_remaining":battery.secsleft
+    }
+  
+    return batteryStats
+"""
+TODO: ADD DISK PARTITIONS, maybe IO counters
+https://psutil.readthedocs.io/en/latest/#disks
+"""
+def getDiskStats():
+    disk = psutil.disk_usage('/')
+    diskStats = {
+        "disk_total":disk.total,
+        "disk_used":disk.used,
+        "disk_free":disk.free,
+        "disk_percent":disk.percent
+    }
+    return diskStats
+
+"""
+Gather info about system stats and returns them together as a dictionary
+Stats include:Memory,processes,network,disk,battery,cpu
+"""
+def poll_system():
+    poll = {
+        "process":getRunningProcesses(),
+        "disk":getDiskStats(),
+        "network":getNetworkStats(),
+        "memory":getMemoryStats(),
+        "battery":getBatteryStats(),
+        "cpuStats":getCPUStats(),
+    }
+    return poll
+
+
+print(json.dumps(poll_system(), indent=4, sort_keys=False))
