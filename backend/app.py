@@ -25,7 +25,7 @@ def sensor():
         pass
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(sensor,'interval',minutes=2)
+sched.add_job(sensor,'interval',minutes=.07)
 sched.start()
 app = Flask(__name__)
 
