@@ -12,11 +12,14 @@ from db.db_init import *
 from monitor.monitor import poll_system
 
 
+"""
+run on percentage of minute intervals
+gets system info and loggs it
+"""
 def sensor():
     try:
         poll = poll_system()
         process_list = poll["process"]
-        print(process_list)
         main_poll(process_list)
         #print(json.dumps(poll, indent=4, sort_keys=False))
 

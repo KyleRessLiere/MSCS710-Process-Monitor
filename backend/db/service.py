@@ -50,7 +50,6 @@ def main_poll(process_list):
 
     # create a database connection
     conn = create_connection(database)
-    print(conn)
     with conn:
         # log a poll
         poll_data = (2, 'Linux', '02-06-2023')
@@ -59,7 +58,7 @@ def main_poll(process_list):
     for p in process_list:
         process_data = (poll_id,p["pid"],p["process_name"],p["status"],p["cpu_percent"],p["num_thread"],p["memory_mb"])
         insert_process(conn, process_data)
-        print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
+        #print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
 
         
 
