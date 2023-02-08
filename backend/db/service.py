@@ -3,19 +3,15 @@ from sqlite3 import Error
 
 
 def create_connection(db_file):
-    """ create a database connection to the SQLite database
-        specified by db_file
-    :param db_file: database file
-    :return: Connection object or None
-    """
+    """ create a database connection to the SQLite database """
     conn = None
     try:
         conn = sqlite3.connect(db_file)
+        return conn
     except Error as e:
         print(e)
 
     return conn
-
 
 
 def insert_poll(conn, poll):
@@ -41,8 +37,8 @@ def insert_process(conn, process):
     :return:
     """
 
-    sql = ''' INSERT INTO processes(poll_id,thread_count,memory)
-              VALUES(?,?,?) '''
+    sql = ''' INSERT INTO processes(poll_id,process_id,process_name,process_status,cpu_percent,num_thread,memory_usage)
+              VALUES(?,?,?,?,?,?,?) '''
     cur = conn.cursor()
     cur.execute(sql, process)
     conn.commit()
@@ -50,16 +46,25 @@ def insert_process(conn, process):
 
 
 def main_poll():
-    database = r"MMM-SQLLite.db"
+    database = r"./db/MMM-SQLite.db"
 
     # create a database connection
     conn = create_connection(database)
+    print(conn)
     with conn:
         # log a poll
         poll_data = (2, 'Linux', '02-06-2023')
         poll_id = insert_poll(conn, poll_data)
-
+        print(poll_id)
         # log a process
+        proc =  {
+      "pid": 912395,
+      "process_name": "trustd",
+      "status": "running",
+      "cpu_percent": "0.03",
+      "num_thread": 2,
+      "memory_mb": "13.771"
+    }
         process = [
     {
       "pid": 912395,
@@ -77,11 +82,12 @@ def main_poll():
       "num_thread": 14,
       "memory_mb": "8.012"
     }]
+   
     for p in process:
-        process_data = (poll_id,)
-        process_data = (poll_id,p.process_name,p.status,p.cpu_percent,p.num_thread,p.memory_mb)
+        process_data = (poll_id,p["pid"],p["process_name"],p["status"],p["cpu_percent"],p["num_thread"],p["memory_mb"])
         insert_process(conn, process_data)
+        print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
 
-        print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id,process_id))
+        
 
 main_poll()

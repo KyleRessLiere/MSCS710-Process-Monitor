@@ -34,15 +34,18 @@ def create_db():
                                     ); """
 
     sql_create_processes_table = """CREATE TABLE IF NOT EXISTS processes (
-                                    poll_id integer NOT NULL PRIMARY KEY
+                                    poll_id integer NOT NULL ,
                                     process_id integer ,
                                     process_name text,
                                     process_status text,
                                     cpu_percent real,
                                     num_thread integer,
-                                    memory_usage real
+                                    memory_usage real,
+                                    PRIMARY KEY (poll_id, process_id),
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
+                                    
                                 );"""
+     
    
     sql_create_cpu_table = """CREATE TABLE IF NOT EXISTS cpu (
                                     cpu_id integer PRIMARY KEY,
