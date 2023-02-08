@@ -1,13 +1,28 @@
 import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-
 import sqlite3
 from sqlite3 import Error
-
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask_apscheduler import APScheduler
 from api import polls
 from db.db_init import *
-from monitor.monitor import *
+from monitor.monitor import poll_system
+
+def sensor():
+    try:
+        poll = poll_system()
+        #print(json.dumps(poll, indent=4, sort_keys=False))
+
+    except Exception:
+        print("monitor fail")
+        pass
+
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(sensor,'interval',minutes=.05)
+sched.start()
+app = Flask(__name__)
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -41,6 +56,6 @@ def api_delete_poll(poll_id):
 
 
 if __name__ == "__main__":
+    
     create_db()
-    print(getMemoryStats)
     app.run()

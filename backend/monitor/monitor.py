@@ -7,7 +7,7 @@ import json
 
 
 """
-pids are dissapering before they are used
+TODO:all process id are same
 """
 def getRunningProcesses():
     # List of current running process IDs.
@@ -47,24 +47,18 @@ def getRunningProcesses():
         try:
             # oneshot to improve info retrieve efficiency
             with p.oneshot():
-                processList.append({"pid":pid
+                processList.append({"pid":p.pid
                                     ,"process_name":p.name(),
                                     "status":str(p.status()),
                                     "cpu_percent": f'{cpu_percent:.2f}',
                                     "num_thread":p.num_threads(),
                                     "memory_mb": f'{p.memory_info().rss / 1e6:.3f}'
                                     })
-                
-
         except Exception as e:
             pass
 
-    
-
     return processList
-"""
-TODO:CPU stats
-"""
+
 def getCPUStats():
     p = psutil
     cpuPercentageByCore = p.cpu_percent(interval=1, percpu=True)
@@ -97,7 +91,7 @@ def getNetworkStats():
 
 
 """
-TODO:add other physcial stats such as temprature and fan speed
+TODO:add other physical stats such as temperature and fan speed
 https://psutil.readthedocs.io/en/latest/#disks
 """
 def getBatteryStats():
@@ -128,6 +122,9 @@ Gather info about system stats and returns them together as a dictionary
 Stats include:Memory,processes,network,disk,battery,cpu
 """
 def poll_system():
+    """
+    TODO: maybe add ternary to catch if their is no value
+    """
     poll = {
         "process":getRunningProcesses(),
         "disk":getDiskStats(),
@@ -138,9 +135,6 @@ def poll_system():
     }
     return poll
 
+#print(getBatteryStats())
 
-#print(json.dumps(poll_system(), indent=4, sort_keys=False))
-while True:
-    poll_system();
-    print(getCPUStats())
-    time.sleep(2)
+print(json.dumps(poll_system(), indent=4, sort_keys=False))
