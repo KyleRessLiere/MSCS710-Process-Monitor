@@ -5,10 +5,14 @@ from subprocess import call
 from prettytable import PrettyTable
 import json
 
+
+"""
+pids are dissapering before they are used
+"""
 def getRunningProcesses():
     # List of current running process IDs.
     proc = []
-    # get the pids from last which mostly are user processes
+    # get the pids from last 200 which mostly are user processes
     for pid in psutil.pids()[-200:]:
         try:
             p = psutil.Process(pid)
@@ -24,7 +28,12 @@ def getRunningProcesses():
     time.sleep(0.1)
     for p in proc:
         # trigger cpu_percent() the second time for measurement
-        top[p] = p.cpu_percent() / psutil.cpu_count()
+        try:
+            top[p] = p.cpu_percent() / psutil.cpu_count()
+        except Exception as e:
+            top[p] = 0
+            print(e)
+            print("pid gone before reached")
 
     top_list = sorted(top.items(), key=lambda x: x[1])
     top10 = top_list
@@ -50,8 +59,7 @@ def getRunningProcesses():
         except Exception as e:
             pass
 
-    for x in processList:
-        print(x)
+    
 
     return processList
 """
@@ -59,9 +67,9 @@ TODO:CPU stats
 """
 def getCPUStats():
     p = psutil
-    cpuPercentageByCore = p.cpu_percent(interval=None, percpu=True)
+    cpuPercentageByCore = p.cpu_percent(interval=1, percpu=True)
     cpuStats ={
-        "cpuSumPercentage":p.cpu_percent(interval=None),
+        "cpuSumPercentage":p.cpu_percent(interval=1),
         "cpuPercentageByCore" : cpuPercentageByCore,
         
     }
@@ -131,4 +139,8 @@ def poll_system():
     return poll
 
 
-print(json.dumps(poll_system(), indent=4, sort_keys=False))
+#print(json.dumps(poll_system(), indent=4, sort_keys=False))
+while True:
+    poll_system();
+    print(getCPUStats())
+    time.sleep(2)
