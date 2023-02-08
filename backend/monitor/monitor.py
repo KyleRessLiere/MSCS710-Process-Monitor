@@ -117,7 +117,7 @@ def getDiskStats():
 
 """
 Gather info about system stats and returns them together as a dictionary
-Stats include:Memory,processes,network,disk,
+Stats include:Memory,processes,network,disk,battery,cpu
 """
 def poll_system():
     poll = {
