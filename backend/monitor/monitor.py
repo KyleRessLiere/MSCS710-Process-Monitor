@@ -87,6 +87,21 @@ def getBatteryStatus():
     }
   
     return batteryStats
+"""
+TODO: ADD DISK PARTITIONS, maybe IO counters
+https://psutil.readthedocs.io/en/latest/#disks
+"""
+def getDiskStats():
+    disk = psutil.disk_usage('/')
+    diskStats = {
+        "disk_total":disk.total,
+        "disk_used":disk.used,
+        "disk_free":disk.free,
+        "disk_percent":disk.percent
+    }
+    return diskStats
 
 
-print(json.dumps(getRunningProcesses()))
+
+
+print(getDiskStats())
