@@ -45,7 +45,7 @@ def insert_process(conn, process):
     return cur.lastrowid
 
 
-def main_poll():
+def main_poll(process_list):
     database = r"./db/MMM-SQLite.db"
 
     # create a database connection
@@ -55,39 +55,11 @@ def main_poll():
         # log a poll
         poll_data = (2, 'Linux', '02-06-2023')
         poll_id = insert_poll(conn, poll_data)
-        print(poll_id)
-        # log a process
-        proc =  {
-      "pid": 912395,
-      "process_name": "trustd",
-      "status": "running",
-      "cpu_percent": "0.03",
-      "num_thread": 2,
-      "memory_mb": "13.771"
-    }
-        process = [
-    {
-      "pid": 912395,
-      "process_name": "trustd",
-      "status": "running",
-      "cpu_percent": "0.03",
-      "num_thread": 2,
-      "memory_mb": "13.771"
-    },
-    {
-      "pid": 98895,
-      "process_name": "docker",
-      "status": "running",
-      "cpu_percent": "0.00",
-      "num_thread": 14,
-      "memory_mb": "8.012"
-    }]
-   
-    for p in process:
+       
+    for p in process_list:
         process_data = (poll_id,p["pid"],p["process_name"],p["status"],p["cpu_percent"],p["num_thread"],p["memory_mb"])
         insert_process(conn, process_data)
         print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
 
         
 
-main_poll()

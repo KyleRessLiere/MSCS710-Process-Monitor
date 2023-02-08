@@ -6,12 +6,18 @@ from sqlite3 import Error
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
 from api import polls
+from db.service import main_poll
 from db.db_init import *
+
 from monitor.monitor import poll_system
+
 
 def sensor():
     try:
         poll = poll_system()
+        process_list = poll["process"]
+        print(process_list)
+        main_poll(process_list)
         #print(json.dumps(poll, indent=4, sort_keys=False))
 
     except Exception:
@@ -19,7 +25,7 @@ def sensor():
         pass
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(sensor,'interval',minutes=.05)
+sched.add_job(sensor,'interval',minutes=2)
 sched.start()
 app = Flask(__name__)
 
@@ -56,6 +62,6 @@ def api_delete_poll(poll_id):
 
 
 if __name__ == "__main__":
-    
+    sensor()
     create_db()
     app.run()
