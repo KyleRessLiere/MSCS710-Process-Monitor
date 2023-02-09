@@ -31,7 +31,7 @@ def getRunningProcesses():
         try:
             top[p] = p.cpu_percent() / psutil.cpu_count()
         except Exception as e:
-            top[p] = 0
+            top[p] = -1
             print(e)
             print("pid gone before reached")
 
@@ -108,6 +108,12 @@ TODO: ADD DISK PARTITIONS, maybe IO counters
 https://psutil.readthedocs.io/en/latest/#disks
 """
 def getDiskStats():
+    """
+    Gather disk stats 
+    :stats include disk_total,disk_used,disk_free,disk_percent
+    :return dict diskStat 
+
+    """
     disk = psutil.disk_usage('/')
     diskStats = {
         "disk_total":disk.total,
@@ -117,13 +123,12 @@ def getDiskStats():
     }
     return diskStats
 
-"""
-Gather info about system stats and returns them together as a dictionary
-Stats include:Memory,processes,network,disk,battery,cpu
-"""
+
 def poll_system():
     """
-    TODO: maybe add ternary to catch if their is no value
+    Gather info about system stats 
+    Stats include:Memory,processes,network,disk,battery,cpu
+    :return dict poll 
     """
     poll = {
         "process":getRunningProcesses(),
