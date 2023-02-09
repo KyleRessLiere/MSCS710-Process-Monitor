@@ -62,6 +62,37 @@ def insert_disk(conn, disk):
     conn.commit()
     return cur.lastrowid
 
+def insert_memory(conn, memory):
+    """
+    Log a disk info to disk table
+    :param conn:
+    :param memory:
+    :return: memory id
+    """
+    sql = ''' INSERT INTO memory(poll_id, total_memory, available_memory, used_memory, percentage_used)
+              VALUES(?,?,?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, memory)
+    conn.commit()
+    return cur.lastrowid
+
+"""
+TODO:get more cpu stats then implement
+"""
+def insert_cpu(conn, disk):
+    """
+    Log a disk info to disk table
+    :param conn:
+    :param disk:
+    :return: disk id
+    """
+    sql = ''' INSERT INTO disks(poll_id, disk_total, disk_used, disk_free, disk_percentage)
+              VALUES(?,?,?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, disk)
+    conn.commit()
+    return cur.lastrowid
+
 
 def main_poll(poll,polling_rate):
     """
@@ -94,8 +125,19 @@ def main_poll(poll,polling_rate):
     disk = poll["disk"]
     
     disk_data = (poll_id,disk["disk_total"],disk["disk_used"],disk["disk_free"],disk["disk_percent"])
-    #insert_disk(conn, disk_data)
+    insert_disk(conn, disk_data)
 
+    """
+    INSERT Memory
+    """
+    memory = poll["memory"]
+    memory_data = (poll_id,memory["total_memory"], memory["used_memory"], memory["available_memory"], memory["percentage_memory"])
+    insert_memory(conn, memory_data)
+    """
+    INSERT CPU
+    TODO:get more cpu info
+    """
+    cpu = poll["cpu"]
     
     """
     INSERT process
@@ -104,13 +146,10 @@ def main_poll(poll,polling_rate):
 
     for p in process_list:
         process_data = (poll_id,p["pid"],p["process_name"],p["status"],p["cpu_percent"],p["num_thread"],p["memory_mb"])
-        insert_process(conn, process_data)
+        #insert_process(conn, process_data)
         #print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
 
-    """
-
-    """   
-
+   
 poll = {
   "process": [
     {
@@ -161,14 +200,14 @@ poll = {
   "memory": {
     "total_memory": "17.180",
     "used_memory": "10.114",
-    "available": "6.198",
-    "percentage": 63.9
+    "available_memory": "6.198",
+    "percentage_memory": 63.9
   },
   "battery": {
     "battery_percent": 78,
     "estimated_battery_seconds_remaining": 14760
   },
-  "cpuStats": {
+  "cpu": {
     "cpuSumPercentage": 16.0,
     "cpuPercentageByCore": [51.0, 12.0, 46.0, 9.0, 44.0, 10.0, 35.0, 10.1]
   }

@@ -6,9 +6,7 @@ from prettytable import PrettyTable
 import json
 
 
-"""
-TODO:all process id are same
-"""
+
 def getRunningProcesses():
     # List of current running process IDs.
     proc = []
@@ -62,19 +60,19 @@ def getRunningProcesses():
 def getCPUStats():
     p = psutil
     cpuPercentageByCore = p.cpu_percent(interval=1, percpu=True)
-    cpuStats ={
+    cpu ={
         "cpuSumPercentage":p.cpu_percent(interval=1),
         "cpuPercentageByCore" : cpuPercentageByCore,
         
     }
-    return cpuStats
+    return cpu
 def getMemoryStats():
     vm = psutil.virtual_memory()
     memory = {
         "total_memory":f'{vm.total / 1e9:.3f}',
         "used_memory":f'{vm.used / 1e9:.3f}',
-        "available":f'{vm.available / 1e9:.3f}',
-        "percentage": vm.percent
+        "available_memory":f'{vm.available / 1e9:.3f}',
+        "percentage_memory": vm.percent
     }
     return memory
 
