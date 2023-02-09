@@ -30,6 +30,7 @@ def create_db():
                                         id integer PRIMARY KEY,
                                         poll_rate integer,
                                         operating_system text,
+                                        operating_system_version text,
                                         time text
                                     ); """
 

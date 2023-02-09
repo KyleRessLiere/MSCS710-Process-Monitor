@@ -1,5 +1,7 @@
 import sqlite3
 from sqlite3 import Error
+import os
+import platform
 
 
 def create_connection(db_file):
@@ -21,8 +23,8 @@ def insert_poll(conn, poll):
     :param poll:
     :return: project id
     """
-    sql = ''' INSERT INTO polls(poll_rate,operating_system,time)
-              VALUES(?,?,?) '''
+    sql = ''' INSERT INTO polls(poll_rate,operating_system,operating_system_version,time)
+              VALUES(?,?,?,?) '''
     cur = conn.cursor()
     cur.execute(sql, poll)
     conn.commit()
@@ -45,20 +47,35 @@ def insert_process(conn, process):
     return cur.lastrowid
 
 
-def main_poll(process_list):
+def main_poll(poll_stats,polling_rate):
+    """
+    Stores polled information into database
+    :param poll_data:
+    :param polling rate
+    """
+    #database path
     database = r"./db/MMM-SQLite.db"
 
     # create a database connection
     conn = create_connection(database)
     with conn:
         # log a poll
-        poll_data = (2, 'Linux', '02-06-2023')
-        poll_id = insert_poll(conn, poll_data)
+        
        
+        #get operating system plat.sys returns darwin for mac otherwise os name
+        os = ("Mac OS X" if platform.system() == "Darwin" else platform.system())
+        os_version = platform.release()
+        poll_data = (polling_rate, os,os_version, '02-06-2023')
+        poll_id = insert_poll(conn, poll_data)
+
+    #store process info int database
+   
+    process_list = poll_stats["process"]
+
     for p in process_list:
         process_data = (poll_id,p["pid"],p["process_name"],p["status"],p["cpu_percent"],p["num_thread"],p["memory_mb"])
         insert_process(conn, process_data)
-        #print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
+        print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
 
         
 
