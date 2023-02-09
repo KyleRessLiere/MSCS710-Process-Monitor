@@ -166,6 +166,7 @@ def main_poll(poll,polling_rate):
     """
     cpu = poll["cpu"]
     
+    
     """
     INSERT process
     """

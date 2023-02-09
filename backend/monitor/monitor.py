@@ -11,7 +11,7 @@ def getRunningProcesses():
     # List of current running process IDs.
     proc = []
     # get the pids from last 200 which mostly are user processes
-    for pid in psutil.pids()[-200:]:
+    for pid in psutil.pids()[-5:]:
         try:
             p = psutil.Process(pid)
             # trigger cpu_percent() the first time which leads to return of 0.0
@@ -63,12 +63,11 @@ https://psutil.readthedocs.io/en/latest/#psutil.cpu_freq
 """
 def getCPUStats():
     p = psutil
-    print(psutil.cpu_stats())
  
-    cpuPercentageByCore = p.cpu_percent(interval=1, percpu=True)
+    cpu_percentage_by_core = p.cpu_percent(interval=1, percpu=True)
     cpu ={
-        "cpuSumPercentage":p.cpu_percent(interval=1),
-        "cpuPercentageByCore" : cpuPercentageByCore,
+        "cpu_sum_percentage":p.cpu_percent(interval=1),
+        "cpu_percentage_by_core" : cpu_percentage_by_core,
         "cpu_load_average": [x / psutil.cpu_count() * 100 for x in psutil.getloadavg()],
         "cpu_count_virtual":  psutil.cpu_count(),
         "cpu_count_physical": psutil.cpu_count(logical="False"),
@@ -154,4 +153,4 @@ def poll_system():
 
 #print(getBatteryStats())
 
-print(getCPUStats())
+print(json.dumps(poll_system(), indent=4, sort_keys=False))

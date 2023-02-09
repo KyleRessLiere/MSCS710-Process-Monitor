@@ -47,16 +47,21 @@ def create_db():
                                     
                                 );"""
      
-   
+    """
+     TODO:Deal with list elements in cpu
+    """
     sql_create_cpu_table = """CREATE TABLE IF NOT EXISTS cpu (
                                     cpu_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
-                                    cpu_times integer,
-                                    cpu_percent integer,
-                                    cpu_times_percent integer,
-                                    cpu_count integer,
-                                    cpu_stats integer,
-                                    cpu_freq integer,
+                                    cpu_percent real,
+                                    cpu_percentage_by_core text,
+                                    cpu_load_average text,
+                                    cpu_count_virtual integer,
+                                    cpu_count_physical integer,
+                                    cpu_ctx_switches integer,
+                                    interrupts integer,
+                                    soft_interrupts integer,
+                                    syscalls integer,
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
 
