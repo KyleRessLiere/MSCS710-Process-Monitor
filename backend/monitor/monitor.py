@@ -153,4 +153,4 @@ def poll_system():
 
 #print(getBatteryStats())
 
-print(json.dumps(poll_system(), indent=4, sort_keys=False))
+#print(json.dumps(poll_system(), indent=4, sort_keys=False))

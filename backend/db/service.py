@@ -97,17 +97,17 @@ def insert_memory(conn, memory):
 """
 TODO:get more cpu stats then implement
 """
-def insert_cpu(conn, disk):
+def insert_cpu(conn, cpu):
     """
     Log a disk info to disk table
     :param conn:
     :param disk:
     :return: disk id
     """
-    sql = ''' INSERT INTO disks(poll_id, disk_total, disk_used, disk_free, disk_percentage)
-              VALUES(?,?,?,?,?) '''
+    sql = ''' INSERT INTO cpu(poll_id, cpu_percent, cpu_percentage_by_core, cpu_load_average, cpu_count_virtual, cpu_count_physical, cpu_ctx_switches, interrupts, soft_interrupts, syscalls)
+              VALUES(?,?,?,?,?,?,?,?,?,?) '''
     cur = conn.cursor()
-    cur.execute(sql, disk)
+    cur.execute(sql, cpu)
     conn.commit()
     return cur.lastrowid
 
@@ -165,7 +165,10 @@ def main_poll(poll,polling_rate):
     TODO:get more cpu info
     """
     cpu = poll["cpu"]
-    
+   
+    cpu_data = ( poll_id,cpu["cpu_sum_percentage"], str(cpu["cpu_percentage_by_core"]),   str(cpu["cpu_load_average"]),  cpu["cpu_count_virtual"],  cpu["cpu_count_physical"],  cpu["cpu_ctx_switches"],cpu["interrupts"],   cpu["soft_interrupts"], cpu["syscalls"] )
+
+    insert_cpu(conn, cpu_data)
     
     """
     INSERT process
@@ -178,29 +181,21 @@ def main_poll(poll,polling_rate):
         #print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
 
    
-poll = {
+test_poll = {
   "process": [
     {
-      "pid": 98895,
+      "pid": 98894,
       "process_name": "trustd",
       "status": "running",
-      "cpu_percent": "0.03",
-      "num_thread": 2,
-      "memory_mb": "13.771"
-    },
-    {
-      "pid": 98895,
-      "process_name": "docker",
-      "status": "running",
       "cpu_percent": "0.00",
-      "num_thread": 14,
-      "memory_mb": "8.012"
+      "num_thread": 2,
+      "memory_mb": "15.491"
     }
   ],
   "disk": {
     "disk_total": 1000240963584,
     "disk_used": 11682930688,
-    "disk_free": 363153088512,
+    "disk_free": 364035297280,
     "disk_percent": 3.1
   },
   "network": [
@@ -215,29 +210,32 @@ poll = {
       "speed": 0
     },
     {
-      "network": "utun5",
-      "status": "Up",
-      "speed": 0
-    },
-    {
-      "network": "utun6",
-      "status": "Up",
+      "network": "stf0",
+      "status": "Down",
       "speed": 0
     }
   ],
   "memory": {
     "total_memory": "17.180",
-    "used_memory": "10.114",
-    "available_memory": "6.198",
-    "percentage_memory": 63.9
+    "used_memory": "9.984",
+    "available_memory": "6.075",
+    "percentage_memory": 64.6
   },
   "battery": {
-    "battery_percent": 78,
-    "estimated_battery_seconds_remaining": 14760
+    "battery_percent": 39,
+    "estimated_battery_seconds_remaining": 8280
   },
   "cpu": {
-    "cpuSumPercentage": 16.0,
-    "cpuPercentageByCore": [51.0, 12.0, 46.0, 9.0, 44.0, 10.0, 35.0, 10.1]
+    "cpu_sum_percentage": 6.5,
+    "cpu_percentage_by_core": [22.8, 0.0, 12.2, 1.0, 12.9, 0.0, 6.0, 0.0],
+    "cpu_load_average": [80.28564453125, 81.5185546875, 153.01513671875],
+    "cpu_count_virtual": 4,
+    "cpu_count_physical": 4,
+    "cpu_ctx_switches": 6007,
+    "interrupts": 951412,
+    "soft_interrupts": 1465898952,
+    "syscalls": 1480147
   }
 }
-#main_poll(poll,1)
+
+#main_poll(test_poll,1)
