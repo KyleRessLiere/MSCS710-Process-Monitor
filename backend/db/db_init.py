@@ -75,7 +75,7 @@ def create_db():
                                     disk_total integer,
                                     disk_used integer,
                                     disk_free integer,
-                                    dis_percentage real
+                                    dis_percentage real,
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
 
