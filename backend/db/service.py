@@ -33,20 +33,22 @@ def insert_poll(conn, poll):
     return cur.lastrowid
 
 
-def insert_process(conn, process):
+def insert_network(conn, network):
     """
-    Create a new process
+    insert network details for poll
     :param conn:
     :param task:
-    :return:
+    :return:network_id
     """
 
-    sql = ''' INSERT INTO processes(poll_id,process_id,process_name,process_status,cpu_percent,num_thread,memory_usage)
-              VALUES(?,?,?,?,?,?,?) '''
+    sql = ''' INSERT INTO network(poll_id, network_interface, network_status, network_speed)
+              VALUES(?,?,?,?) '''
     cur = conn.cursor()
-    cur.execute(sql, process)
+    cur.execute(sql, network)
     conn.commit()
     return cur.lastrowid
+
+   
 
 def insert_disk(conn, disk):
     """
@@ -133,6 +135,15 @@ def main_poll(poll,polling_rate):
     memory = poll["memory"]
     memory_data = (poll_id,memory["total_memory"], memory["used_memory"], memory["available_memory"], memory["percentage_memory"])
     insert_memory(conn, memory_data)
+    
+    """
+    INSERT network
+    """
+    network_list = poll["network"]
+    for n in network_list:
+        network_data = (poll_id,n["network"], n["status"], n["speed"])
+        insert_network(conn, network_data)
+    
     """
     INSERT CPU
     TODO:get more cpu info
