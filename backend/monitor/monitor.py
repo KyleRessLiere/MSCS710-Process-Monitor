@@ -57,15 +57,29 @@ def getRunningProcesses():
 
     return processList
 
+"""
+TODO:add cpu frequency
+https://psutil.readthedocs.io/en/latest/#psutil.cpu_freq
+"""
 def getCPUStats():
     p = psutil
+    print(psutil.cpu_stats())
+ 
     cpuPercentageByCore = p.cpu_percent(interval=1, percpu=True)
     cpu ={
         "cpuSumPercentage":p.cpu_percent(interval=1),
         "cpuPercentageByCore" : cpuPercentageByCore,
+        "cpu_load_average": [x / psutil.cpu_count() * 100 for x in psutil.getloadavg()],
+        "cpu_count_virtual":  psutil.cpu_count(),
+        "cpu_count_physical": psutil.cpu_count(logical="False"),
+        "cpu_ctx_switches":psutil.cpu_stats()[0],
+        "interrupts":psutil.cpu_stats()[1],
+        "soft_interrupts": psutil.cpu_stats()[2],
+        "syscalls": psutil.cpu_stats()[3]
         
     }
     return cpu
+
 def getMemoryStats():
     vm = psutil.virtual_memory()
     memory = {
@@ -140,3 +154,4 @@ def poll_system():
 
 #print(getBatteryStats())
 
+print(getCPUStats())
