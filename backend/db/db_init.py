@@ -31,7 +31,7 @@ def create_db():
                                         poll_rate integer,
                                         operating_system text,
                                         operating_system_version text,
-                                        time text
+                                        time TIMESTAMP
                                     ); """
 
     sql_create_processes_table = """CREATE TABLE IF NOT EXISTS processes (

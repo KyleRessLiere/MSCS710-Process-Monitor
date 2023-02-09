@@ -2,6 +2,8 @@ import sqlite3
 from sqlite3 import Error
 import os
 import platform
+import datetime
+import time
 
 
 def create_connection(db_file):
@@ -46,6 +48,20 @@ def insert_process(conn, process):
     conn.commit()
     return cur.lastrowid
 
+def insert_disk(conn, disk):
+    """
+    Log a disk info to disk table
+    :param conn:
+    :param poll:
+    :return: poll id
+    """
+    sql = ''' INSERT INTO polls(poll_rate,operating_system,operating_system_version,time)
+              VALUES(?,?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, poll)
+    conn.commit()
+    return cur.lastrowid
+
 
 def main_poll(poll,polling_rate):
     """
@@ -65,9 +81,11 @@ def main_poll(poll,polling_rate):
     """
     INSERT poll_data
     """
+    ts = time.time()
+    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     os = ("Mac OS X" if platform.system() == "Darwin" else platform.system())
     os_version = platform.release()
-    poll_data = (polling_rate, os,os_version, '02-06-2023')
+    poll_data = (polling_rate, os,os_version, timestamp)
     poll_id = insert_poll(conn, poll_data)
 
     """
