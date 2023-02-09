@@ -15,6 +15,7 @@ from monitor.monitor import poll_system
 """
 run on percentage of minute intervals
 gets system info and loggs it
+TODO:add awaiting till db is created to prevent error
 """
 def sensor(polling_rate):
     

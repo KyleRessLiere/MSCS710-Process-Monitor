@@ -134,7 +134,7 @@ def poll_system():
         "network":getNetworkStats(),
         "memory":getMemoryStats(),
         "battery":getBatteryStats(),
-        "cpuStats":getCPUStats(),
+        "cpu":getCPUStats(),
     }
     return poll
 

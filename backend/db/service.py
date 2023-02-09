@@ -64,6 +64,22 @@ def insert_disk(conn, disk):
     conn.commit()
     return cur.lastrowid
 
+def insert_process(conn, process):
+    """
+    Create a new process
+    :param conn:
+    :param task:
+    :return:
+    """
+
+    sql = ''' INSERT INTO processes(poll_id,process_id,process_name,process_status,cpu_percent,num_thread,memory_usage)
+              VALUES(?,?,?,?,?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, process)
+    conn.commit()
+    return cur.lastrowid
+
+
 def insert_memory(conn, memory):
     """
     Log a disk info to disk table
@@ -157,7 +173,7 @@ def main_poll(poll,polling_rate):
 
     for p in process_list:
         process_data = (poll_id,p["pid"],p["process_name"],p["status"],p["cpu_percent"],p["num_thread"],p["memory_mb"])
-        #insert_process(conn, process_data)
+        insert_process(conn, process_data)
         #print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
 
    
