@@ -34,13 +34,19 @@ def create_db():
                                     ); """
 
     sql_create_processes_table = """CREATE TABLE IF NOT EXISTS processes (
-                                    process_id integer PRIMARY KEY,
-                                    poll_id integer NOT NULL,
-                                    thread_count integer,
-                                    memory integer,
+                                    poll_id integer NOT NULL ,
+                                    process_id integer ,
+                                    process_name text,
+                                    process_status text,
+                                    cpu_percent real,
+                                    num_thread integer,
+                                    memory_usage real,
+                                    PRIMARY KEY (poll_id, process_id),
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
+                                    
                                 );"""
-
+     
+   
     sql_create_cpu_table = """CREATE TABLE IF NOT EXISTS cpu (
                                     cpu_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
@@ -56,32 +62,29 @@ def create_db():
     sql_create_memory_table = """CREATE TABLE IF NOT EXISTS memory (
                                     memory_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
-                                    total_memory integer,
-                                    available_memory integer,
-                                    used_memory integer,
-                                    free_memory integer,
-                                    active_memory integer,
-                                    inactive_memory integer,
-                                    wired_memory integer,
+                                    total_memory real,
+                                    available_memory real,
+                                    used_memory real,
+                                    percentage_used real,
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
 
     sql_create_disks_table = """CREATE TABLE IF NOT EXISTS disks (
                                     disk_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
-                                    disk_partitions integer,
-                                    disk_usage integer,
-                                    disk_io_counters integer,
+                                    disk_total integer,
+                                    disk_used integer,
+                                    disk_free integer,
+                                    dis_percentage real,
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
 
     sql_create_network_table = """CREATE TABLE IF NOT EXISTS network (
                                     network_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
-                                    net_io_counters integer,
-                                    net_connections integer,
-                                    net_if_addrs integer,
-                                    net_if_stats integer,
+                                    network_interface text,
+                                    network_status text,
+                                    network_speed real,
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
 

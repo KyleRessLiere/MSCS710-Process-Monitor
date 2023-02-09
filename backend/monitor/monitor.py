@@ -5,10 +5,14 @@ from subprocess import call
 from prettytable import PrettyTable
 import json
 
+
+"""
+TODO:all process id are same
+"""
 def getRunningProcesses():
     # List of current running process IDs.
     proc = []
-    # get the pids from last which mostly are user processes
+    # get the pids from last 200 which mostly are user processes
     for pid in psutil.pids()[-200:]:
         try:
             p = psutil.Process(pid)
@@ -24,7 +28,12 @@ def getRunningProcesses():
     time.sleep(0.1)
     for p in proc:
         # trigger cpu_percent() the second time for measurement
-        top[p] = p.cpu_percent() / psutil.cpu_count()
+        try:
+            top[p] = p.cpu_percent() / psutil.cpu_count()
+        except Exception as e:
+            top[p] = 0
+            print(e)
+            print("pid gone before reached")
 
     top_list = sorted(top.items(), key=lambda x: x[1])
     top10 = top_list
@@ -38,30 +47,23 @@ def getRunningProcesses():
         try:
             # oneshot to improve info retrieve efficiency
             with p.oneshot():
-                processList.append({"pid":pid
+                processList.append({"pid":p.pid
                                     ,"process_name":p.name(),
                                     "status":str(p.status()),
                                     "cpu_percent": f'{cpu_percent:.2f}',
                                     "num_thread":p.num_threads(),
                                     "memory_mb": f'{p.memory_info().rss / 1e6:.3f}'
                                     })
-                
-
         except Exception as e:
             pass
 
-    for x in processList:
-        print(x)
-
     return processList
-"""
-TODO:CPU stats
-"""
+
 def getCPUStats():
     p = psutil
-    cpuPercentageByCore = p.cpu_percent(interval=None, percpu=True)
+    cpuPercentageByCore = p.cpu_percent(interval=1, percpu=True)
     cpuStats ={
-        "cpuSumPercentage":p.cpu_percent(interval=None),
+        "cpuSumPercentage":p.cpu_percent(interval=1),
         "cpuPercentageByCore" : cpuPercentageByCore,
         
     }
@@ -89,7 +91,7 @@ def getNetworkStats():
 
 
 """
-TODO:add other physcial stats such as temprature and fan speed
+TODO:add other physical stats such as temperature and fan speed
 https://psutil.readthedocs.io/en/latest/#disks
 """
 def getBatteryStats():
@@ -120,6 +122,9 @@ Gather info about system stats and returns them together as a dictionary
 Stats include:Memory,processes,network,disk,battery,cpu
 """
 def poll_system():
+    """
+    TODO: maybe add ternary to catch if their is no value
+    """
     poll = {
         "process":getRunningProcesses(),
         "disk":getDiskStats(),
@@ -130,5 +135,5 @@ def poll_system():
     }
     return poll
 
+#print(getBatteryStats())
 
-print(json.dumps(poll_system(), indent=4, sort_keys=False))
