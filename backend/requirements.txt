@@ -5,3 +5,4 @@ psutil==5.9.4
 db==0.1.1
 db-sqlite3==0.0.1
 APScheduler==3.9.1.post1
+flask_apscheduler==1.12.4
