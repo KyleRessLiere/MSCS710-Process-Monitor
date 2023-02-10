@@ -25,4 +25,19 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\CPUView.axaml.cs">
+        <DependentUpon>CPUView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\MainWindowView.axaml.cs">
+        <DependentUpon>MainWindowView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\MemoryView.axaml.cs">
+        <DependentUpon>MemoryView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\ProcessView.axaml.cs">
+        <DependentUpon>ProcessView.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

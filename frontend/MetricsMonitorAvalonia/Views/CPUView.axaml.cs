@@ -2,11 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace MetricsMonitorAvalonia;
+namespace MetricsMonitorAvalonia.Views;
 
-public partial class ProcessUserControl : UserControl
+public partial class CPUView : UserControl
 {
-    public ProcessUserControl()
+    public CPUView()
     {
         InitializeComponent();
     }

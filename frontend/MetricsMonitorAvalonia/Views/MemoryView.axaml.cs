@@ -2,11 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace MetricsMonitorAvalonia;
+namespace MetricsMonitorAvalonia.Views;
 
-public partial class MemoryUserControl : UserControl
+public partial class MemoryView : UserControl
 {
-    public MemoryUserControl()
+    public MemoryView()
     {
         InitializeComponent();
     }

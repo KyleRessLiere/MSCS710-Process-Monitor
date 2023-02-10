@@ -1,0 +1,50 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MetricsMonitorClient.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MetricsMonitorClient.Views.MainWindowView"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MetricsMonitorClient">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+
+
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width=".2*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<!-- Sidebar -->
+		<Grid Grid.Column="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height=".3*"/>
+				<RowDefinition Height="60"/>
+				<RowDefinition Height="60"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+		
+		
+		</Grid>
+		
+		<!-- Main content area -->
+
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height=".3*"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<TextBlock Text="Test" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			
+			
+		</Grid>	
+		
+	</Grid>
+
+</Window>
