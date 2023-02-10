@@ -25,8 +25,8 @@ def insert_poll(conn, poll):
     :param poll:
     :return: poll id
     """
-    sql = ''' INSERT INTO polls(poll_rate,operating_system,operating_system_version,time)
-              VALUES(?,?,?,?) '''
+    sql = ''' INSERT INTO polls(poll_rate, operating_system, operating_system_version, poll_type, time)
+              VALUES(?,?,?,?,?) '''
     cur = conn.cursor()
     cur.execute(sql, poll)
     conn.commit()
@@ -112,7 +112,7 @@ def insert_cpu(conn, cpu):
     return cur.lastrowid
 
 
-def main_poll(poll,polling_rate):
+def main_poll(poll,polling_rate, poll_type):
     """
     Stores polled information into database
     :param poll:
@@ -134,7 +134,7 @@ def main_poll(poll,polling_rate):
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     os = ("Mac OS X" if platform.system() == "Darwin" else platform.system())
     os_version = platform.release()
-    poll_data = (polling_rate, os,os_version, timestamp)
+    poll_data = (polling_rate, os,os_version,poll_type, timestamp)
     poll_id = insert_poll(conn, poll_data)
 
     """

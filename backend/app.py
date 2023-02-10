@@ -22,7 +22,7 @@ def sensor(polling_rate):
     try:
         poll = poll_system()
       
-        main_poll(poll,polling_rate)
+        main_poll(poll,polling_rate, "live")
         #print(json.dumps(poll, indent=4, sort_keys=False))
 
     except Exception as e:
