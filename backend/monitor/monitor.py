@@ -11,7 +11,7 @@ def getRunningProcesses():
     # List of current running process IDs.
     proc = []
     # get the pids from last 200 which mostly are user processes
-    for pid in psutil.pids()[-5:]:
+    for pid in psutil.pids()[-200:]:
         try:
             p = psutil.Process(pid)
             # trigger cpu_percent() the first time which leads to return of 0.0
