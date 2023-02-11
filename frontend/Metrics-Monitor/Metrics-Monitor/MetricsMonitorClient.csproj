@@ -6,6 +6,11 @@
     <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
     <TrimMode>copyused</TrimMode>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <RootNamespace>MetricsMonitorClient</RootNamespace>
+    <AssemblyName>MetricsMonitorClient</AssemblyName>
+    <StartupObject>MetricsMonitorClient.Program</StartupObject>
+    <Title>Metrics Monitor Client</Title>
+    <Authors>Sam Alcosser</Authors>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -28,6 +33,8 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="Splat" Version="14.6.8" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
   </ItemGroup>
@@ -35,14 +42,5 @@
     <Compile Update="Views\MainWindowView.axaml.cs">
       <DependentUpon>MainWindowView.axaml</DependentUpon>
     </Compile>
-	  <!--<Compile Update="Views\CPUView.axaml.cs">
-		  <DependentUpon>CPUView.axaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\StorageView.axaml.cs">
-		  <DependentUpon>StorageView.axaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\MemoryView.axaml.cs">
-		  <DependentUpon>MemoryView.axaml</DependentUpon>
-	  </Compile>-->
   </ItemGroup>
 </Project>

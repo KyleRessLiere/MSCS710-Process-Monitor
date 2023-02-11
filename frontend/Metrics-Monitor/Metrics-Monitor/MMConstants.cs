@@ -12,5 +12,16 @@ namespace MetricsMonitorClient {
         public const string Memory_Tab_Name = "Memory tab";
         public const string Storage_Tab_Name = "Storage tab";
         public const string Network_Tab_Name = "Network tab";
+
+
+        public enum SelectedTab { 
+            Home = 0,
+            CPU = 1,
+            Memory = 2,
+            Storage = 3
+        }
+
+
+
     }
 }

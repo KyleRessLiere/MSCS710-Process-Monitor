@@ -5,5 +5,6 @@ namespace MetricsMonitorClient.Views {
         public MainWindowView() {
             InitializeComponent();
         }
+
     }
 }
