@@ -5,8 +5,11 @@ using System;
 
 namespace MetricsMonitorClient {
     public class ViewLocator : IDataTemplate {
-        public IControl Build(object data) {
-            var name = data.GetType().FullName!.Replace("ViewModel", "View");
+        public IControl Build(object param) {
+            if (param == null)
+                return null;
+
+            var name = param.GetType().FullName!.Replace("ViewModel", "View");
             var type = Type.GetType(name);
 
             if (type != null) {
@@ -19,5 +22,6 @@ namespace MetricsMonitorClient {
         public bool Match(object data) {
             return data is ViewModelBase;
         }
+       
     }
 }

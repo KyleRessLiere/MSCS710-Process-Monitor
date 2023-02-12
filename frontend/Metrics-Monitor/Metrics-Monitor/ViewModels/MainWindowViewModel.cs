@@ -1,3 +1,5 @@
+using MetricsMonitorClient.DataServices.CPU;
+using MetricsMonitorClient.DataServices.MonitorSystem;
 using Microsoft.VisualBasic;
 using ReactiveUI;
 using System;
@@ -5,16 +7,20 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Text;
 
-namespace MetricsMonitorClient.ViewModels {
+namespace MetricsMonitorClient.ViewModels
+{
     public class MainWindowViewModel : ViewModelBase {
         public string Greeting => "Welcome to Avalonia!";
-        private Services.ICPUDataFactory _cpuData;
+        private readonly ICPUDataFactory _cpuDataFactory;
+        private readonly IMonitorSystemFactory _monitorSystemFactory;
         #region Constructor
-        public MainWindowViewModel() {
-            CPUViewModel = new CPUViewModel();
+        public MainWindowViewModel(ICPUDataFactory cpuDataFactory, IMonitorSystemFactory monitorSystemFactory) {
+            _cpuDataFactory = cpuDataFactory;
+            _monitorSystemFactory = monitorSystemFactory;
+            CPUViewModel = new CPUViewModel(_cpuDataFactory);
             MemoryViewModel = new MemoryViewModel();
             StorageViewModel = new StorageViewModel();
-            HomeViewModel = new HomeViewModel();
+            HomeViewModel = new HomeViewModel(_monitorSystemFactory);
             ResourceText = "Overview";
         }
         #endregion Constructor

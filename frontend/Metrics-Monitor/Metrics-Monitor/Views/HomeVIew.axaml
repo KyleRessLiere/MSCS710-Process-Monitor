@@ -3,6 +3,35 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:MetricsMonitorClient.ViewModels.HomeViewModel"
              x:Class="MetricsMonitorClient.Views.HomeView">
-home stuff
+	<Grid Classes="ContentGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Height=".15*"/>
+			<RowDefinition Height=".85*"/>
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0" HorizontalAlignment="Center" Classes="h4" Foreground="{DynamicResource MM-Light}">Polls</TextBlock>
+
+			<DataGrid
+			Grid.Row="1"
+			Width="800"
+			Height="400"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center"
+			GridLinesVisibility="None"
+			RowBackground="DarkGray"
+			AlternatingRowBackground="DarkGray"
+			Foreground="{DynamicResource MM-Light}"
+			AutoGenerateColumns="False"
+			Items="{Binding Polls, Mode=OneWay}">
+				<DataGrid.Columns>
+					<DataGridTextColumn IsReadOnly="True" Header="ID" Binding="{Binding PollId}"></DataGridTextColumn>
+					<DataGridTextColumn IsReadOnly="True" Header="Poll Rate" Binding="{Binding PollRate}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Operating System" Binding="{Binding OperatingSystem}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="OS Version" Binding="{Binding OperatingSystemVersion}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Poll Type" Binding="{Binding PollType}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Timestamp" Binding="{Binding Time}"/>
+				</DataGrid.Columns>
+			</DataGrid>
+	</Grid>
 </UserControl>
