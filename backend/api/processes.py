@@ -2,8 +2,6 @@
 
 import sqlite3
 from sqlite3 import Error
-import json
-
 
 def get_processes():
     processes = []
@@ -11,12 +9,11 @@ def get_processes():
         db_file = r"./db/MMM-SQLite.db"
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
-
         res = cur.execute("SELECT * FROM processes")
         processes = res.fetchall()
-        conn.close()
-
-    except:
-        processes = []
-
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
     return processes

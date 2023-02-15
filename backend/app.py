@@ -34,12 +34,11 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/api/polls', methods=['GET'])
 def api_get_polls():
-    return jsonify(polls.get_polls())
+    return polls.get_polls()
 
 @app.route('/api/processes', methods=['GET'])
 def api_get_proccess():
     return processes.get_processes()
-
 
 
 
