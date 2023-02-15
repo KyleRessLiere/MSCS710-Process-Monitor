@@ -43,10 +43,8 @@ def create_db():
                                     memory_usage real,
                                     PRIMARY KEY (poll_id, process_id),
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
-                                    
                                 );"""
-     
-   
+
     sql_create_cpu_table = """CREATE TABLE IF NOT EXISTS cpu (
                                     cpu_id integer PRIMARY KEY,
                                     poll_id integer NOT NULL,
@@ -107,5 +105,4 @@ def create_db():
 
 
 if __name__ == '__main__':
-    
     create_db()
