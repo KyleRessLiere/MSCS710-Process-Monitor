@@ -6,7 +6,7 @@ from monitor.monitor import poll_system
 from db.service import main_poll
 from db.db_init import *
 from sqlite3 import Error
-from api import polls, processes
+from api import polls, processes, memory
 
 
 """
@@ -40,7 +40,9 @@ def api_get_polls():
 def api_get_proccess():
     return processes.get_processes()
 
-
+@app.route('/api/memory', methods=['GET'])
+def api_get_memory():
+    return memory.get_memory()
 
 if __name__ == "__main__":
     sensor()
