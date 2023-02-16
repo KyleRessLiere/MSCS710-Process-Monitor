@@ -5,5 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="using:MetricsMonitorClient.ViewModels.MemoryViewModel"
              x:Class="MetricsMonitorClient.Views.MemoryView">
-	<TextBlock Text="{Binding TestingText}"/> 
+	<Grid Classes="ContentGrid">
+		<TextBlock Text="{Binding TestingText}"/>
+	</Grid>
 </UserControl>

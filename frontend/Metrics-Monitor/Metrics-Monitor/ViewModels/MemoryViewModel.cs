@@ -9,18 +9,21 @@ using System.Threading.Tasks;
 namespace MetricsMonitorClient.ViewModels
 {
     public class MemoryViewModel : ViewModelBase{
+        #region Constructor
+        public MemoryViewModel() {
+            TestingText = "First!";
+            Change();
+        }
+        #endregion Constructor
+        #region Properties
 
         private string testingText;
         public string TestingText {
             get { return testingText; }
             set { this.RaiseAndSetIfChanged(ref testingText, value); }
         }
-
-        public MemoryViewModel() {
-            TestingText = "First!";
-            Change();
-        }
-
+        #endregion Properties
+        #region Methods
         public void Change() {
             Thread.Sleep(8000);
             TestingText = "Second!";
@@ -28,9 +31,7 @@ namespace MetricsMonitorClient.ViewModels
             TestingText = "Third!";
             Thread.Sleep(700);
             TestingText = "Fourth!";
-
-
         }
-
+        #endregion Methods
     }
 }
