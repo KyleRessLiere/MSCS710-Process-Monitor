@@ -159,17 +159,17 @@ def main_poll(poll,polling_rate, poll_type):
     for n in network_list:
         network_data = (poll_id,n["network"], n["status"], n["speed"])
         insert_network(conn, network_data)
-    
+
     """
     INSERT CPU
     TODO:get more cpu info
     """
     cpu = poll["cpu"]
-   
+
     cpu_data = ( poll_id,cpu["cpu_sum_percentage"], str(cpu["cpu_percentage_by_core"]),   str(cpu["cpu_load_average"]),  cpu["cpu_count_virtual"],  cpu["cpu_count_physical"],  cpu["cpu_ctx_switches"],cpu["interrupts"],   cpu["soft_interrupts"], cpu["syscalls"] )
 
     insert_cpu(conn, cpu_data)
-    
+
     """
     INSERT process
     """
@@ -178,12 +178,8 @@ def main_poll(poll,polling_rate, poll_type):
     for p in process_list:
         process_data = (poll_id,p["pid"],p["process_name"],p["status"],p["cpu_percent"],p["num_thread"],p["memory_mb"])
         insert_process(conn, process_data)
-<<<<<<< HEAD
-        #print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
-=======
         #print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
 
-   
 test_poll = {
   "process": [
     {
