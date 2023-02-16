@@ -1,22 +1,31 @@
 #!/usr/bin/python
 
+import json
 import sqlite3
 from sqlite3 import Error
 
 def get_polls():
-    polls = []
+    poll_list = []
     try:
         db_file = r"./db/MMM-SQLite.db"
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM polls")
         polls = res.fetchall()
+        for i in polls:
+            poll = {
+                "poll_id": i[0],
+                "poll_rate": i[1],
+                "operating_system": i[2],
+                "time": i[3]
+            }
+            poll_list.append(poll)
     except Error as e:
         print(e)
     finally:
         if conn:
             conn.close()
-    return polls
+    return poll_list
 
 def get_poll_by_id(poll_id):
     poll = {}
