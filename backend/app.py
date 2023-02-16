@@ -48,9 +48,9 @@ def api_get_processes():
 
 @app.route('/api/processes/<process_id>', methods=['GET'])
 def api_get_process_by_id(process_id):
-    process_item = []
-    process_item.append(processes.get_process_by_id(process_id))
-    return process_item
+    process_items = []
+    process_items.append(processes.get_process_by_id(process_id))
+    return process_items
 
 @app.route('/api/memory', methods=['GET'])
 def api_get_memory():
@@ -65,6 +65,12 @@ def api_get_memory_by_id(memory_id):
 @app.route('/api/disks', methods=['GET'])
 def api_get_disks():
     return disks.get_disks()
+
+@app.route('/api/disks/<disk_id>', methods=['GET'])
+def api_get_disk_by_id(disk_id):
+    disk_item = []
+    disk_item.append(memory.get_memory_by_id(disk_id))
+    return disk_item
 
 @app.route('/api/network', methods=['GET'])
 def api_get_network():
