@@ -76,6 +76,12 @@ def api_get_disk_by_id(disk_id):
 def api_get_network():
     return network.get_network()
 
+@app.route('/api/network/<network_id>', methods=['GET'])
+def api_get_network_by_id(network_id):
+    network_item = []
+    network_item.append(memory.get_memory_by_id(network_id))
+    return network_item
+
 if __name__ == "__main__":
     sensor()
     create_db()
