@@ -15,17 +15,15 @@ gets system info and loggs it
 TODO:add awaiting till db is created to prevent error
 """
 def sensor(polling_rate):
-    
     try:
         poll = poll_system()
-      
         main_poll(poll,polling_rate, "live")
         #print(json.dumps(poll, indent=4, sort_keys=False))
-
     except Exception as e:
         print(e)
         print("monitor fail")
         pass
+
 
 """
 Start monitoring at specified rate
@@ -34,8 +32,6 @@ polling_rate = 0.07
 sched = BackgroundScheduler(daemon=True)
 sched.add_job(sensor,args=[polling_rate],trigger ='interval',minutes=polling_rate)
 sched.start()
-
-
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -56,9 +52,7 @@ def api_get_processes():
 
 @app.route('/api/processes/<process_id>', methods=['GET'])
 def api_get_process_by_id(process_id):
-    process_items = []
-    process_items.append(processes.get_process_by_id(process_id))
-    return process_items
+    return processes.get_process_by_id(process_id)
 
 @app.route('/api/memory', methods=['GET'])
 def api_get_memory():
@@ -91,6 +85,5 @@ def api_get_network_by_id(network_id):
     return network_item
 
 if __name__ == "__main__":
-   
     create_db()
     app.run()

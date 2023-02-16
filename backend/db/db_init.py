@@ -46,7 +46,7 @@ def create_db():
                                     PRIMARY KEY (poll_id, process_id),
                                     FOREIGN KEY (poll_id) REFERENCES polls (id)
                                 );"""
-     
+
     """
      TODO:Deal with list elements in cpu
     """

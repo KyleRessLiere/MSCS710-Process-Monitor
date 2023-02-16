@@ -6,7 +6,6 @@ from prettytable import PrettyTable
 import json
 
 
-
 def getRunningProcesses():
     # List of current running process IDs.
     proc = []
