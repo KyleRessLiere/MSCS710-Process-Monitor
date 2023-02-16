@@ -27,7 +27,7 @@ def create_db():
     database = r"./db/MMM-SQLite.db"
 
     sql_create_polls_table = """ CREATE TABLE IF NOT EXISTS polls (
-                                        id integer PRIMARY KEY,
+                                        poll_id integer PRIMARY KEY,
                                         poll_rate integer,
                                         operating_system text,
                                         time text

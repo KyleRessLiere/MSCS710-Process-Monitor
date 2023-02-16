@@ -38,14 +38,19 @@ def api_get_polls():
 
 @app.route('/api/polls/<poll_id>', methods=['GET'])
 def api_get_poll(poll_id):
-    #return polls.get_poll_by_id(poll_id)
-    x = []
-    x.append(polls.get_poll_by_id(poll_id))
-    return x
+    poll = []
+    poll.append(polls.get_poll_by_id(poll_id))
+    return poll
 
 @app.route('/api/processes', methods=['GET'])
 def api_get_processes():
     return processes.get_processes()
+
+@app.route('/api/processes/<process_id>', methods=['GET'])
+def api_get_process(process_id):
+    process = []
+    process.append(processes.get_process_by_id(process_id))
+    return process
 
 @app.route('/api/memory', methods=['GET'])
 def api_get_memory():
