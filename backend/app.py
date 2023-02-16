@@ -36,6 +36,13 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 def api_get_polls():
     return polls.get_polls()
 
+@app.route('/api/polls/<poll_id>', methods=['GET'])
+def api_get_poll(poll_id):
+    #return polls.get_poll_by_id(poll_id)
+    x = []
+    x.append(polls.get_poll_by_id(poll_id))
+    return x
+
 @app.route('/api/processes', methods=['GET'])
 def api_get_processes():
     return processes.get_processes()
@@ -43,10 +50,6 @@ def api_get_processes():
 @app.route('/api/memory', methods=['GET'])
 def api_get_memory():
     return memory.get_memory()
-
-@app.route('/api/disks', methods=['GET'])
-def api_get_disks():
-    return disks.get_disks()
 
 @app.route('/api/disks', methods=['GET'])
 def api_get_disks():
