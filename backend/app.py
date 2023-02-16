@@ -37,7 +37,7 @@ def api_get_polls():
     return polls.get_polls()
 
 @app.route('/api/polls/<poll_id>', methods=['GET'])
-def api_get_poll(poll_id):
+def api_get_poll_by_id(poll_id):
     poll = []
     poll.append(polls.get_poll_by_id(poll_id))
     return poll
@@ -47,14 +47,20 @@ def api_get_processes():
     return processes.get_processes()
 
 @app.route('/api/processes/<process_id>', methods=['GET'])
-def api_get_process(process_id):
-    process = []
-    process.append(processes.get_process_by_id(process_id))
-    return process
+def api_get_process_by_id(process_id):
+    process_item = []
+    process_item.append(processes.get_process_by_id(process_id))
+    return process_item
 
 @app.route('/api/memory', methods=['GET'])
 def api_get_memory():
     return memory.get_memory()
+
+@app.route('/api/memory/<memory_id>', methods=['GET'])
+def api_get_memory_by_id(memory_id):
+    memory_item = []
+    memory_item.append(memory.get_memory_by_id(memory_id))
+    return memory_item
 
 @app.route('/api/disks', methods=['GET'])
 def api_get_disks():

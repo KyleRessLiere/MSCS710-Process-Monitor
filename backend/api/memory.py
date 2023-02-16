@@ -17,3 +17,18 @@ def get_memory():
         if conn:
             conn.close()
     return memory
+
+def get_memory_by_id(memory_id):
+    memory = {}
+    try:
+        db_file = r"./db/MMM-SQLite.db"
+        conn = sqlite3.connect(db_file)
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (memory_id,))
+        memory = res.fetchone()
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+    return memory
