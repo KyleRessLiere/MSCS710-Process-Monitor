@@ -12,21 +12,29 @@ from api import polls, processes, memory, disks, network
 """
 run on percentage of minute intervals
 gets system info and loggs it
+TODO:add awaiting till db is created to prevent error
 """
-def sensor():
+def sensor(polling_rate):
+    
     try:
         poll = poll_system()
-        process_list = poll["process"]
-        main_poll(process_list)
+      
+        main_poll(poll,polling_rate, "live")
         #print(json.dumps(poll, indent=4, sort_keys=False))
 
-    except Exception:
+    except Exception as e:
+        print(e)
         print("monitor fail")
         pass
 
+"""
+Start monitoring at specified rate
+"""
+polling_rate = 0.07
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(sensor,'interval',minutes=.07)
+sched.add_job(sensor,args=[polling_rate],trigger ='interval',minutes=polling_rate)
 sched.start()
+
 
 
 app = Flask(__name__)
@@ -83,6 +91,6 @@ def api_get_network_by_id(network_id):
     return network_item
 
 if __name__ == "__main__":
-    sensor()
+   
     create_db()
     app.run()

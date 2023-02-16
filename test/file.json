@@ -1,0 +1,56 @@
+{
+  "process": [
+    {
+      "pid": 98894,
+      "process_name": "trustd",
+      "status": "running",
+      "cpu_percent": "0.00",
+      "num_thread": 2,
+      "memory_mb": "15.491"
+    }
+  ],
+  "disk": {
+    "disk_total": 1000240963584,
+    "disk_used": 11682930688,
+    "disk_free": 364035297280,
+    "disk_percent": 3.1
+  },
+  "network": [
+    {
+      "network": "lo0",
+      "status": "Up",
+      "speed": 0
+    },
+    {
+      "network": "gif0",
+      "status": "Down",
+      "speed": 0
+    },
+    {
+      "network": "stf0",
+      "status": "Down",
+      "speed": 0
+    }
+  ],
+  "memory": {
+    "total_memory": "17.180",
+    "used_memory": "9.984",
+    "available_memory": "6.075",
+    "percentage_memory": 64.6
+  },
+  "battery": {
+    "battery_percent": 39,
+    "estimated_battery_seconds_remaining": 8280
+  },
+  "cpu": {
+    "cpu_sum_percentage": 6.5,
+    "cpu_percentage_by_core": [22.8, 0.0, 12.2, 1.0, 12.9, 0.0, 6.0, 0.0],
+    "cpu_load_average": [80.28564453125, 81.5185546875, 153.01513671875],
+    "cpu_count_virtual": 4,
+    "cpu_count_physical": 4,
+    "cpu_ctx_switches": 6007,
+    "interrupts": 951412,
+    "soft_interrupts": 1465898952,
+    "syscalls": 1480147
+  }
+}
