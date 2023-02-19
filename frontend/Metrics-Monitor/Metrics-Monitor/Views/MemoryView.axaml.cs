@@ -1,10 +1,10 @@
 using Avalonia.Controls;
 
-namespace MetricsMonitorClient.Views
-{
+namespace MetricsMonitorClient.Views {
     public partial class MemoryView : UserControl {
-    public MemoryView() {
-       InitializeComponent();
+        public MemoryView() {
+            InitializeComponent();
+
+        }
     }
-}
 }
