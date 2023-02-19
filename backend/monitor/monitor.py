@@ -6,9 +6,7 @@ from prettytable import PrettyTable
 import json
 
 
-"""
-TODO:all process id are same
-"""
+
 def getRunningProcesses():
     # List of current running process IDs.
     proc = []
@@ -31,7 +29,7 @@ def getRunningProcesses():
         try:
             top[p] = p.cpu_percent() / psutil.cpu_count()
         except Exception as e:
-            top[p] = 0
+            top[p] = -1
             print(e)
             print("pid gone before reached")
 
@@ -59,22 +57,35 @@ def getRunningProcesses():
 
     return processList
 
+"""
+TODO:add cpu frequency
+https://psutil.readthedocs.io/en/latest/#psutil.cpu_freq
+"""
 def getCPUStats():
     p = psutil
-    cpuPercentageByCore = p.cpu_percent(interval=1, percpu=True)
-    cpuStats ={
-        "cpuSumPercentage":p.cpu_percent(interval=1),
-        "cpuPercentageByCore" : cpuPercentageByCore,
+ 
+    cpu_percentage_by_core = p.cpu_percent(interval=1, percpu=True)
+    cpu ={
+        "cpu_sum_percentage":p.cpu_percent(interval=1),
+        "cpu_percentage_by_core" : cpu_percentage_by_core,
+        "cpu_load_average": [x / psutil.cpu_count() * 100 for x in psutil.getloadavg()],
+        "cpu_count_virtual":  psutil.cpu_count(),
+        "cpu_count_physical": psutil.cpu_count(logical="False"),
+        "cpu_ctx_switches":psutil.cpu_stats()[0],
+        "interrupts":psutil.cpu_stats()[1],
+        "soft_interrupts": psutil.cpu_stats()[2],
+        "syscalls": psutil.cpu_stats()[3]
         
     }
-    return cpuStats
+    return cpu
+
 def getMemoryStats():
     vm = psutil.virtual_memory()
     memory = {
         "total_memory":f'{vm.total / 1e9:.3f}',
         "used_memory":f'{vm.used / 1e9:.3f}',
-        "available":f'{vm.available / 1e9:.3f}',
-        "percentage": vm.percent
+        "available_memory":f'{vm.available / 1e9:.3f}',
+        "percentage_memory": vm.percent
     }
     return memory
 
@@ -108,6 +119,12 @@ TODO: ADD DISK PARTITIONS, maybe IO counters
 https://psutil.readthedocs.io/en/latest/#disks
 """
 def getDiskStats():
+    """
+    Gather disk stats 
+    :stats include disk_total,disk_used,disk_free,disk_percent
+    :return dict diskStat 
+
+    """
     disk = psutil.disk_usage('/')
     diskStats = {
         "disk_total":disk.total,
@@ -117,13 +134,12 @@ def getDiskStats():
     }
     return diskStats
 
-"""
-Gather info about system stats and returns them together as a dictionary
-Stats include:Memory,processes,network,disk,battery,cpu
-"""
+
 def poll_system():
     """
-    TODO: maybe add ternary to catch if their is no value
+    Gather info about system stats 
+    Stats include:Memory,processes,network,disk,battery,cpu
+    :return dict poll 
     """
     poll = {
         "process":getRunningProcesses(),
@@ -131,9 +147,10 @@ def poll_system():
         "network":getNetworkStats(),
         "memory":getMemoryStats(),
         "battery":getBatteryStats(),
-        "cpuStats":getCPUStats(),
+        "cpu":getCPUStats(),
     }
     return poll
 
 #print(getBatteryStats())
 
+#print(json.dumps(poll_system(), indent=4, sort_keys=False))
