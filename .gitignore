@@ -396,3 +396,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Python bytecode-compiled
+*.pyc
+backend/api/__pycache__/*
+
+# User's SQLite Database file
+backend/db/MMM-SQLite.db
