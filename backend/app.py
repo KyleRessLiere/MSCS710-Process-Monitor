@@ -54,6 +54,10 @@ def api_get_processes():
 def api_get_processes_by_id(process_id):
     return processes.get_processes_by_id(process_id)
 
+@app.route('/api/processes/latest/<process_id>', methods=['GET'])
+def api_get_latest_process_by_id(process_id):
+    return processes.get_latest_process_by_id(process_id)
+
 @app.route('/api/memory', methods=['GET'])
 def api_get_memory():
     return memory.get_memory()
