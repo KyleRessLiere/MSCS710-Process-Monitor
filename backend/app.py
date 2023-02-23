@@ -74,11 +74,11 @@ def api_get_disk_by_id(disk_id):
     disk_item.append(memory.get_memory_by_id(disk_id))
     return disk_item
 
-@app.route('/api/networks', methods=['GET'])
+@app.route('/api/network', methods=['GET'])
 def api_get_network():
     return network.get_network()
 
-@app.route('/api/networks/<network_id>', methods=['GET'])
+@app.route('/api/network/<network_id>', methods=['GET'])
 def api_get_network_by_id(network_id):
     network_item = []
     network_item.append(memory.get_memory_by_id(network_id))
