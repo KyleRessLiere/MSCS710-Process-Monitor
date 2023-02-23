@@ -35,6 +35,12 @@ def get_poll_by_id(poll_id):
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM polls WHERE poll_id = ?", (poll_id,))
         poll = res.fetchone()
+        poll = {
+                "poll_id": poll[0],
+                "poll_rate": poll[1],
+                "operating_system": poll[2],
+                "time": poll[3]
+            }
     except Error as e:
         print(e)
     finally:

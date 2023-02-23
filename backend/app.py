@@ -42,9 +42,7 @@ def api_get_polls():
 
 @app.route('/api/polls/<poll_id>', methods=['GET'])
 def api_get_poll_by_id(poll_id):
-    poll = []
-    poll.append(polls.get_poll_by_id(poll_id))
-    return poll
+    return polls.get_poll_by_id(poll_id)
 
 @app.route('/api/processes', methods=['GET'])
 def api_get_processes():
@@ -60,9 +58,7 @@ def api_get_memory():
 
 @app.route('/api/memory/<memory_id>', methods=['GET'])
 def api_get_memory_by_id(memory_id):
-    memory_item = []
-    memory_item.append(memory.get_memory_by_id(memory_id))
-    return memory_item
+    return memory.get_memory_by_id(memory_id)
 
 @app.route('/api/disks', methods=['GET'])
 def api_get_disks():
@@ -70,9 +66,7 @@ def api_get_disks():
 
 @app.route('/api/disks/<disk_id>', methods=['GET'])
 def api_get_disk_by_id(disk_id):
-    disk_item = []
-    disk_item.append(memory.get_memory_by_id(disk_id))
-    return disk_item
+    return memory.get_memory_by_id(disk_id)
 
 @app.route('/api/network', methods=['GET'])
 def api_get_network():
@@ -80,9 +74,7 @@ def api_get_network():
 
 @app.route('/api/network/<network_id>', methods=['GET'])
 def api_get_network_by_id(network_id):
-    network_item = []
-    network_item.append(memory.get_memory_by_id(network_id))
-    return network_item
+    return memory.get_memory_by_id(network_id)
 
 if __name__ == "__main__":
     create_db()

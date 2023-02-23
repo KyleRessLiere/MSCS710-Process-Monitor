@@ -36,6 +36,14 @@ def get_memory_by_id(memory_id):
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (memory_id,))
         memory = res.fetchone()
+        memory = {
+                "memory_id": memory[0],
+                "poll_id": memory[1],
+                "total_memory": memory[2],
+                "available_memory": memory[3],
+                "used_memory": memory[4],
+                "percentage_used": memory[5]
+            }
     except Error as e:
         print(e)
     finally:

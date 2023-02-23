@@ -35,6 +35,13 @@ def get_network_by_id(network_id):
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM network WHERE network_id = ?", (network_id,))
         network = res.fetchone()
+        network = {
+                "network_id": network[0],
+                "poll_id": network[1],
+                "network_interface": network[2],
+                "network_status": network[3],
+                "network_speed": network[4]
+            }
     except Error as e:
         print(e)
     finally:

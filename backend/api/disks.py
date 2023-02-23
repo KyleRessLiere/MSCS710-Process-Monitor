@@ -36,6 +36,14 @@ def get_disk_by_id(disk_id):
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (disk_id,))
         disk = res.fetchone()
+        disk = {
+                "disk_id": disk[0],
+                "poll_id": disk[1],
+                "disk_total": disk[2],
+                "disk_used": disk[3],
+                "disk_free": disk[4],
+                "disk_percentage": disk[5]
+            }
     except Error as e:
         print(e)
     finally:

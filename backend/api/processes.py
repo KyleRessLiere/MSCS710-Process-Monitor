@@ -37,6 +37,15 @@ def get_process_by_id(process_id):
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM processes WHERE process_id = ?", (process_id,))
         process = res.fetchall()
+        process = {
+                "poll_id": process[0],
+                "process_id": process[1],
+                "process_name": process[2],
+                "process_status": process[3],
+                "cpu_percent": process[4],
+                "num_thread": process[5],
+                "memory_usage": process[6]
+            }
     except Error as e:
         print(e)
     finally:
