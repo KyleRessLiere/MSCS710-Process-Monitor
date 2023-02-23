@@ -33,8 +33,10 @@ sched = BackgroundScheduler(daemon=True)
 sched.add_job(sensor,args=[polling_rate],trigger ='interval',minutes=polling_rate)
 sched.start()
 
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
+
 
 @app.route('/api/polls', methods=['GET'])
 def api_get_polls():
@@ -49,8 +51,8 @@ def api_get_processes():
     return processes.get_processes()
 
 @app.route('/api/processes/<process_id>', methods=['GET'])
-def api_get_process_by_id(process_id):
-    return processes.get_process_by_id(process_id)
+def api_get_processes_by_id(process_id):
+    return processes.get_processes_by_id(process_id)
 
 @app.route('/api/memory', methods=['GET'])
 def api_get_memory():
@@ -75,6 +77,7 @@ def api_get_network():
 @app.route('/api/network/<network_id>', methods=['GET'])
 def api_get_network_by_id(network_id):
     return memory.get_memory_by_id(network_id)
+
 
 if __name__ == "__main__":
     create_db()
