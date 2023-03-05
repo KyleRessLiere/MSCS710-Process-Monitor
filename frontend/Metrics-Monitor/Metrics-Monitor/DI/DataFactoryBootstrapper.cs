@@ -1,4 +1,5 @@
 ﻿using MetricsMonitorClient.DataServices.CPU;
+using MetricsMonitorClient.DataServices.Memory;
 using MetricsMonitorClient.DataServices.MonitorSystem;
 using Splat;
 using System;
@@ -14,6 +15,7 @@ namespace MetricsMonitorClient.DI
         public DataFactoryBootstrapper() {
             Locator.CurrentMutable.RegisterLazySingleton(() => new CPUDataFactory(), typeof(ICPUDataFactory));
             Locator.CurrentMutable.RegisterLazySingleton(() => new MonitorSystemFactory(), typeof(IMonitorSystemFactory));
+            Locator.CurrentMutable.RegisterLazySingleton(() => new MemoryFactory(), typeof(IMemoryFactory));
         }
     }
 }

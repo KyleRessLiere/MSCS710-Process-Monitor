@@ -2,8 +2,11 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace MetricsMonitorClient.ViewModels {
-    public class ViewModelBase : ReactiveObject {
+    public abstract class ViewModelBase : ReactiveObject {
+
     }
 }

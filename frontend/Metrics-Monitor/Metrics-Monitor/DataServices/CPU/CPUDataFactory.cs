@@ -12,19 +12,6 @@ using MetricsMonitorClient.Models.CPU;
 namespace MetricsMonitorClient.DataServices.CPU
 {
     public class CPUDataFactory : ICPUDataFactory {
-
-        
-
-        private CPUDataFactory _instance;
-        public CPUDataFactory Instance {
-            get {
-                if (_instance == null) {
-                    _instance = new CPUDataFactory();
-                }
-                return _instance;
-            }
-        }
-
         public IEnumerable<CPUD> GetAllRecords() {
             try {
                 var dtoList = new List<CPUDto> {

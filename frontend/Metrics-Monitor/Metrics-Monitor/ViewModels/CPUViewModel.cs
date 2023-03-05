@@ -66,6 +66,11 @@ namespace MetricsMonitorClient.ViewModels
             DataOptions.AddRange(DataOptionDict.Keys);
         }
 
+
+        public void TickClock() {
+            //do stuff
+        }
+
         #endregion Methods
     }
 }
