@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import ast
 import sqlite3
 from sqlite3 import Error
 
@@ -24,6 +25,8 @@ def get_cpu():
                 "soft_interrupts": i[8],
                 "syscalls": i[9]
             }
+            cpu_item['cpu_percentage_per_core'] = ast.literal_eval(cpu_item['cpu_percentage_per_core'])
+            cpu_item['cpu_count_virtual'] = ast.literal_eval(cpu_item['cpu_count_virtual'])
             cpu_list.append(cpu_item)
     except Error as e:
         print(e)
@@ -52,6 +55,8 @@ def get_cpu_by_id(cpu_id):
                 "soft_interrupts": cpu[8],
                 "syscalls": cpu[9]
             }
+        cpu_item['cpu_percentage_per_core'] = ast.literal_eval(cpu_item['cpu_percentage_per_core'])
+        cpu_item['cpu_count_virtual'] = ast.literal_eval(cpu_item['cpu_count_virtual'])
     except Error as e:
         print(e)
     finally:
