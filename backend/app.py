@@ -6,7 +6,7 @@ from monitor.monitor import poll_system
 from db.service import main_poll
 from db.db_init import *
 from sqlite3 import Error
-from api import polls, processes, memory, disks, network
+from api import polls, processes, memory, disks, network, cpu
 
 
 """
@@ -81,6 +81,14 @@ def api_get_network():
 @app.route('/api/network/<network_id>', methods=['GET'])
 def api_get_network_by_id(network_id):
     return memory.get_memory_by_id(network_id)
+
+@app.route('/api/cpu', methods=['GET'])
+def api_get_cpu():
+    return cpu.get_cpu()
+
+@app.route('/api/cpu/<cpu_id>', methods=['GET'])
+def api_get_cpu_by_id(cpu_id):
+    return cpu.get_cpu_by_id(cpu_id)
 
 
 if __name__ == "__main__":
