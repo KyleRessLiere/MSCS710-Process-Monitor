@@ -72,7 +72,7 @@ def api_get_disks():
 
 @app.route('/api/disks/<disk_id>', methods=['GET'])
 def api_get_disk_by_id(disk_id):
-    return memory.get_memory_by_id(disk_id)
+    return disks.get_disk_by_id(disk_id)
 
 @app.route('/api/network', methods=['GET'])
 def api_get_network():
@@ -80,7 +80,7 @@ def api_get_network():
 
 @app.route('/api/network/<network_id>', methods=['GET'])
 def api_get_network_by_id(network_id):
-    return memory.get_memory_by_id(network_id)
+    return network.get_network_by_id(network_id)
 
 @app.route('/api/cpu', methods=['GET'])
 def api_get_cpu():
