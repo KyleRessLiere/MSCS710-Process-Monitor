@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -23,6 +24,22 @@ def sensor(polling_rate):
         print(e)
         print("monitor fail")
         pass
+def schedule_poll(polling_rate,polling_duration):
+    sched.remove_all_jobs()
+    end_time = datetime.datetime.now() + datetime.timedelta(minutes=polling_duration / 60)  # run for 30 minutes
+    #TODO: maybe add mask instances
+    sched.add_job(sensor, args=[polling_rate], trigger='interval', minutes=polling_rate, end_date=end_time)
+    sched.add_listener(my_listener)
+
+    sched.start()
+
+def reset_poll():
+    sched.remove_all_jobs()
+    polling_rate = 0.07
+    sched = BackgroundScheduler(daemon=True)
+
+    sched.add_job(sensor,args=[polling_rate,'live'],trigger ='interval',minutes=polling_rate)
+    sched.start()
 
 
 """
@@ -30,6 +47,7 @@ Start monitoring at specified rate
 """
 polling_rate = 0.07
 sched = BackgroundScheduler(daemon=True)
+
 sched.add_job(sensor,args=[polling_rate],trigger ='interval',minutes=polling_rate)
 sched.start()
 
@@ -37,6 +55,17 @@ sched.start()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+@app.route('/api/schedule_poll', methods=['POST'])
+def handle_polling():
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No data received'}), 400
+    polling_rate = data.get('polling_rate')
+    polling_duration = data.get('polling_duration')
+    if polling_rate is None or polling_duration is None:
+        return jsonify({'error': 'Missing polling data'}), 400
+    # do something with the data, such as saving it to a database or using it to start a polling process
+    return jsonify({'message': f'Received polling data with rate {polling_rate} and duration {polling_duration}'})
 
 @app.route('/api/polls', methods=['GET'])
 def api_get_polls():
