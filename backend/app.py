@@ -15,25 +15,28 @@ run on percentage of minute intervals
 gets system info and loggs it
 TODO:add awaiting till db is created to prevent error
 """
-def sensor(polling_rate):
+def sensor(polling_rate, poll_type):
     try:
         poll = poll_system()
-        main_poll(poll,polling_rate, "live")
-        #print(json.dumps(poll, indent=4, sort_keys=False))
+        main_poll(poll, polling_rate, poll_type)
+        # print(json.dumps(poll, indent=4, sort_keys=False))
     except Exception as e:
         print(e)
         print("monitor fail")
         pass
+
 def schedule_poll(polling_rate,polling_duration):
-    sched.remove_all_jobs()
-    end_time = datetime.datetime.now() + datetime.timedelta(minutes=polling_duration / 60)  # run for 30 minutes
-    #TODO: maybe add mask instances
-    sched.add_job(sensor, args=[polling_rate], trigger='interval', minutes=polling_rate, end_date=end_time)
-    sched.add_listener(my_listener)
+   if not sched.running:
+        sched.remove_all_jobs()
+        end_time = datetime.datetime.now() + datetime.timedelta(minutes=polling_duration)  # run for 30 minutes
+        sched.add_job(sensor, args=[polling_rate,"scheduled"], trigger='interval', minutes=polling_rate, end_date=end_time)
+        #sched.add_listener(reset_poll)
+        sched.start()
+   else:
+        print("Scheduler is already running")
 
-    sched.start()
-
-def reset_poll():
+def reset_poll(event=None):
+    
     sched.remove_all_jobs()
     polling_rate = 0.07
     sched = BackgroundScheduler(daemon=True)
@@ -48,7 +51,7 @@ Start monitoring at specified rate
 polling_rate = 0.07
 sched = BackgroundScheduler(daemon=True)
 
-sched.add_job(sensor,args=[polling_rate],trigger ='interval',minutes=polling_rate)
+sched.add_job(sensor,args=[polling_rate,"live"],trigger ='interval',minutes=polling_rate)
 sched.start()
 
 
@@ -58,13 +61,10 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 @app.route('/api/schedule_poll', methods=['POST'])
 def handle_polling():
     data = request.json
-    if not data:
-        return jsonify({'error': 'No data received'}), 400
     polling_rate = data.get('polling_rate')
     polling_duration = data.get('polling_duration')
-    if polling_rate is None or polling_duration is None:
-        return jsonify({'error': 'Missing polling data'}), 400
-    # do something with the data, such as saving it to a database or using it to start a polling process
+    
+    schedule_poll(polling_rate, polling_duration)
     return jsonify({'message': f'Received polling data with rate {polling_rate} and duration {polling_duration}'})
 
 @app.route('/api/polls', methods=['GET'])
