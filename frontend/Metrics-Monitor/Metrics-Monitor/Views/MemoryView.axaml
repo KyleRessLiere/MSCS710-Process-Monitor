@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="using:MetricsMonitorClient.ViewModels.MemoryViewModel"
+			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              x:Class="MetricsMonitorClient.Views.MemoryView">
 	<Grid Classes="ContentGrid">
 		<Grid.RowDefinitions>
@@ -11,26 +12,15 @@
 			<RowDefinition Height=".85*"/>
 		</Grid.RowDefinitions>
 		<TextBlock Grid.Row="0" HorizontalAlignment="Center" Classes="h4" Foreground="{DynamicResource MM-Light}">Polls</TextBlock>
-
-		<DataGrid
-		Grid.Row="1"
-		Width="800"
-		Height="400"
-		VerticalAlignment="Center"
-		HorizontalAlignment="Center"
-		GridLinesVisibility="None"
-		RowBackground="DarkGray"
-		AlternatingRowBackground="DarkGray"
-		Foreground="{DynamicResource MM-Light}"
-		AutoGenerateColumns="False"
-		Items="{Binding UsagePolls,  Mode=OneWay}">
-			<DataGrid.Columns>
-				<DataGridTextColumn IsReadOnly="True" Header="ID" Binding="{Binding MemoryPollId}"/>
-				<DataGridTextColumn IsReadOnly="True" Header="Total Memory" Binding="{Binding total_memory}"/>
-				<DataGridTextColumn IsReadOnly="True" Header="Used Memory" Binding="{Binding used_memory}"/>
-				<DataGridTextColumn IsReadOnly="True" Header="Available Memory" Binding="{Binding available_memory}"/>
-				<DataGridTextColumn IsReadOnly="True" Header="Percentage Memory" Binding="{Binding percentage_memory}"/>
-			</DataGrid.Columns>
-		</DataGrid>
+		<lvc:CartesianChart
+			Grid.Row="1"
+			Series="{Binding MemoryPercentageGraph, Mode=OneWay}"
+			ZoomMode="X"
+			YAxes="{Binding YAxes}"
+			XAxes="{Binding XAxes}"
+			LegendPosition="Top"
+			LegendBackground="{DynamicResource MM-Light}"
+			>
+		</lvc:CartesianChart>
 	</Grid>
 </UserControl>

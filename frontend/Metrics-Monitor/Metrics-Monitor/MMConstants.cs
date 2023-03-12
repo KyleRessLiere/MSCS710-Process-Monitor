@@ -10,5 +10,6 @@ namespace MetricsMonitorClient {
         /// sleep period between clock ticks in milliseconds
         /// </summary>
         public const int SystemClockInterval = 500;
+        public const int PollBufferSize = 15;
     }
 }

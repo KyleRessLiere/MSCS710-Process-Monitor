@@ -42,6 +42,7 @@ namespace MetricsMonitorClient.ViewModels
                 Dispatcher.UIThread.InvokeAsync(() =>
                     Parallel.Invoke(() => MemoryViewModel.TickClock(),
                     () => CPUViewModel.TickClock()));
+                Console.WriteLine("Tick " + ClockCycle);
            }
         }
 

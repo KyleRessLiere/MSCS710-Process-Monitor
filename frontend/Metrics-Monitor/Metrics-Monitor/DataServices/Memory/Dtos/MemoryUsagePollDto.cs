@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace MetricsMonitorClient.DataServices.Memory.Dtos {
     public class MemoryUsagePollDto {
 
-        public decimal total_memory { get; set; }
-        public decimal used_memory { get; set; }
-        public decimal available_memory { get; set; }
-        public decimal percentage_memory { get; set; }
+        public double total_memory { get; set; }
+        public double used_memory { get; set; }
+        public double available_memory { get; set; }
+        public double percentage_memory { get; set; }
         public int MemoryPollId { get; set; }
 
     }
