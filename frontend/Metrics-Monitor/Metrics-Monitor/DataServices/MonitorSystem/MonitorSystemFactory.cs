@@ -32,7 +32,7 @@ namespace MetricsMonitorClient.DataServices.MonitorSystem {
         public IEnumerable<PollDTO> GetAllRecords() {
             try {
                 List<PollDTO>? polls = new List<PollDTO>();
-                using (StreamReader r = new StreamReader(@"C:\MM_TestData\polls.json")) {   //example file is in source control
+                using (StreamReader r = new StreamReader(@"C:\SANDBOX\mcapping\MSCS710-Process-Monitor\FrontEnd\Metrics-Monitor\Metrics-Monitor\DataServices\TEST_DATA\polls.json")) {   //example file is in source control
                     string json = r.ReadToEnd();
                     var dbItems = JsonConvert.DeserializeObject<List<PollDTO>>(json);
                     if (dbItems.Any()) {

@@ -34,20 +34,56 @@ namespace MetricsMonitorClient.ViewModels
         #region Properties
 
         public SemaphoreSlim ClockLock { get; private set; }
-
         public AvaloniaList<MemoryUsagePollDto> UsagePolls { get; }
 
-
-        private string testingText;
-        public string TestingText {
-            get { return testingText; }
-            set { this.RaiseAndSetIfChanged(ref testingText, value); }
+        private string _usedLabel;
+        public string UsedLabel {
+            get { return _usedLabel; }
+            set { this.RaiseAndSetIfChanged(ref _usedLabel, value); }
         }
 
-        private ObservableCollection<ISeries> _memoryPercentageGraph;
-        public ObservableCollection<ISeries> MemoryPercentageGraph {
-            get { return _memoryPercentageGraph; }
-            set { this.RaiseAndSetIfChanged(ref _memoryPercentageGraph, value); }
+        private string _availableLabel;
+        public string AvailableLabel {
+            get { return _availableLabel; }
+            set { this.RaiseAndSetIfChanged(ref _availableLabel, value); }
+        }
+
+        private string _totalLabel;
+        public string TotalLabel {
+            get { return _totalLabel; }
+            set { this.RaiseAndSetIfChanged(ref _totalLabel, value); }
+        }
+
+        private string _usedLabel;
+        public string UsedLabel {
+            get { return _usedLabel; }
+            set { this.RaiseAndSetIfChanged(ref _usedLabel, value); }
+        }
+
+        private ObservableCollection<ISeries> _usagePercentageGraph;
+        public ObservableCollection<ISeries> UsagePercentageGraph {
+            get { return _usagePercentageGraph; }
+            set { this.RaiseAndSetIfChanged(ref _usagePercentageGraph, value); }
+        }
+
+
+
+        private ObservableCollection<ISeries> _availablePercentageGraph;
+        public ObservableCollection<ISeries> AvailablePercentageGraph {
+            get { return _availablePercentageGraph; }
+            set { this.RaiseAndSetIfChanged(ref _availablePercentageGraph, value); }
+        }
+
+        private ObservableCollection<ISeries> _totalPercentageGraph;
+        public ObservableCollection<ISeries> TotalPercentageGraph {
+            get { return _totalPercentageGraph; }
+            set { this.RaiseAndSetIfChanged(ref _totalPercentageGraph, value); }
+        }
+
+        private ObservableCollection<ISeries> _usedPercentageGraph;
+        public ObservableCollection<ISeries> UsedPercentageGraph {
+            get { return _usedPercentageGraph; }
+            set { this.RaiseAndSetIfChanged(ref _usedPercentageGraph, value); }
         }
 
         public Axis[] YAxes { get; set; } =
@@ -62,7 +98,9 @@ namespace MetricsMonitorClient.ViewModels
                 Color = SKColors.AliceBlue,
             },
 
-            Labeler = Labelers.SevenRepresentativeDigits 
+            Labeler = Labelers.SevenRepresentativeDigits,
+            MinLimit = 0.0,
+            MaxLimit = 100
         }
     };
 
@@ -76,7 +114,8 @@ namespace MetricsMonitorClient.ViewModels
                 Color = SKColors.AliceBlue,
             },
 
-            Labeler = Labelers.SevenRepresentativeDigits
+            Labeler = Labelers.SevenRepresentativeDigits,
+            IsInverted = true
         }
     };
         #endregion Properties
@@ -88,6 +127,8 @@ namespace MetricsMonitorClient.ViewModels
             var poll = _memoryFactory.GetLatestMemoryPoll();
 
             if (poll == null) { return; }
+
+            UpdateCurrentStats(poll);
 
             UsagePolls.Add(poll);
 
@@ -106,8 +147,8 @@ namespace MetricsMonitorClient.ViewModels
         }
 
         public void InitGraph() {
-            MemoryPercentageGraph = new ObservableCollection<ISeries>
-           {
+            UsagePercentageGraph = new ObservableCollection<ISeries>
+            {
                 new LineSeries<ObservableValue>
                 {
                     Name = "Memory Usage Percentage",
@@ -115,8 +156,12 @@ namespace MetricsMonitorClient.ViewModels
                     ZIndex = 0,
                     LineSmoothness = 0,
                     EasingFunction = null,
-                    AnimationsSpeed = null
-                },
+                    AnimationsSpeed = TimeSpan.Zero
+                }
+
+            };
+            
+            AvailablePercentageGraph = new ObservableCollection<ISeries> {
                 new LineSeries<ObservableValue>
                 {
                     Name = "Available Memory",
@@ -124,17 +169,23 @@ namespace MetricsMonitorClient.ViewModels
                     ZIndex = 2,
                     LineSmoothness = 0,
                     EasingFunction = null,
-                    AnimationsSpeed = null
+                    AnimationsSpeed = TimeSpan.Zero
                 },
-                new LineSeries<ObservableValue>
+            };
+           
+            TotalPercentageGraph = new ObservableCollection<ISeries> {
+                   new LineSeries<ObservableValue>
                 {
                     Name = "Total Memory",
                     Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 0 },
                     ZIndex = 1,
                     LineSmoothness = 0,
                     EasingFunction = null,
-                    AnimationsSpeed = null
-                },
+                    AnimationsSpeed = TimeSpan.Zero
+                }
+            };
+
+            UsedPercentageGraph = new ObservableCollection<ISeries> {
                 new LineSeries<ObservableValue>
                 {
                     Name = "Used Memory",
@@ -142,19 +193,22 @@ namespace MetricsMonitorClient.ViewModels
                     ZIndex = 3,
                     LineSmoothness = 0,
                     EasingFunction = null,
-                    AnimationsSpeed = null
+                    AnimationsSpeed = TimeSpan.Zero
                 }
             };
         }
 
 
         public void UpdateGraphs() {
-           if(MemoryPercentageGraph == null || MemoryPercentageGraph.Count < 4 ) return;
 
-            MemoryPercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.percentage_memory });
-            MemoryPercentageGraph[1].Values = UsagePolls.Select(u => new ObservableValue { Value = u.available_memory });
-            MemoryPercentageGraph[2].Values = UsagePolls.Select(u => new ObservableValue { Value = u.total_memory });
-            MemoryPercentageGraph[3].Values = UsagePolls.Select(u => new ObservableValue { Value = u.used_memory });
+            UsagePercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.percentage_memory });
+            AvailablePercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.available_memory });
+            TotalPercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.total_memory });
+            UsedPercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.used_memory });
+        }
+
+        public void UpdateCurrentStats(MemoryUsagePollDto poll) {
+
         }
 
         #endregion Methods

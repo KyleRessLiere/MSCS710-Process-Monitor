@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 namespace MetricsMonitorClient.DataServices.Memory {
     public class MemoryFactory : IMemoryFactory {
 
+        public MemoryFactory(ILogger logger) {
+            this._logger = logger;
+        }
+
+        private readonly ILogger _logger;
 
         public List<MemoryUsagePollDto> MemoryUsagePolls { get; set; }
         private int index;
@@ -45,6 +50,7 @@ namespace MetricsMonitorClient.DataServices.Memory {
                     }
                 }
             } catch (Exception ex) {
+                _logger.Write($"an error occured.\n{ex.Message}", LogLevel.Error);
                 throw;
             }
         }

@@ -12,9 +12,44 @@
 			<RowDefinition Height=".85*"/>
 		</Grid.RowDefinitions>
 		<TextBlock Grid.Row="0" HorizontalAlignment="Center" Classes="h4" Foreground="{DynamicResource MM-Light}">Polls</TextBlock>
+		
+		<!-- charts -->
+		<Grid Grid.Row="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height=".5*"/>
+				<RowDefinition Height=".5*"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width=".5*"/>
+				<ColumnDefinition Width=".5*"/>
+			</Grid.ColumnDefinitions>
+			
+			
+			<Grid Grid.Row="0" Grid.Column="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height=".18*"/>
+					<RowDefinition Height=".82*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width=".7*"/>
+					<ColumnDefinition Width=".3*"/>
+				</Grid.ColumnDefinitions>
+				<Label Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0">Percentage Used: </Label>
+				<TextBlock Classes="h6" Text="{Binding LastMemoryPoll.used_memory}" Grid.Row="0" Grid.Column="1"/>
+				<lvc:CartesianChart
+							Grid.Row="1"
+							Grid.Column="0"
+							Grid.ColumnSpan="2"
+							Series="{Binding UsagePercentageGraph, Mode=OneWay}"
+							ZoomMode="X"
+							YAxes="{Binding YAxes}"
+							XAxes="{Binding XAxes}">
+				</lvc:CartesianChart>
+			</Grid>
 		<lvc:CartesianChart
-			Grid.Row="1"
-			Series="{Binding MemoryPercentageGraph, Mode=OneWay}"
+			Grid.Row="0"
+			Grid.Column="1"
+			Series="{Binding AvailablePercentageGraph, Mode=OneWay}"
 			ZoomMode="X"
 			YAxes="{Binding YAxes}"
 			XAxes="{Binding XAxes}"
@@ -22,5 +57,29 @@
 			LegendBackground="{DynamicResource MM-Light}"
 			>
 		</lvc:CartesianChart>
+		<lvc:CartesianChart
+			Grid.Row="1"
+			Grid.Column="0"
+			Series="{Binding TotalPercentageGraph, Mode=OneWay}"
+			ZoomMode="X"
+			YAxes="{Binding YAxes}"
+			XAxes="{Binding XAxes}"
+			LegendPosition="Top"
+			LegendBackground="{DynamicResource MM-Light}"
+			>
+		</lvc:CartesianChart>
+		<lvc:CartesianChart
+			Grid.Row="1"
+			Grid.Column="1"
+			Series="{Binding UsedPercentageGraph, Mode=OneWay}"
+			ZoomMode="X"
+			YAxes="{Binding YAxes}"
+			XAxes="{Binding XAxes}"
+			LegendPosition="Top"
+			LegendBackground="{DynamicResource MM-Light}"
+			>
+		</lvc:CartesianChart>
+		</Grid>
+	<!-- end charts-->
 	</Grid>
 </UserControl>
