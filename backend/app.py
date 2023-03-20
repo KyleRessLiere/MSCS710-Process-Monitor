@@ -8,7 +8,9 @@ from db.service import main_poll
 from db.db_init import *
 from sqlite3 import Error
 from api import polls, processes, memory, disks, network, cpu
-
+import time
+from datetime import datetime, timedelta
+from apscheduler.triggers.date import DateTrigger
 
 """
 run on percentage of minute intervals
@@ -25,24 +27,32 @@ def sensor(polling_rate, poll_type):
         print("monitor fail")
         pass
 
-def schedule_poll(polling_rate,polling_duration):
-   if not sched.running:
-        sched.remove_all_jobs()
-        end_time = datetime.datetime.now() + datetime.timedelta(minutes=polling_duration)  # run for 30 minutes
-        sched.add_job(sensor, args=[polling_rate,"scheduled"], trigger='interval', minutes=polling_rate, end_date=end_time)
-        #sched.add_listener(reset_poll)
-        sched.start()
-   else:
-        print("Scheduler is already running")
+def schedule_custom_poll(polling_rate, duration):
+    global sched
+    global custom_poll_job
 
-def reset_poll(event=None):
-    
-    sched.remove_all_jobs()
-    polling_rate = 0.07
-    sched = BackgroundScheduler(daemon=True)
+    # Remove existing custom_poll_job if exists
+    if custom_poll_job:
+        sched.remove_job(custom_poll_job.id)
 
-    sched.add_job(sensor,args=[polling_rate,'live'],trigger ='interval',minutes=polling_rate)
-    sched.start()
+    # Create a new job with custom polling rate and duration
+    custom_poll_job = sched.add_job(sensor, args=[polling_rate, "custom"], trigger='interval', minutes=polling_rate)
+
+    # Schedule the job to stop after the specified duration
+    stop_time = datetime.now() + timedelta(minutes=duration)
+    sched.add_job(stop_custom_poll, trigger=DateTrigger(stop_time))
+
+
+def stop_custom_poll():
+    global custom_poll_job
+
+    if custom_poll_job:
+        sched.remove_job(custom_poll_job.id)
+        custom_poll_job = None
+
+
+# Initialize custom_poll_job to None
+custom_poll_job = None
 
 
 """
@@ -60,12 +70,15 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/api/schedule_poll', methods=['POST'])
 def handle_polling():
-    data = request.json
-    polling_rate = data.get('polling_rate')
-    polling_duration = data.get('polling_duration')
+    polling_rate = request.json.get("polling_rate")
+    duration = request.json.get("duration")
+
+    if polling_rate is not None and duration is not None:
+        schedule_custom_poll(polling_rate, duration)
+        return jsonify({"message": "Polling scheduled successfully"})
+    else:
+        return jsonify({"message": "Invalid request"}), 400
     
-    schedule_poll(polling_rate, polling_duration)
-    return jsonify({'message': f'Received polling data with rate {polling_rate} and duration {polling_duration}'})
 
 @app.route('/api/polls', methods=['GET'])
 def api_get_polls():
