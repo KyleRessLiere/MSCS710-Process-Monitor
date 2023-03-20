@@ -30,6 +30,11 @@ def sensor(polling_rate, poll_type):
 def schedule_custom_poll(polling_rate, duration):
     global sched
     global custom_poll_job
+    global live_poll_job
+
+    # Stop the live polling job
+    if live_poll_job:
+        sched.remove_job(live_poll_job.id)
 
     # Remove existing custom_poll_job if exists
     if custom_poll_job:
@@ -45,10 +50,14 @@ def schedule_custom_poll(polling_rate, duration):
 
 def stop_custom_poll():
     global custom_poll_job
+    global live_poll_job
 
     if custom_poll_job:
         sched.remove_job(custom_poll_job.id)
         custom_poll_job = None
+
+    # Resume the live polling job
+    live_poll_job = sched.add_job(sensor, args=[polling_rate, "live"], trigger='interval', minutes=polling_rate)
 
 
 # Initialize custom_poll_job to None
@@ -61,7 +70,7 @@ Start monitoring at specified rate
 polling_rate = 0.07
 sched = BackgroundScheduler(daemon=True)
 
-sched.add_job(sensor,args=[polling_rate,"live"],trigger ='interval',minutes=polling_rate)
+live_poll_job = sched.add_job(sensor,args=[polling_rate,"live"],trigger ='interval',minutes=polling_rate)
 sched.start()
 
 
