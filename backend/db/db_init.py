@@ -1,6 +1,6 @@
 import sqlite3
 from sqlite3 import Error
-
+import os
 
 def create_connection(db_file):
     """ create a database connection to the SQLite database """
@@ -24,7 +24,7 @@ def create_table(conn, create_table_sql):
 
 
 def create_db():
-    database = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'MMM-SQLite.db')
+    database = r('./MMM-SQLite.db')
 
 
     sql_create_polls_table = """ CREATE TABLE IF NOT EXISTS polls (
