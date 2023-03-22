@@ -6,7 +6,7 @@ from sqlite3 import Error
 def get_memory():
     memory_list = []
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM memory")
@@ -31,7 +31,7 @@ def get_memory():
 def get_memory_by_id(memory_id):
     memory = {}
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (memory_id,))

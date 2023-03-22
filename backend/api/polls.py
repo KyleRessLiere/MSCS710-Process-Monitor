@@ -7,7 +7,7 @@ from sqlite3 import Error
 def get_polls():
     poll_list = []
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM polls")
@@ -30,7 +30,7 @@ def get_polls():
 def get_poll_by_id(poll_id):
     poll = {}
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM polls WHERE poll_id = ?", (poll_id,))

@@ -6,7 +6,7 @@ from sqlite3 import Error
 def get_processes():
     process_list = []
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM processes")
@@ -32,7 +32,7 @@ def get_processes():
 def get_processes_by_id(process_id):
     process_list = []
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM processes WHERE process_id = ?", (process_id,))
@@ -58,7 +58,7 @@ def get_processes_by_id(process_id):
 def get_latest_process_by_id(process_id):
     latest_process = {}
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM processes WHERE process_id = ? ORDER BY poll_id DESC LIMIT 1", (process_id,))

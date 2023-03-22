@@ -7,7 +7,7 @@ from sqlite3 import Error
 def get_cpu():
     cpu_list = []
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM cpu")
@@ -38,7 +38,7 @@ def get_cpu():
 def get_cpu_by_id(cpu_id):
     cpu = {}
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM cpu WHERE cpu_id = ?", (cpu_id,))

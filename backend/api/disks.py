@@ -6,7 +6,7 @@ from sqlite3 import Error
 def get_disks():
     disk_list = []
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM disks")
@@ -31,7 +31,7 @@ def get_disks():
 def get_disk_by_id(disk_id):
     disk = {}
     try:
-        db_file = r"./db/MMM-SQLite.db"
+        db_file = r'./MMM-SQLite.db'
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (disk_id,))
