@@ -24,7 +24,7 @@ def create_table(conn, create_table_sql):
 
 
 def create_db():
-    database = r('./MMM-SQLite.db')
+    database = r'./MMM-SQLite.db'
 
 
     sql_create_polls_table = """ CREATE TABLE IF NOT EXISTS polls (
