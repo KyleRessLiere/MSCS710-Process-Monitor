@@ -24,7 +24,8 @@ def create_table(conn, create_table_sql):
 
 
 def create_db():
-    database = r"./db/MMM-SQLite.db"
+    database = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'MMM-SQLite.db')
+
 
     sql_create_polls_table = """ CREATE TABLE IF NOT EXISTS polls (
                                         poll_id integer PRIMARY KEY,

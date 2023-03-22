@@ -118,7 +118,8 @@ def main_poll(poll,polling_rate, poll_type):
     :param polling rate
     """
     #database path
-    database = r"./db/MMM-SQLite.db"
+    database = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'MMM-SQLite.db')
+
 
     # create a database connection
     conn = create_connection(database)
