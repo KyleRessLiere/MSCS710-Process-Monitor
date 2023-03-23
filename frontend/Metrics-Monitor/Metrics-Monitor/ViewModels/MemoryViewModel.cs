@@ -124,7 +124,7 @@ namespace MetricsMonitorClient.ViewModels
 
         private void GetLatestPoll() {
             
-            var poll = _memoryFactory.GetLatestMemoryPoll();
+            var poll = Task.Run(() => _memoryFactory.GetLatestMemoryPollAsync()).Result;
 
             if (poll == null) { return; }
 
@@ -140,7 +140,7 @@ namespace MetricsMonitorClient.ViewModels
 
         }
 
-        public void TickClock() {
+        public void  TickClock() {
             ClockLock.Wait();
             GetLatestPoll();
             ClockLock.Release();
@@ -208,6 +208,7 @@ namespace MetricsMonitorClient.ViewModels
             AvailablePercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.available_memory });
             TotalPercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.total_memory });
             UsedPercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.used_memory });
+
         }
 
         public void UpdateCurrentStats(MemoryUsagePollDto poll) {
