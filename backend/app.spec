@@ -8,7 +8,7 @@ a = Analysis(
     ['app.py'],
     pathex=[],
     binaries=[],
-    datas=[('MMM-SQLite.db', 'db')],
+    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
