@@ -48,7 +48,6 @@ def insert_network(conn, network):
     conn.commit()
     return cur.lastrowid
 
-   
 
 def insert_disk(conn, disk):
     """
@@ -125,8 +124,8 @@ def main_poll(poll,polling_rate, poll_type):
     conn = create_connection(database)
     # with conn:
         # log a poll
-        
-       
+
+
     """
     INSERT poll_data
     """
@@ -141,7 +140,6 @@ def main_poll(poll,polling_rate, poll_type):
     INSERT disk
     """
     disk = poll["disk"]
-    
     disk_data = (poll_id,disk["disk_total"],disk["disk_used"],disk["disk_free"],disk["disk_percent"])
     insert_disk(conn, disk_data)
 
@@ -151,7 +149,7 @@ def main_poll(poll,polling_rate, poll_type):
     memory = poll["memory"]
     memory_data = (poll_id,memory["total_memory"], memory["used_memory"], memory["available_memory"], memory["percentage_memory"])
     insert_memory(conn, memory_data)
-    
+
     """
     INSERT network
     """
@@ -159,28 +157,25 @@ def main_poll(poll,polling_rate, poll_type):
     for n in network_list:
         network_data = (poll_id,n["network"], n["status"], n["speed"])
         insert_network(conn, network_data)
-    
+
     """
     INSERT CPU
     TODO:get more cpu info
     """
     cpu = poll["cpu"]
-   
     cpu_data = ( poll_id,cpu["cpu_sum_percentage"], str(cpu["cpu_percentage_by_core"]),   str(cpu["cpu_load_average"]),  cpu["cpu_count_virtual"],  cpu["cpu_count_physical"],  cpu["cpu_ctx_switches"],cpu["interrupts"],   cpu["soft_interrupts"], cpu["syscalls"] )
-
     insert_cpu(conn, cpu_data)
-    
+
     """
     INSERT process
     """
     process_list = poll["process"]
-
     for p in process_list:
         process_data = (poll_id,p["pid"],p["process_name"],p["status"],p["cpu_percent"],p["num_thread"],p["memory_mb"])
         insert_process(conn, process_data)
         #print("Poll ID: {}, and Process ID: {} have been logged in SQLite DB".format(poll_id, p["pid"]))
 
-   
+
 test_poll = {
   "process": [
     {
