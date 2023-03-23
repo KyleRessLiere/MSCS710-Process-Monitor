@@ -36,10 +36,10 @@ namespace MetricsMonitorClient.ViewModels
         public SemaphoreSlim ClockLock { get; private set; }
         public AvaloniaList<MemoryUsagePollDto> UsagePolls { get; }
 
-        private string _usedLabel;
-        public string UsedLabel {
-            get { return _usedLabel; }
-            set { this.RaiseAndSetIfChanged(ref _usedLabel, value); }
+        private string _usageLabel;
+        public string UsageLabel {
+            get { return _usageLabel; }
+            set { this.RaiseAndSetIfChanged(ref _usageLabel, value); }
         }
 
         private string _availableLabel;
@@ -196,11 +196,14 @@ namespace MetricsMonitorClient.ViewModels
                     AnimationsSpeed = TimeSpan.Zero
                 }
             };
+            UsagePercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
+            AvailablePercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
+            TotalPercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
+            UsedPercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
         }
 
 
         public void UpdateGraphs() {
-
             UsagePercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.percentage_memory });
             AvailablePercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.available_memory });
             TotalPercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.total_memory });
