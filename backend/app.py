@@ -11,7 +11,7 @@ from api import polls, processes, memory, disks, network, cpu
 
 """
 run on percentage of minute intervals
-gets system info and loggs it
+gets system info and logs it
 TODO:add awaiting till db is created to prevent error
 """
 def sensor(polling_rate):
@@ -78,6 +78,10 @@ def api_get_polls():
 @app.route('/api/polls/<poll_id>', methods=['GET'])
 def api_get_poll_by_poll_id(poll_id):
     return polls.get_poll_by_poll_id(poll_id)
+
+@app.route('/api/polls/<start_time>/<end_time>', methods=['GET'])
+def api_get_poll_by_time_interval(start_time, end_time):
+    return polls.get_polls_by_time_interval(start_time, end_time)
 
 @app.route('/api/processes', methods=['GET'])
 def api_get_processes():
