@@ -28,10 +28,10 @@ namespace MetricsMonitorClient.ViewModels
             _cpuDataFactory = cpuDataFactory;
             _monitorSystemFactory = monitorSystemFactory;
             _memoryFactory = memoryFactory;
-            CPUViewModel = new CPUViewModel(_cpuDataFactory);
-            MemoryViewModel = new MemoryViewModel(_memoryFactory);
-            StorageViewModel = new StorageViewModel();
-            HomeViewModel = new HomeViewModel(_monitorSystemFactory);
+            CPUViewModel =  ObjectFactory.CreateObject<CPUViewModel>();
+            MemoryViewModel = ObjectFactory.CreateObject<MemoryViewModel>();
+            StorageViewModel = ObjectFactory.CreateObject<StorageViewModel>();
+            HomeViewModel = ObjectFactory.CreateObject<HomeViewModel>();
             //ResourceText = "Overview";
             SelectedResourceIndex = (int)ResourceTabIndex.Memory;
             uiClock = new Timer(MMConstants.SystemClockInterval);
@@ -43,14 +43,16 @@ namespace MetricsMonitorClient.ViewModels
 
         #endregion Constructor
         #region Properties
-        //private void MainWindowViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
-        //   if(e.PropertyName == nameof(ClockCycle)) {
-        //        Invo
-
-        //        DispatcherInvokeAsync(() =>
-                    
-        //   }
-        //}
+        private void MainWindowViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
+           if(e.PropertyName == nameof(ClockCycle)) {
+              
+                
+                Dispatcher.UIThread.InvokeAsync(() =>
+                    Parallel.Invoke(() => MemoryViewModel.TickClock(),
+                    () => CPUViewModel.TickClock()));
+                Console.WriteLine("Tick " + ClockCycle);
+           }
+        }
 
         private long _clockCycle;
         public long ClockCycle {

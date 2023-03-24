@@ -17,16 +17,8 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace MetricsMonitorClient.DataServices.MonitorSystem {
     public class MonitorSystemFactory : IMonitorSystemFactory {
-        private MonitorSystemFactory _instance;
-        public MonitorSystemFactory Instance {
-            get {
-                if (_instance == null) {
-                    _instance = new MonitorSystemFactory();
-                }
-                return _instance;
-            }
-        }
 
+        public MonitorSystemFactory() { }
 
 
         public IEnumerable<PollDTO> GetAllRecords() {
@@ -36,10 +28,10 @@ namespace MetricsMonitorClient.DataServices.MonitorSystem {
                     string json = r.ReadToEnd();
                     var dbItems = JsonConvert.DeserializeObject<List<PollDTO>>(json);
                     if (dbItems.Any()) {
-                       polls.AddRange(dbItems);
+                        polls.AddRange(dbItems);
                     }
                 }
-            return polls;
+                return polls;
             } catch (Exception ex) {
                 throw;
             }

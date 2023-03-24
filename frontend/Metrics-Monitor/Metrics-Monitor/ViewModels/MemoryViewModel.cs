@@ -36,10 +36,10 @@ namespace MetricsMonitorClient.ViewModels
         public SemaphoreSlim ClockLock { get; private set; }
         public AvaloniaList<MemoryUsagePollDto> UsagePolls { get; }
 
-        private string _usageLabel;
-        public string UsageLabel {
-            get { return _usageLabel; }
-            set { this.RaiseAndSetIfChanged(ref _usageLabel, value); }
+        private string _usedPctLabel;
+        public string UsedPctLabel {
+            get { return _usedPctLabel; }
+            set { this.RaiseAndSetIfChanged(ref _usedPctLabel, value); }
         }
 
         private string _availableLabel;
@@ -86,21 +86,36 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref _usedPercentageGraph, value); }
         }
 
-        public Axis[] YAxes { get; set; } =
+        public Axis[] YAxesPct { get; set; } =
         {
         new Axis
         {
             Name = "Percentage",
             NamePadding = new LiveChartsCore.Drawing.Padding(0, 5),
-
             LabelsPaint = new SolidColorPaint
             {
                 Color = SKColors.AliceBlue,
             },
-
             Labeler = Labelers.SevenRepresentativeDigits,
             MinLimit = 0.0,
             MaxLimit = 100
+        }
+    };
+
+
+        public Axis[] YAxes { get; set; } =
+        {
+        new Axis
+        {
+            Name = "Amount Gb",
+            NamePadding = new LiveChartsCore.Drawing.Padding(0, 5),
+            LabelsPaint = new SolidColorPaint
+            {
+                Color = SKColors.AliceBlue,
+            },
+            Labeler = Labelers.SevenRepresentativeDigits,
+            MinLimit = 0.0,
+            MaxLimit = 50
         }
     };
 
@@ -202,6 +217,9 @@ namespace MetricsMonitorClient.ViewModels
             UsedPercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
         }
 
+        public void UpdateCurrentStats(MemoryUsagePollDto poll) {
+
+        }
 
         public void UpdateGraphs() {
             UsagePercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.percentage_memory });
@@ -210,11 +228,6 @@ namespace MetricsMonitorClient.ViewModels
             UsedPercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.used_memory });
 
         }
-
-        public void UpdateCurrentStats(MemoryUsagePollDto poll) {
-
-        }
-
         #endregion Methods
     }
 }
