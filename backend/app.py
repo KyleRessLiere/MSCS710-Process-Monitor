@@ -38,6 +38,17 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
+@app.route('/api/metrics', methods=['GET'])
+def api_get_latest_metrics():
+    metrics = {}
+    metrics['poll'] = polls.get_latest_poll()
+    metrics['process'] = processes.get_latest_process()
+    metrics['network'] = network.get_latest_network()
+    metrics['disk'] = disks.get_latest_disk()
+    metrics['memory'] = memory.get_latest_memory()
+    metrics['cpu'] = cpu.get_latest_cpu()
+    return metrics
+
 @app.route('/api/polls', methods=['GET'])
 def api_get_polls():
     return polls.get_polls()

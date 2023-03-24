@@ -63,3 +63,32 @@ def get_cpu_by_id(cpu_id):
         if conn:
             conn.close()
     return cpu_item
+
+def get_latest_cpu():
+    cpu_item = {}
+    try:
+        db_file = r"./db/MMM-SQLite.db"
+        conn = sqlite3.connect(db_file)
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM cpu ORDER BY poll_id DESC LIMIT 1")
+        latest_cpu = res.fetchone()
+        cpu_item = {
+                "cpu_id": latest_cpu[0],
+                "poll_id": latest_cpu[1],
+                "cpu_percent": latest_cpu[2],
+                "cpu_percentage_per_core": latest_cpu[3],
+                "cpu_count_virtual": latest_cpu[4],
+                "cpu_count_physical": latest_cpu[5],
+                "cpu_ctx_switches": latest_cpu[6],
+                "interrupts": latest_cpu[7],
+                "soft_interrupts": latest_cpu[8],
+                "syscalls": latest_cpu[9]
+            }
+        cpu_item['cpu_percentage_per_core'] = ast.literal_eval(cpu_item['cpu_percentage_per_core'])
+        cpu_item['cpu_count_virtual'] = ast.literal_eval(cpu_item['cpu_count_virtual'])
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+    return cpu_item
