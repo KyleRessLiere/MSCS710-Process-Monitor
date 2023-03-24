@@ -28,13 +28,36 @@ def get_disks():
             conn.close()
     return disk_list
 
-def get_disk_by_id(disk_id):
+def get_disk_by_disk_id(disk_id):
     disk = {}
     try:
         db_file = r"./db/MMM-SQLite.db"
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (disk_id,))
+        disk = res.fetchone()
+        disk = {
+                "disk_id": disk[0],
+                "poll_id": disk[1],
+                "disk_total": disk[2],
+                "disk_used": disk[3],
+                "disk_free": disk[4],
+                "disk_percentage": disk[5]
+            }
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+    return disk
+
+def get_disk_by_poll_id(poll_id):
+    disk = {}
+    try:
+        db_file = r"./db/MMM-SQLite.db"
+        conn = sqlite3.connect(db_file)
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM memory WHERE poll_id = ?", (poll_id,))
         disk = res.fetchone()
         disk = {
                 "disk_id": disk[0],

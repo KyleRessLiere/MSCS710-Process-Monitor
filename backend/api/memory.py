@@ -28,13 +28,36 @@ def get_memory():
             conn.close()
     return memory_list
 
-def get_memory_by_id(memory_id):
+def get_memory_by_memory_id(memory_id):
     memory = {}
     try:
         db_file = r"./db/MMM-SQLite.db"
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (memory_id,))
+        memory = res.fetchone()
+        memory = {
+                "memory_id": memory[0],
+                "poll_id": memory[1],
+                "total_memory": memory[2],
+                "available_memory": memory[3],
+                "used_memory": memory[4],
+                "percentage_used": memory[5]
+            }
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+    return memory
+
+def get_memory_by_poll_id(poll_id):
+    memory = {}
+    try:
+        db_file = r"./db/MMM-SQLite.db"
+        conn = sqlite3.connect(db_file)
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM memory WHERE poll_id = ?", (poll_id,))
         memory = res.fetchone()
         memory = {
                 "memory_id": memory[0],

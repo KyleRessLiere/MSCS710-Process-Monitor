@@ -27,7 +27,7 @@ def get_polls():
             conn.close()
     return poll_list
 
-def get_poll_by_id(poll_id):
+def get_poll_by_poll_id(poll_id):
     poll = {}
     try:
         db_file = r"./db/MMM-SQLite.db"

@@ -29,7 +29,7 @@ def get_processes():
             conn.close()
     return process_list
 
-def get_processes_by_id(process_id):
+def get_processes_by_process_id(process_id):
     process_list = []
     try:
         db_file = r"./db/MMM-SQLite.db"
@@ -79,7 +79,7 @@ def get_latest_process():
             conn.close()
     return latest_process
 
-def get_latest_process_by_id(process_id):
+def get_latest_process_by_process_id(process_id):
     latest_process = {}
     try:
         db_file = r"./db/MMM-SQLite.db"
@@ -102,3 +102,27 @@ def get_latest_process_by_id(process_id):
         if conn:
             conn.close()
     return latest_process
+
+def get_process_by_poll_id(poll_id):
+    process = {}
+    try:
+        db_file = r"./db/MMM-SQLite.db"
+        conn = sqlite3.connect(db_file)
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM processes WHERE poll_id = ?", (poll_id,))
+        process = res.fetchone()
+        process = {
+                    "poll_id": process[0],
+                    "process_id": process[1],
+                    "process_name": process[2],
+                    "process_status": process[3],
+                    "cpu_percent": process[4],
+                    "num_thread": process[5],
+                    "memory_usage": process[6]
+                }
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+    return process
