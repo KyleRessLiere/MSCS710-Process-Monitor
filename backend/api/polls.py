@@ -126,3 +126,55 @@ def get_polls_by_time_interval(start_time, end_time):
         if conn:
             conn.close()
     return poll_list
+
+
+def get_metrics_by_time_interval(start_time, end_time):
+
+    if len(start_time) == 19:
+        try:
+            start_dt = datetime.datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+            end_dt = datetime.datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
+        except ValueError as e:
+            raise ValueError("Invalid timestamp format. Expected format: YYYY-mm-dd HH-MM-SS")
+    elif len(start_time) == 16:
+        try:
+            start_dt = datetime.datetime.strptime(start_time, '%Y-%m-%d %H:%M')
+            start_dt = start_dt.replace(second=0)
+            end_dt = datetime.datetime.strptime(end_time, '%Y-%m-%d %H:%M')
+            end_dt = end_dt.replace(second=59)
+        except ValueError as e:
+            raise ValueError("Invalid timestamp format. Expected format: YYYY-mm-dd HH-MM")
+    elif len(start_time) == 13:
+        try:
+            start_dt = datetime.datetime.strptime(start_time, '%Y-%m-%d %H')
+            start_dt = start_dt.replace(minute=0,second=0)
+            end_dt = datetime.datetime.strptime(end_time, '%Y-%m-%d %H')
+            end_dt = end_dt.replace(minute=59,second=59)
+        except ValueError as e:
+            raise ValueError("Invalid timestamp format. Expected format: YYYY-mm-dd HH")
+    elif len(start_time) == 10:
+        try:
+            start_dt = datetime.datetime.strptime(start_time, '%Y-%m-%d')
+            start_dt = start_dt.replace(hour=0,minute=0,second=0)
+            end_dt = datetime.datetime.strptime(end_time, '%Y-%m-%d')
+            end_dt = end_dt.replace(hour=23,minute=59,second=59)
+        except ValueError as e:
+            raise ValueError("Invalid timestamp format. Expected format: YYYY-mm-dd")
+    else:
+        raise ValueError("Invalid timestamp format. Expected format: YYYY-mm-dd HH-MM-SS")
+
+    poll_ids = []
+    try:
+        db_file = r"./db/MMM-SQLite.db"
+        conn = sqlite3.connect(db_file)
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM polls WHERE time BETWEEN ? AND ?", (start_dt, end_dt))
+        polls = res.fetchall()
+        for i in polls:
+            poll_ids.append(i[0])
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+    return poll_ids

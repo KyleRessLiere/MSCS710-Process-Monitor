@@ -71,6 +71,21 @@ def api_get_metrics_by_poll_id(poll_id):
     metrics['cpu'] = cpu.get_cpu_by_poll_id(poll_id)
     return metrics
 
+@app.route('/api/metrics/<start_time>/<end_time>', methods=['GET'])
+def api_get_metrics_by_time_interval(start_time, end_time):
+    metrics_list = []
+    polls_ids = polls.get_metrics_by_time_interval(start_time, end_time)
+    for poll_id in polls_ids:
+        metrics = {}
+        metrics['poll'] = polls.get_poll_by_poll_id(poll_id)
+        metrics['process'] = processes.get_process_by_poll_id(poll_id)
+        metrics['network'] = network.get_network_by_poll_id(poll_id)
+        metrics['disk'] = disks.get_disk_by_poll_id(poll_id)
+        metrics['memory'] = memory.get_memory_by_poll_id(poll_id)
+        metrics['cpu'] = cpu.get_cpu_by_poll_id(poll_id)
+        metrics_list.append(metrics)
+    return metrics_list
+
 @app.route('/api/polls', methods=['GET'])
 def api_get_polls():
     return polls.get_polls()
