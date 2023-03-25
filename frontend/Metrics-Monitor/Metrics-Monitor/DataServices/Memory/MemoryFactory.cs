@@ -12,18 +12,35 @@ using System.Threading.Tasks;
 
 namespace MetricsMonitorClient.DataServices.Memory {
     public class MemoryFactory : IMemoryFactory {
-
+        private readonly ILogger _logger;
         public MemoryFactory(ILogger logger) {
             this._logger = logger;
         }
+        public async Task<MemoryUsagePollDto> GetLatestMemoryPollAsync() {
+            try {
+                using (var client = new HttpClient()) {
 
+                    var response = await client.GetAsync(MMConstants.BaseApiUrl + "/memory/latest");
 
+                    if (response?.IsSuccessStatusCode ?? false) {
+                        var responseContent = await response.Content.ReadAsStringAsync();
 
-        private readonly ILogger _logger;
-        public MemoryFactory() {
+                        var result = JsonConvert.DeserializeObject<MemoryUsagePollDto>(responseContent);
+
+                        return result;
+                    }
+
+                   throw new HttpRequestException("An Error occured making a get request");
+                }
+            } catch(Exception ex) {
+                _logger.Write($"an error occurred.\n{ex.Message}", LogLevel.Error);
+                throw;
+            }
         }
 
-        public async Task<MemoryUsagePollDto> GetLatestMemoryPollAsync() {
+
+
+        public async Task<IEnumerable<MemoryUsagePollDto>> GetAllMemoryPollsAsync() {
             try {
                 using (var client = new HttpClient()) {
 
@@ -34,12 +51,12 @@ namespace MetricsMonitorClient.DataServices.Memory {
 
                         var result = JsonConvert.DeserializeObject<List<MemoryUsagePollDto>>(responseContent);
 
-                        return result.OrderByDescending(p => p.poll_id).FirstOrDefault();
+                        return result.OrderByDescending(p => p.poll_id);
                     }
 
-                   throw new HttpRequestException("An Error occured making a get request");
+                    throw new HttpRequestException("An Error occured making a get request");
                 }
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 _logger.Write($"an error occurred.\n{ex.Message}", LogLevel.Error);
                 throw;
             }

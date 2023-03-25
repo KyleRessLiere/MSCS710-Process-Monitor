@@ -1,3 +1,4 @@
 title MetricsMonitorService
-cd ../../../backend
+cd ../../../../../backend
 python app.py
+cmd /k

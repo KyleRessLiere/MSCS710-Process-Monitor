@@ -8,13 +8,11 @@
              x:Class="MetricsMonitorClient.Views.MemoryView">
 	<Grid Classes="ContentGrid">
 		<Grid.RowDefinitions>
-			<RowDefinition Height=".15*"/>
 			<RowDefinition Height=".85*"/>
 		</Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" HorizontalAlignment="Center" Classes="h4" Foreground="{DynamicResource MM-Light}">Polls</TextBlock>
 		
 		<!-- charts -->
-		<Grid Grid.Row="1">
+		<Grid >
 			<Grid.RowDefinitions>
 				<RowDefinition Height=".5*"/>
 				<RowDefinition Height=".5*"/>
@@ -34,15 +32,14 @@
 					<ColumnDefinition Width=".7*"/>
 					<ColumnDefinition Width=".3*"/>
 				</Grid.ColumnDefinitions>
-				<Label Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0">Percentage Used: </Label>
-				<TextBlock Classes="h6" Text="{Binding LastMemoryPoll.used_memory}" Grid.Row="0" Grid.Column="1"/>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CurrentUsedPct}"/>
 				<lvc:CartesianChart
 							Grid.Row="1"
 							Grid.Column="0"
 							Grid.ColumnSpan="2"
 							Series="{Binding UsagePercentageGraph, Mode=OneWay}"
 							ZoomMode="X"
-							YAxes="{Binding YAxes}"
+							YAxes="{Binding YAxesPct}"
 							XAxes="{Binding XAxes}">
 				</lvc:CartesianChart>
 			</Grid>
@@ -55,15 +52,14 @@
 					<ColumnDefinition Width=".7*"/>
 					<ColumnDefinition Width=".3*"/>
 				</Grid.ColumnDefinitions>
-				<Label Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0">Total Memory: </Label>
-				<TextBlock Classes="h6" Text="{Binding LastMemoryPoll.total_memory}" Grid.Row="0" Grid.Column="1"/>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CurrentMemoryAvailable}"/>
 				<lvc:CartesianChart
 							Grid.Row="1"
 							Grid.Column="0"
 							Grid.ColumnSpan="2"
-							Series="{Binding TotalPercentageGraph, Mode=OneWay}"
+							Series="{Binding AvailableMemoryGraph, Mode=OneWay}"
 							ZoomMode="X"
-							YAxes="{Binding YAxes}"
+							YAxes="{Binding YAxesGb}"
 							XAxes="{Binding XAxes}">
 				</lvc:CartesianChart>
 			</Grid>
@@ -77,15 +73,14 @@
 					<ColumnDefinition Width=".7*"/>
 					<ColumnDefinition Width=".3*"/>
 				</Grid.ColumnDefinitions>
-				<Label Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0">Amount Used: </Label>
-				<TextBlock Classes="h6" Text="{Binding LastMemoryPoll.used_memory}" Grid.Row="0" Grid.Column="1"/>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CurrentTotal}"/>
 				<lvc:CartesianChart
 							Grid.Row="1"
 							Grid.Column="0"
 							Grid.ColumnSpan="2"
-							Series="{Binding UsedPercentageGraph, Mode=OneWay}"
+							Series="{Binding TotalMemoryGraph, Mode=OneWay}"
 							ZoomMode="X"
-							YAxes="{Binding YAxes}"
+							YAxes="{Binding YAxesGb}"
 							XAxes="{Binding XAxes}">
 				</lvc:CartesianChart>
 			</Grid>
@@ -98,15 +93,14 @@
 					<ColumnDefinition Width=".7*"/>
 					<ColumnDefinition Width=".3*"/>
 				</Grid.ColumnDefinitions>
-				<Label Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0">Percentage Available: </Label>
-				<TextBlock Classes="h6" Text="{Binding LastMemoryPoll.available_memory}" Grid.Row="0" Grid.Column="1"/>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CurrentUsedAmt}"/>
 				<lvc:CartesianChart
 							Grid.Row="1"
 							Grid.Column="0"
 							Grid.ColumnSpan="2"
-							Series="{Binding AvailablePercentageGraph, Mode=OneWay}"
+							Series="{Binding UsedMemoryGraph, Mode=OneWay}"
 							ZoomMode="X"
-							YAxes="{Binding YAxes}"
+							YAxes="{Binding YAxesGb}"
 							XAxes="{Binding XAxes}">
 				</lvc:CartesianChart>
 			</Grid>

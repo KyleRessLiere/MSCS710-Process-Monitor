@@ -17,6 +17,8 @@ using System.Collections.ObjectModel;
 using Avalonia.Media;
 using LiveChartsCore.Drawing;
 using NUnit.Framework.Constraints;
+using Org.BouncyCastle.Asn1.BC;
+using System.Runtime.CompilerServices;
 
 namespace MetricsMonitorClient.ViewModels
 {
@@ -36,54 +38,57 @@ namespace MetricsMonitorClient.ViewModels
         public SemaphoreSlim ClockLock { get; private set; }
         public AvaloniaList<MemoryUsagePollDto> UsagePolls { get; }
 
-        private string _usedPctLabel;
-        public string UsedPctLabel {
-            get { return _usedPctLabel; }
-            set { this.RaiseAndSetIfChanged(ref _usedPctLabel, value); }
+
+
+        //Current usage values
+        private string _currentUsedPct;
+        public string CurrentUsedPct {
+            get { return _currentUsedPct; }
+            set { this.RaiseAndSetIfChanged(ref _currentUsedPct, value); }
         }
 
-        private string _availableLabel;
-        public string AvailableLabel {
-            get { return _availableLabel; }
-            set { this.RaiseAndSetIfChanged(ref _availableLabel, value); }
+        private string _currentMemoryAvailable;
+        public string CurrentMemoryAvailable {
+            get { return _currentMemoryAvailable; }
+            set { this.RaiseAndSetIfChanged(ref _currentMemoryAvailable, value); }
         }
 
-        private string _totalLabel;
-        public string TotalLabel {
-            get { return _totalLabel; }
-            set { this.RaiseAndSetIfChanged(ref _totalLabel, value); }
+        private string _currentTotal;
+        public string CurrentTotal {
+            get { return _currentTotal; }
+            set { this.RaiseAndSetIfChanged(ref _currentTotal, value); }
         }
 
-        private string _usedLabel;
-        public string UsedLabel {
-            get { return _usedLabel; }
-            set { this.RaiseAndSetIfChanged(ref _usedLabel, value); }
+        private string _currentUsedAmt;
+        public string CurrentUsedAmt {
+            get { return _currentUsedAmt; }
+            set { this.RaiseAndSetIfChanged(ref _currentUsedAmt, value); }
         }
 
+
+        //graph data
         private ObservableCollection<ISeries> _usagePercentageGraph;
         public ObservableCollection<ISeries> UsagePercentageGraph {
             get { return _usagePercentageGraph; }
             set { this.RaiseAndSetIfChanged(ref _usagePercentageGraph, value); }
         }
 
-
-
-        private ObservableCollection<ISeries> _availablePercentageGraph;
-        public ObservableCollection<ISeries> AvailablePercentageGraph {
-            get { return _availablePercentageGraph; }
-            set { this.RaiseAndSetIfChanged(ref _availablePercentageGraph, value); }
+        private ObservableCollection<ISeries> _availableMemoryGraph;
+        public ObservableCollection<ISeries> AvailableMemoryGraph {
+            get { return _availableMemoryGraph; }
+            set { this.RaiseAndSetIfChanged(ref _availableMemoryGraph, value); }
         }
 
-        private ObservableCollection<ISeries> _totalPercentageGraph;
-        public ObservableCollection<ISeries> TotalPercentageGraph {
-            get { return _totalPercentageGraph; }
-            set { this.RaiseAndSetIfChanged(ref _totalPercentageGraph, value); }
+        private ObservableCollection<ISeries> _totalMemoryGraph;
+        public ObservableCollection<ISeries> TotalMemoryGraph {
+            get { return _totalMemoryGraph; }
+            set { this.RaiseAndSetIfChanged(ref _totalMemoryGraph, value); }
         }
 
-        private ObservableCollection<ISeries> _usedPercentageGraph;
-        public ObservableCollection<ISeries> UsedPercentageGraph {
-            get { return _usedPercentageGraph; }
-            set { this.RaiseAndSetIfChanged(ref _usedPercentageGraph, value); }
+        private ObservableCollection<ISeries> _usedMemoryGraph;
+        public ObservableCollection<ISeries> UsedMemoryGraph {
+            get { return _usedMemoryGraph; }
+            set { this.RaiseAndSetIfChanged(ref _usedMemoryGraph, value); }
         }
 
         public Axis[] YAxesPct { get; set; } =
@@ -103,11 +108,11 @@ namespace MetricsMonitorClient.ViewModels
     };
 
 
-        public Axis[] YAxes { get; set; } =
+        public Axis[] YAxesGb { get; set; } =
         {
         new Axis
         {
-            Name = "Amount Gb",
+            Name = "Amount (Gb)",
             NamePadding = new LiveChartsCore.Drawing.Padding(0, 5),
             LabelsPaint = new SolidColorPaint
             {
@@ -137,7 +142,7 @@ namespace MetricsMonitorClient.ViewModels
         #region Methods
 
 
-        private void GetLatestPoll() {
+        private void UpdateUIData() {
             
             var poll = Task.Run(() => _memoryFactory.GetLatestMemoryPollAsync()).Result;
 
@@ -157,13 +162,14 @@ namespace MetricsMonitorClient.ViewModels
 
         public void  TickClock() {
             ClockLock.Wait();
-            GetLatestPoll();
+            UpdateUIData();
             ClockLock.Release();
         }
 
         public void InitGraph() {
-            UsagePercentageGraph = new ObservableCollection<ISeries>
-            {
+            try {
+                UsagePercentageGraph = new ObservableCollection<ISeries>
+          {
                 new LineSeries<ObservableValue>
                 {
                     Name = "Memory Usage Percentage",
@@ -175,8 +181,8 @@ namespace MetricsMonitorClient.ViewModels
                 }
 
             };
-            
-            AvailablePercentageGraph = new ObservableCollection<ISeries> {
+
+                AvailableMemoryGraph = new ObservableCollection<ISeries> {
                 new LineSeries<ObservableValue>
                 {
                     Name = "Available Memory",
@@ -187,8 +193,8 @@ namespace MetricsMonitorClient.ViewModels
                     AnimationsSpeed = TimeSpan.Zero
                 },
             };
-           
-            TotalPercentageGraph = new ObservableCollection<ISeries> {
+
+                TotalMemoryGraph = new ObservableCollection<ISeries> {
                    new LineSeries<ObservableValue>
                 {
                     Name = "Total Memory",
@@ -200,7 +206,7 @@ namespace MetricsMonitorClient.ViewModels
                 }
             };
 
-            UsedPercentageGraph = new ObservableCollection<ISeries> {
+                UsedMemoryGraph = new ObservableCollection<ISeries> {
                 new LineSeries<ObservableValue>
                 {
                     Name = "Used Memory",
@@ -211,21 +217,43 @@ namespace MetricsMonitorClient.ViewModels
                     AnimationsSpeed = TimeSpan.Zero
                 }
             };
-            UsagePercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
-            AvailablePercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
-            TotalPercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
-            UsedPercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
-        }
+                UsagePercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
+                AvailableMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
+                TotalMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
+                UsedMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
 
+                PreloadGraphsAndLabels();
+            }catch(Exception ex) {
+                //TODO: add logger here
+            
+            }
+          
+
+        }
+        public void PreloadGraphsAndLabels() {
+            var polls = Task.Run(() => _memoryFactory.GetAllMemoryPollsAsync()).Result;
+            var pollDataSelection = polls.Take(MMConstants.PollBufferSize);
+
+            UsagePercentageGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.percentage_used });
+            AvailableMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.available_memory });
+            TotalMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.total_memory });
+            UsedMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.used_memory });
+
+            UpdateCurrentStats(pollDataSelection.FirstOrDefault());
+
+        }
         public void UpdateCurrentStats(MemoryUsagePollDto poll) {
-
+            CurrentUsedPct = $"Memory Usage: {poll.used_memory}%";
+            CurrentMemoryAvailable = $"Available Memory: {poll.available_memory}";
+            CurrentTotal = $"Total Memory: {poll.total_memory}";
+            CurrentUsedAmt = $"Used Memory: {poll.used_memory}";
         }
-
+       
         public void UpdateGraphs() {
-            UsagePercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.percentage_memory });
-            AvailablePercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.available_memory });
-            TotalPercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.total_memory });
-            UsedPercentageGraph[0].Values = UsagePolls.Select(u => new ObservableValue { Value = u.used_memory });
+            UsagePercentageGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id ).Select(u => new ObservableValue { Value = u.percentage_used });
+            AvailableMemoryGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id).Select(u => new ObservableValue { Value = u.available_memory });
+            TotalMemoryGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id).Select(u => new ObservableValue { Value = u.total_memory });
+            UsedMemoryGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id).Select(u => new ObservableValue { Value = u.used_memory });
 
         }
         #endregion Methods

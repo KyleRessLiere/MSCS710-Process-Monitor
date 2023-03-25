@@ -31,7 +31,7 @@ namespace MetricsMonitorClient {
                 _dIPack = new DataFactoryBootstrapper();
 
                 desktopLifetime.MainWindow = new MainWindowView {
-                    DataContext = ObjectFactory.CreateObject<MainWindowViewModel>()
+                    DataContext = WorkspaceFactory.CreateWorkspace<MainWindowViewModel>()
                 };
 
                 Locator.CurrentMutable.RegisterConstant(new AvaloniaActivationForViewFetcher(), typeof(IActivationForViewFetcher));

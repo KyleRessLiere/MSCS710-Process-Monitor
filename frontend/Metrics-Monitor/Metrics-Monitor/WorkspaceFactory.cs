@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 
 namespace MetricsMonitorClient {
-    public class ObjectFactory {
+    public class WorkspaceFactory {
 
         private static readonly object _lock = new object();
 
@@ -14,7 +14,7 @@ namespace MetricsMonitorClient {
         /// </summary>
         /// <typeparam name="T">Desired type of returned object</typeparam>
         /// <returns> object of type T</returns>
-        public static T CreateObject<T>() {
+        public static T CreateWorkspace<T>() {
             T createdObject;
             lock (_lock) {
                 var constructors = typeof(T).GetConstructors();
@@ -40,6 +40,9 @@ namespace MetricsMonitorClient {
 
                 createdObject = (T)constructor.Invoke(orderedDependencies);
                 
+
+
+
                 return (T)createdObject;
             }
         }

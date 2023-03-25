@@ -20,18 +20,12 @@ namespace MetricsMonitorClient.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase {
         public string Greeting => "Welcome to Avalonia!";
-        private readonly ICPUDataFactory _cpuDataFactory;
-        private readonly IMonitorSystemFactory _monitorSystemFactory;
-        private readonly IMemoryFactory _memoryFactory;
         #region Constructor
-        public MainWindowViewModel(ICPUDataFactory cpuDataFactory, IMonitorSystemFactory monitorSystemFactory, IMemoryFactory memoryFactory) {
-            _cpuDataFactory = cpuDataFactory;
-            _monitorSystemFactory = monitorSystemFactory;
-            _memoryFactory = memoryFactory;
-            CPUViewModel =  ObjectFactory.CreateObject<CPUViewModel>();
-            MemoryViewModel = ObjectFactory.CreateObject<MemoryViewModel>();
-            StorageViewModel = ObjectFactory.CreateObject<StorageViewModel>();
-            HomeViewModel = ObjectFactory.CreateObject<HomeViewModel>();
+        public MainWindowViewModel() {
+            CPUViewModel =  WorkspaceFactory.CreateWorkspace<CPUViewModel>();
+            MemoryViewModel = WorkspaceFactory.CreateWorkspace<MemoryViewModel>();
+            StorageViewModel = WorkspaceFactory.CreateWorkspace<StorageViewModel>();
+            HomeViewModel = WorkspaceFactory.CreateWorkspace<HomeViewModel>();
             //ResourceText = "Overview";
             SelectedResourceIndex = (int)ResourceTabIndex.Memory;
             uiClock = new Timer(MMConstants.SystemClockInterval);
