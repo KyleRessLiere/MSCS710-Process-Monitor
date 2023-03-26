@@ -50,13 +50,23 @@
 			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
 		</Style>
 
+		<Style Selector="Label.h5">
+			<Setter Property="FontSize" Value="68"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+
 		<Style Selector="TextBlock.h6">
 			<Setter Property="FontSize" Value="26"/>
 			<Setter Property="FontWeight" Value="Bold"/>
 			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
 		</Style>
 
-
+		<Style Selector="Label.h6">
+			<Setter Property="FontSize" Value="26"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
 
 		<Style Selector="TabItem.Header.NavButton">
 			<Setter Property="FontSize" Value="30"/>

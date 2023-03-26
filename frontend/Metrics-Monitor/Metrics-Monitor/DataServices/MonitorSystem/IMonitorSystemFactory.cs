@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace MetricsMonitorClient.DataServices.MonitorSystem {
     public interface IMonitorSystemFactory {
-        MonitorSystemFactory Instance { get; }
-
         IEnumerable<PollDTO> GetAllRecords();
     }
 }

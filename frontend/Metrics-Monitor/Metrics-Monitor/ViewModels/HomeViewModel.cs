@@ -23,10 +23,10 @@ namespace MetricsMonitorClient.ViewModels {
         #endregion Properties
         #region Methods
         public void Load() {
-          var polls =   _factory.GetAllRecords();
-            if (!polls.Any()) { return; }
-            Polls.Clear();
-            Polls.AddRange(polls);
+          //var polls =   _factory.GetAllRecords();
+          //  if (!polls.Any()) { return; }
+          //  Polls.Clear();
+          //  Polls.AddRange(polls);
         }
         #endregion Methods
 
