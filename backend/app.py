@@ -63,15 +63,12 @@ def api_get_latest_metrics():
 @app.route('/api/metrics/<poll_id>', methods=['GET'])
 def api_get_metrics_by_poll_id(poll_id):
     metrics = {}
-    try:
-        metrics['poll'] = polls.get_poll_by_poll_id(poll_id)
-        metrics['process'] = processes.get_process_by_poll_id(poll_id)
-        metrics['network'] = network.get_network_by_poll_id(poll_id)
-        metrics['disk'] = disks.get_disk_by_poll_id(poll_id)
-        metrics['memory'] = memory.get_memory_by_poll_id(poll_id)
-        metrics['cpu'] = cpu.get_cpu_by_poll_id(poll_id)
-    except TypeError:
-        abort(404, description=f"Poll ID {poll_id} not found")
+    metrics['poll'] = polls.get_poll_by_poll_id(poll_id)
+    metrics['process'] = processes.get_process_by_poll_id(poll_id)
+    metrics['network'] = network.get_network_by_poll_id(poll_id)
+    metrics['disk'] = disks.get_disk_by_poll_id(poll_id)
+    metrics['memory'] = memory.get_memory_by_poll_id(poll_id)
+    metrics['cpu'] = cpu.get_cpu_by_poll_id(poll_id)
     return metrics
 
 @app.route('/api/metrics/<start_time>/<end_time>', methods=['GET'])

@@ -4,6 +4,7 @@ import datetime
 import json
 import sqlite3
 from sqlite3 import Error
+from flask import jsonify, abort
 
 def get_polls():
     poll_list = []
@@ -29,25 +30,20 @@ def get_polls():
     return poll_list
 
 def get_poll_by_poll_id(poll_id):
-    poll = None
-    try:
-        db_file = r"./db/MMM-SQLite.db"
-        conn = sqlite3.connect(db_file)
+    db_file = r"./db/MMM-SQLite.db"
+    with sqlite3.connect(db_file) as conn:
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM polls WHERE poll_id = ?", (poll_id,))
         poll = res.fetchone()
         if poll:
             poll = {
-                    "poll_id": poll[0],
-                    "poll_rate": poll[1],
-                    "operating_system": poll[2],
-                    "time": poll[3]
-                }
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
+                "poll_id": poll[0],
+                "poll_rate": poll[1],
+                "operating_system": poll[2],
+                "time": poll[3]
+            }
+        else:
+            abort(404, description=f"Poll ID {poll_id} not found")
     return poll
 
 def get_latest_poll():
