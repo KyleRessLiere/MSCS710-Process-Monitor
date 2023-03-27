@@ -56,7 +56,7 @@ def get_disk_by_disk_id(disk_id):
     db_file = r"./db/MMM-SQLite.db"
     with sqlite3.connect(db_file) as conn:
         cur = conn.cursor()
-        res = cur.execute("SELECT * FROM disk WHERE disk_id = ?", (disk_id,))
+        res = cur.execute("SELECT * FROM disks WHERE disk_id = ?", (disk_id,))
         disk = res.fetchone()
         if disk:
             disk = {
@@ -75,7 +75,7 @@ def get_disk_by_poll_id(poll_id):
     db_file = r"./db/MMM-SQLite.db"
     with sqlite3.connect(db_file) as conn:
         cur = conn.cursor()
-        res = cur.execute("SELECT * FROM disk WHERE poll_id = ?", (poll_id,))
+        res = cur.execute("SELECT * FROM disks WHERE poll_id = ?", (poll_id,))
         disk = res.fetchone()
         if disk:
             disk = {

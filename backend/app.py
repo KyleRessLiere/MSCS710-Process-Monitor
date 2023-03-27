@@ -1,4 +1,4 @@
-from flask import Flask, abort
+from flask import Flask
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
