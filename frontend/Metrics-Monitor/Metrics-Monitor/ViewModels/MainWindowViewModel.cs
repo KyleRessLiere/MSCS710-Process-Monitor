@@ -1,30 +1,59 @@
+using Avalonia.Threading;
 using MetricsMonitorClient.DataServices.CPU;
+using MetricsMonitorClient.DataServices.Memory;
 using MetricsMonitorClient.DataServices.MonitorSystem;
 using Microsoft.VisualBasic;
+using NUnit.Framework.Constraints;
+using Org.BouncyCastle.Asn1.Crmf;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Reactive;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
+using ResourceTabIndex = MetricsMonitorClient.MMConstants.ResourceTabIndex;
+using Timer = System.Timers.Timer;
 
 namespace MetricsMonitorClient.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase {
         public string Greeting => "Welcome to Avalonia!";
-        private readonly ICPUDataFactory _cpuDataFactory;
-        private readonly IMonitorSystemFactory _monitorSystemFactory;
         #region Constructor
-        public MainWindowViewModel(ICPUDataFactory cpuDataFactory, IMonitorSystemFactory monitorSystemFactory) {
-            _cpuDataFactory = cpuDataFactory;
-            _monitorSystemFactory = monitorSystemFactory;
-            CPUViewModel = new CPUViewModel(_cpuDataFactory);
-            MemoryViewModel = new MemoryViewModel();
-            StorageViewModel = new StorageViewModel();
-            HomeViewModel = new HomeViewModel(_monitorSystemFactory);
-            ResourceText = "Overview";
+        public MainWindowViewModel() {
+            CPUViewModel =  WorkspaceFactory.CreateWorkspace<CPUViewModel>();
+            MemoryViewModel = WorkspaceFactory.CreateWorkspace<MemoryViewModel>();
+            StorageViewModel = WorkspaceFactory.CreateWorkspace<StorageViewModel>();
+            HomeViewModel = WorkspaceFactory.CreateWorkspace<HomeViewModel>();
+            //ResourceText = "Overview";
+            SelectedResourceIndex = (int)ResourceTabIndex.Memory;
+            uiClock = new Timer(MMConstants.SystemClockInterval);
+            uiClock.Elapsed += RunClock;
+            uiClock.Start();
+
         }
+
+
         #endregion Constructor
         #region Properties
+        private void MainWindowViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
+           if(e.PropertyName == nameof(ClockCycle)) {
+              
+                
+                Dispatcher.UIThread.InvokeAsync(() =>
+                    Parallel.Invoke(() => MemoryViewModel.TickClock(),
+                    () => CPUViewModel.TickClock()));
+                Console.WriteLine("Tick " + ClockCycle);
+           }
+        }
+
+        private long _clockCycle;
+        public long ClockCycle {
+            get { return _clockCycle; }
+            private set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
+        }
+
         CPUViewModel CPUViewModel { get; set; }
         MemoryViewModel MemoryViewModel { get; set; }
         StorageViewModel StorageViewModel { get; set; }
@@ -45,20 +74,23 @@ namespace MetricsMonitorClient.ViewModels
                 UpdateUI();
             }
         }
+
+
+        private Timer uiClock { get; set; }
         #endregion Properties
         #region Methods
         public void UpdateUI() {
-            switch (SelectedResourceIndex) {
-                case 0:
+            switch ((ResourceTabIndex)SelectedResourceIndex) {
+                case ResourceTabIndex.Overview:
                     ResourceText = "Overview";
                     break;
-                case 1:
+                case ResourceTabIndex.Processing:
                     ResourceText = "Processing";
                     break;
-                case 2:
+                case ResourceTabIndex.Memory:
                     ResourceText = "Memory";
                     break;
-                case 3:
+                case ResourceTabIndex.Storage:
                     ResourceText = "Storage";
                     break;
                 default:
@@ -68,5 +100,42 @@ namespace MetricsMonitorClient.ViewModels
 
         }
         #endregion Methods
+        #region System
+
+        //private bool hasStartedClockCycling;
+        //private void StartClock() {
+        //    clockLock.Wait();
+        //    if (hasStartedClockCycling) { return; }
+        //    Task.Run(() => RunClock());
+        //    clockLock.Release();
+        //}
+        //private SemaphoreSlim clockLock = new SemaphoreSlim(1);
+
+
+
+        private void RunClock(object sender, ElapsedEventArgs e) {
+            Task.Run(() => MemoryViewModel.TickClock());
+        }
+
+        //private void RunClock() {
+            
+        //    if (hasStartedClockCycling) { return; }
+
+        //    hasStartedClockCycling = true;
+              
+        //    while (true) {
+        //        ClockCycle++;
+        //        Thread.Sleep(MMConstants.SystemClockInterval);
+        //    }
+        //}
+
+        private void doCycle() {
+            MemoryViewModel.TickClock();
+            Console.WriteLine("Tick " + ClockCycle);
+        }
+
+
+        
+        #endregion
     }
 }

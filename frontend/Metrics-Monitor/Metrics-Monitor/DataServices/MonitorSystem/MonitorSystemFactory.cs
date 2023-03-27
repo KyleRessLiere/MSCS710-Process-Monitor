@@ -17,29 +17,21 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace MetricsMonitorClient.DataServices.MonitorSystem {
     public class MonitorSystemFactory : IMonitorSystemFactory {
-        private MonitorSystemFactory _instance;
-        public MonitorSystemFactory Instance {
-            get {
-                if (_instance == null) {
-                    _instance = new MonitorSystemFactory();
-                }
-                return _instance;
-            }
-        }
 
+        public MonitorSystemFactory() { }
 
 
         public IEnumerable<PollDTO> GetAllRecords() {
             try {
                 List<PollDTO>? polls = new List<PollDTO>();
-                using (StreamReader r = new StreamReader(@"C:\MM_TestData\polls.json")) {   //example file is in source control
+                using (StreamReader r = new StreamReader(@"C:\SANDBOX\mcapping\MSCS710-Process-Monitor\FrontEnd\Metrics-Monitor\Metrics-Monitor\DataServices\TEST_DATA\polls.json")) {   //example file is in source control
                     string json = r.ReadToEnd();
                     var dbItems = JsonConvert.DeserializeObject<List<PollDTO>>(json);
                     if (dbItems.Any()) {
-                       polls.AddRange(dbItems);
+                        polls.AddRange(dbItems);
                     }
                 }
-            return polls;
+                return polls;
             } catch (Exception ex) {
                 throw;
             }
