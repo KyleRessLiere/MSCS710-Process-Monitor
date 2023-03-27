@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, abort
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
@@ -63,12 +63,15 @@ def api_get_latest_metrics():
 @app.route('/api/metrics/<poll_id>', methods=['GET'])
 def api_get_metrics_by_poll_id(poll_id):
     metrics = {}
-    metrics['poll'] = polls.get_poll_by_poll_id(poll_id)
-    metrics['process'] = processes.get_process_by_poll_id(poll_id)
-    metrics['network'] = network.get_network_by_poll_id(poll_id)
-    metrics['disk'] = disks.get_disk_by_poll_id(poll_id)
-    metrics['memory'] = memory.get_memory_by_poll_id(poll_id)
-    metrics['cpu'] = cpu.get_cpu_by_poll_id(poll_id)
+    try:
+        metrics['poll'] = polls.get_poll_by_poll_id(poll_id)
+        metrics['process'] = processes.get_process_by_poll_id(poll_id)
+        metrics['network'] = network.get_network_by_poll_id(poll_id)
+        metrics['disk'] = disks.get_disk_by_poll_id(poll_id)
+        metrics['memory'] = memory.get_memory_by_poll_id(poll_id)
+        metrics['cpu'] = cpu.get_cpu_by_poll_id(poll_id)
+    except TypeError:
+        abort(404, description=f"Poll ID {poll_id} not found")
     return metrics
 
 @app.route('/api/metrics/<start_time>/<end_time>', methods=['GET'])
