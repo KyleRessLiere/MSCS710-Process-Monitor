@@ -90,6 +90,10 @@ def api_get_metrics_by_time_interval(start_time, end_time):
 def api_get_polls():
     return polls.get_polls()
 
+@app.route('/api/polls/latest', methods=['GET'])
+def api_get_latest_poll():
+    return polls.get_latest_poll()
+
 @app.route('/api/polls/<poll_id>', methods=['GET'])
 def api_get_poll_by_poll_id(poll_id):
     return polls.get_poll_by_poll_id(poll_id)
@@ -101,6 +105,10 @@ def api_get_poll_by_time_interval(start_time, end_time):
 @app.route('/api/processes', methods=['GET'])
 def api_get_processes():
     return processes.get_processes()
+
+@app.route('/api/processes/latest', methods=['GET'])
+def api_get_latest_process():
+    return processes.get_latest_process()
 
 @app.route('/api/processes/<process_id>', methods=['GET'])
 def api_get_processes_by_process_id(process_id):
@@ -114,6 +122,10 @@ def api_get_latest_process_by_process_id(process_id):
 def api_get_memory():
     return memory.get_memory()
 
+@app.route('/api/memory/latest', methods=['GET'])
+def api_get_latest_memory():
+    return memory.get_latest_memory()
+
 @app.route('/api/memory/<memory_id>', methods=['GET'])
 def api_get_memory_by_memory_id(memory_id):
     return memory.get_memory_by_memory_id(memory_id)
@@ -121,6 +133,10 @@ def api_get_memory_by_memory_id(memory_id):
 @app.route('/api/disks', methods=['GET'])
 def api_get_disks():
     return disks.get_disks()
+
+@app.route('/api/disks/latest', methods=['GET'])
+def api_get_latest_disk():
+    return disks.get_latest_disk()
 
 @app.route('/api/disks/<disk_id>', methods=['GET'])
 def api_get_disk_by_disk_id(disk_id):
@@ -130,6 +146,10 @@ def api_get_disk_by_disk_id(disk_id):
 def api_get_network():
     return network.get_network()
 
+@app.route('/api/network/latest', methods=['GET'])
+def api_get_latest_network():
+    return network.get_latest_network()
+
 @app.route('/api/network/<network_id>', methods=['GET'])
 def api_get_network_by_disk_id(network_id):
     return network.get_network_by_network_id(network_id)
@@ -137,6 +157,10 @@ def api_get_network_by_disk_id(network_id):
 @app.route('/api/cpu', methods=['GET'])
 def api_get_cpu():
     return cpu.get_cpu()
+
+@app.route('/api/cpu/latest', methods=['GET'])
+def api_get_latest_cpu():
+    return cpu.get_latest_cpu()
 
 @app.route('/api/cpu/<cpu_id>', methods=['GET'])
 def api_get_cpu_by_cpu_id(cpu_id):
