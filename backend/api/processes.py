@@ -29,7 +29,7 @@ def get_processes():
             conn.close()
     return process_list
 
-def get_processes_by_id(process_id):
+def get_processes_by_process_id(process_id):
     process_list = []
     try:
         db_file = r"./db/MMM-SQLite.db"
@@ -55,7 +55,31 @@ def get_processes_by_id(process_id):
             conn.close()
     return process_list
 
-def get_latest_process_by_id(process_id):
+def get_latest_process():
+    latest_process = {}
+    try:
+        db_file = r"./db/MMM-SQLite.db"
+        conn = sqlite3.connect(db_file)
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM processes ORDER BY poll_id DESC LIMIT 1")
+        latest_process = res.fetchone()
+        latest_process = {
+                    "poll_id": latest_process[0],
+                    "process_id": latest_process[1],
+                    "process_name": latest_process[2],
+                    "process_status": latest_process[3],
+                    "cpu_percent": latest_process[4],
+                    "num_thread": latest_process[5],
+                    "memory_usage": latest_process[6]
+                }
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+    return latest_process
+
+def get_latest_process_by_process_id(process_id):
     latest_process = {}
     try:
         db_file = r"./db/MMM-SQLite.db"
@@ -78,3 +102,27 @@ def get_latest_process_by_id(process_id):
         if conn:
             conn.close()
     return latest_process
+
+def get_process_by_poll_id(poll_id):
+    process = {}
+    try:
+        db_file = r"./db/MMM-SQLite.db"
+        conn = sqlite3.connect(db_file)
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM processes WHERE poll_id = ?", (poll_id,))
+        process = res.fetchone()
+        process = {
+                    "poll_id": process[0],
+                    "process_id": process[1],
+                    "process_name": process[2],
+                    "process_status": process[3],
+                    "cpu_percent": process[4],
+                    "num_thread": process[5],
+                    "memory_usage": process[6]
+                }
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+    return process
