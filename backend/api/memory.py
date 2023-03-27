@@ -2,6 +2,7 @@
 
 import sqlite3
 from sqlite3 import Error
+from flask import abort
 
 def get_memory():
     memory_list = []
@@ -28,52 +29,6 @@ def get_memory():
             conn.close()
     return memory_list
 
-def get_memory_by_memory_id(memory_id):
-    memory = {}
-    try:
-        db_file = r"./db/MMM-SQLite.db"
-        conn = sqlite3.connect(db_file)
-        cur = conn.cursor()
-        res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (memory_id,))
-        memory = res.fetchone()
-        memory = {
-                "memory_id": memory[0],
-                "poll_id": memory[1],
-                "total_memory": memory[2],
-                "available_memory": memory[3],
-                "used_memory": memory[4],
-                "percentage_used": memory[5]
-            }
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
-    return memory
-
-def get_memory_by_poll_id(poll_id):
-    memory = {}
-    try:
-        db_file = r"./db/MMM-SQLite.db"
-        conn = sqlite3.connect(db_file)
-        cur = conn.cursor()
-        res = cur.execute("SELECT * FROM memory WHERE poll_id = ?", (poll_id,))
-        memory = res.fetchone()
-        memory = {
-                "memory_id": memory[0],
-                "poll_id": memory[1],
-                "total_memory": memory[2],
-                "available_memory": memory[3],
-                "used_memory": memory[4],
-                "percentage_used": memory[5]
-            }
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
-    return memory
-
 def get_latest_memory():
     latest_memory = {}
     try:
@@ -96,3 +51,41 @@ def get_latest_memory():
         if conn:
             conn.close()
     return latest_memory
+
+def get_memory_by_memory_id(memory_id):
+    db_file = r"./db/MMM-SQLite.db"
+    with sqlite3.connect(db_file) as conn:
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (memory_id,))
+        memory = res.fetchone()
+        if memory:
+            memory = {
+                    "memory_id": memory[0],
+                    "poll_id": memory[1],
+                    "total_memory": memory[2],
+                    "available_memory": memory[3],
+                    "used_memory": memory[4],
+                    "percentage_used": memory[5]
+                }
+        else:
+            abort(404, description=f"Memory ID {memory_id} not found")
+    return memory
+
+def get_memory_by_poll_id(poll_id):
+    db_file = r"./db/MMM-SQLite.db"
+    with sqlite3.connect(db_file) as conn:
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM memory WHERE poll_id = ?", (poll_id,))
+        memory = res.fetchone()
+        if memory:
+            memory = {
+                    "memory_id": memory[0],
+                    "poll_id": memory[1],
+                    "total_memory": memory[2],
+                    "available_memory": memory[3],
+                    "used_memory": memory[4],
+                    "percentage_used": memory[5]
+                }
+        else:
+            abort(404, description=f"Poll ID {poll_id} not found")
+    return memory

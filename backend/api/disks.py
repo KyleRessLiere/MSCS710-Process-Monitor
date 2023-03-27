@@ -2,6 +2,7 @@
 
 import sqlite3
 from sqlite3 import Error
+from flask import abort
 
 def get_disks():
     disk_list = []
@@ -28,52 +29,6 @@ def get_disks():
             conn.close()
     return disk_list
 
-def get_disk_by_disk_id(disk_id):
-    disk = {}
-    try:
-        db_file = r"./db/MMM-SQLite.db"
-        conn = sqlite3.connect(db_file)
-        cur = conn.cursor()
-        res = cur.execute("SELECT * FROM memory WHERE memory_id = ?", (disk_id,))
-        disk = res.fetchone()
-        disk = {
-                "disk_id": disk[0],
-                "poll_id": disk[1],
-                "disk_total": disk[2],
-                "disk_used": disk[3],
-                "disk_free": disk[4],
-                "disk_percentage": disk[5]
-            }
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
-    return disk
-
-def get_disk_by_poll_id(poll_id):
-    disk = {}
-    try:
-        db_file = r"./db/MMM-SQLite.db"
-        conn = sqlite3.connect(db_file)
-        cur = conn.cursor()
-        res = cur.execute("SELECT * FROM memory WHERE poll_id = ?", (poll_id,))
-        disk = res.fetchone()
-        disk = {
-                "disk_id": disk[0],
-                "poll_id": disk[1],
-                "disk_total": disk[2],
-                "disk_used": disk[3],
-                "disk_free": disk[4],
-                "disk_percentage": disk[5]
-            }
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
-    return disk
-
 def get_latest_disk():
     latest_disk = {}
     try:
@@ -96,3 +51,41 @@ def get_latest_disk():
         if conn:
             conn.close()
     return latest_disk
+
+def get_disk_by_disk_id(disk_id):
+    db_file = r"./db/MMM-SQLite.db"
+    with sqlite3.connect(db_file) as conn:
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM disk WHERE disk_id = ?", (disk_id,))
+        disk = res.fetchone()
+        if disk:
+            disk = {
+                    "disk_id": disk[0],
+                    "poll_id": disk[1],
+                    "disk_total": disk[2],
+                    "disk_used": disk[3],
+                    "disk_free": disk[4],
+                    "disk_percentage": disk[5]
+                }
+        else:
+            abort(404, description=f"Disk ID {disk_id} not found")
+    return disk
+
+def get_disk_by_poll_id(poll_id):
+    db_file = r"./db/MMM-SQLite.db"
+    with sqlite3.connect(db_file) as conn:
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM disk WHERE poll_id = ?", (poll_id,))
+        disk = res.fetchone()
+        if disk:
+            disk = {
+                    "disk_id": disk[0],
+                    "poll_id": disk[1],
+                    "disk_total": disk[2],
+                    "disk_used": disk[3],
+                    "disk_free": disk[4],
+                    "disk_percentage": disk[5]
+                }
+        else:
+            abort(404, description=f"Poll ID {poll_id} not found")
+    return disk

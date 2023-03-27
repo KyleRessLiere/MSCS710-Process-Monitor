@@ -110,13 +110,17 @@ def api_get_processes():
 def api_get_latest_process():
     return processes.get_latest_process()
 
+@app.route('/api/processes/latest/<process_id>', methods=['GET'])
+def api_get_latest_process_by_process_id(process_id):
+    return processes.get_latest_process_by_process_id(process_id)
+
 @app.route('/api/processes/<process_id>', methods=['GET'])
 def api_get_processes_by_process_id(process_id):
     return processes.get_processes_by_process_id(process_id)
 
-@app.route('/api/processes/latest/<process_id>', methods=['GET'])
-def api_get_latest_process_by_process_id(process_id):
-    return processes.get_latest_process_by_process_id(process_id)
+@app.route('/api/processes/poll/<poll_id>', methods=['GET'])
+def api_get_processes_by_poll_id(poll_id):
+    return processes.get_process_by_poll_id(poll_id)
 
 @app.route('/api/memory', methods=['GET'])
 def api_get_memory():
@@ -130,6 +134,10 @@ def api_get_latest_memory():
 def api_get_memory_by_memory_id(memory_id):
     return memory.get_memory_by_memory_id(memory_id)
 
+@app.route('/api/memory/poll/<poll_id>', methods=['GET'])
+def api_get_memory_by_poll_id(poll_id):
+    return memory.get_memory_by_poll_id(poll_id)
+
 @app.route('/api/disks', methods=['GET'])
 def api_get_disks():
     return disks.get_disks()
@@ -141,6 +149,10 @@ def api_get_latest_disk():
 @app.route('/api/disks/<disk_id>', methods=['GET'])
 def api_get_disk_by_disk_id(disk_id):
     return disks.get_disk_by_disk_id(disk_id)
+
+@app.route('/api/disks/poll/<poll_id>', methods=['GET'])
+def api_get_disk_by_poll_id(poll_id):
+    return disks.get_disk_by_poll_id(poll_id)
 
 @app.route('/api/network', methods=['GET'])
 def api_get_network():
@@ -154,6 +166,10 @@ def api_get_latest_network():
 def api_get_network_by_disk_id(network_id):
     return network.get_network_by_network_id(network_id)
 
+@app.route('/api/network/poll/<poll_id>', methods=['GET'])
+def api_get_network_by_network_id(poll_id):
+    return network.get_network_by_poll_id(poll_id)
+
 @app.route('/api/cpu', methods=['GET'])
 def api_get_cpu():
     return cpu.get_cpu()
@@ -165,6 +181,10 @@ def api_get_latest_cpu():
 @app.route('/api/cpu/<cpu_id>', methods=['GET'])
 def api_get_cpu_by_cpu_id(cpu_id):
     return cpu.get_cpu_by_cpu_id(cpu_id)
+
+@app.route('/api/cpu/poll/<poll_id>', methods=['GET'])
+def api_get_cpu_by_poll_id(poll_id):
+    return cpu.get_cpu_by_poll_id(poll_id)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@
 
 import sqlite3
 from sqlite3 import Error
+from flask import abort
 
 def get_network():
     network_list = []
@@ -27,50 +28,6 @@ def get_network():
             conn.close()
     return network_list
 
-def get_network_by_network_id(network_id):
-    network = {}
-    try:
-        db_file = r"./db/MMM-SQLite.db"
-        conn = sqlite3.connect(db_file)
-        cur = conn.cursor()
-        res = cur.execute("SELECT * FROM network WHERE network_id = ?", (network_id,))
-        network = res.fetchone()
-        network = {
-                "network_id": network[0],
-                "poll_id": network[1],
-                "network_interface": network[2],
-                "network_status": network[3],
-                "network_speed": network[4]
-            }
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
-    return network
-
-def get_network_by_poll_id(poll_id):
-    network = {}
-    try:
-        db_file = r"./db/MMM-SQLite.db"
-        conn = sqlite3.connect(db_file)
-        cur = conn.cursor()
-        res = cur.execute("SELECT * FROM network WHERE poll_id = ?", (poll_id,))
-        network = res.fetchone()
-        network = {
-                "network_id": network[0],
-                "poll_id": network[1],
-                "network_interface": network[2],
-                "network_status": network[3],
-                "network_speed": network[4]
-            }
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
-    return network
-
 def get_latest_network():
     latest_network = {}
     try:
@@ -92,3 +49,41 @@ def get_latest_network():
         if conn:
             conn.close()
     return latest_network
+
+def get_network_by_network_id(network_id):
+    network = {}
+    db_file = r"./db/MMM-SQLite.db"
+    with sqlite3.connect(db_file) as conn:
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM network WHERE network_id = ?", (network_id,))
+        network = res.fetchone()
+        if network:
+            network = {
+                    "network_id": network[0],
+                    "poll_id": network[1],
+                    "network_interface": network[2],
+                    "network_status": network[3],
+                    "network_speed": network[4]
+                }
+        else:
+            abort(404, description=f"Network ID {network_id} not found")
+    return network
+
+def get_network_by_poll_id(poll_id):
+    network = {}
+    db_file = r"./db/MMM-SQLite.db"
+    with sqlite3.connect(db_file) as conn:
+        cur = conn.cursor()
+        res = cur.execute("SELECT * FROM network WHERE poll_id = ?", (poll_id,))
+        network = res.fetchone()
+        if network:
+            network = {
+                    "network_id": network[0],
+                    "poll_id": network[1],
+                    "network_interface": network[2],
+                    "network_status": network[3],
+                    "network_speed": network[4]
+                }
+        else:
+            abort(404, description=f"Poll ID {poll_id} not found")
+    return network
