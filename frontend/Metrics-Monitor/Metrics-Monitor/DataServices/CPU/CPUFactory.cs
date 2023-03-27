@@ -26,7 +26,6 @@ namespace MetricsMonitorClient.DataServices.CPU {
                         var responseContent = await response.Content.ReadAsStringAsync();
 
                         var result = JsonConvert.DeserializeObject<List<CPUDto>>(responseContent);
-
                         return result.OrderByDescending(p => p.poll_id).FirstOrDefault();
                     }
 
