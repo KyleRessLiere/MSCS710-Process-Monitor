@@ -4,20 +4,43 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="using:MetricsMonitorClient.ViewModels.CPUViewMoel"
+			 			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              x:Class="MetricsMonitorClient.Views.CPUView">
 
 
 	<Grid Classes="ContentGrid">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="60"/>
+			<RowDefinition Height="350"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="100"/>
-			<ColumnDefinition Width="200"/>
-		</Grid.ColumnDefinitions>
-		<Button Grid.Row="0" Grid.Column="0" Command="{Binding DoTheThing}">Load</Button>
-		<ComboBox Grid.Row="0" Grid.Column="1" Items="{Binding DataOptions}" SelectedItem="{Binding SelectedLabel}" />
+		<Grid Grid.Row="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Row="0" VerticalAlignment="Center" TextAlignment="Left" FontSize="38" Foreground="Black" Text="{Binding CurrentUsagePercentage}"/>
+			<TextBlock Grid.Row="1" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding ContextSwitches}"/>
+			<TextBlock Grid.Row="2" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding Interrupts}"/>
+			<TextBlock Grid.Row="3" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding SoftInterrupts}"/>
+			<TextBlock Grid.Row="4" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding SysCalls}"/>
+			<TextBlock Grid.Row="5" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding CoreCountPhysical}"/>
+		</Grid>
+		<Grid Grid.Row="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<lvc:PieChart Grid.Row="1"
+			Series="{Binding PCT}"
+			InitialRotation="-225"
+			MaxAngle="270"
+			Total="100">
+			</lvc:PieChart>
+		</Grid>
+		
 	</Grid>
 	
 </UserControl>

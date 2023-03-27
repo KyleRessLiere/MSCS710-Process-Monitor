@@ -12,6 +12,8 @@ using MetricsMonitorClient.Views;
 using ReactiveUI;
 using Splat;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,8 +24,26 @@ namespace MetricsMonitorClient {
         public DataFactoryBootstrapper _dIPack { get; set; }
 
         public override void Initialize() {
-            System.Diagnostics.Process.Start("../../../startService.bat");
+            //System.Diagnostics.Process.Start("../../../startService.bat");
+         //   startFlaskServer();
+         //   startFlaskServer();
             AvaloniaXamlLoader.Load(this);
+        }
+
+
+
+        private void startFlaskServer() {
+            ProcessStartInfo start = new ProcessStartInfo();
+            start.FileName = @"C:\Users\samal\AppData\Local\Microsoft\WindowsApps\python.exe";
+            start.Arguments = "app.py";
+            start.UseShellExecute = false;
+            start.RedirectStandardOutput = true;
+            using (Process process = Process.Start(start)) {
+                using (StreamReader reader = process.StandardOutput) {
+                    string result = reader.ReadToEnd();
+                    Console.Write(result);
+                }
+            }
         }
 
         public override void OnFrameworkInitializationCompleted() {

@@ -126,7 +126,7 @@
 							<TabItem Header="Overview" Classes="NavButton" VerticalContentAlignment="Center">
 								<v:HomeView DataContext="{Binding HomeViewModel}"/>
 							</TabItem>
-							<TabItem Header="Processing" Classes="NavButton" VerticalContentAlignment="Center">
+							<TabItem Header="CPU" Classes="NavButton" VerticalContentAlignment="Center">
 								<v:CPUView DataContext="{Binding CPUViewModel}"/>
 							</TabItem>
 							<TabItem Header="Memory" Classes="NavButton" VerticalContentAlignment="Center">

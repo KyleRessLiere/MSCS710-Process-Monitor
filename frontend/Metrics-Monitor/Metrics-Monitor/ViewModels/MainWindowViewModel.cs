@@ -26,27 +26,17 @@ namespace MetricsMonitorClient.ViewModels
             MemoryViewModel = WorkspaceFactory.CreateWorkspace<MemoryViewModel>();
             StorageViewModel = WorkspaceFactory.CreateWorkspace<StorageViewModel>();
             HomeViewModel = WorkspaceFactory.CreateWorkspace<HomeViewModel>();
-            //ResourceText = "Overview";
-            SelectedResourceIndex = (int)ResourceTabIndex.Memory;
+            ResourceText = "Overview";
             uiClock = new Timer(MMConstants.SystemClockInterval);
             uiClock.Elapsed += RunClock;
             uiClock.Start();
+            SingleCycleLock = new SemaphoreSlim(1, 1);
 
         }
 
 
         #endregion Constructor
         #region Properties
-        private void MainWindowViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
-           if(e.PropertyName == nameof(ClockCycle)) {
-              
-                
-                Dispatcher.UIThread.InvokeAsync(() =>
-                    Parallel.Invoke(() => MemoryViewModel.TickClock(),
-                    () => CPUViewModel.TickClock()));
-                Console.WriteLine("Tick " + ClockCycle);
-           }
-        }
 
         private long _clockCycle;
         public long ClockCycle {
@@ -84,8 +74,8 @@ namespace MetricsMonitorClient.ViewModels
                 case ResourceTabIndex.Overview:
                     ResourceText = "Overview";
                     break;
-                case ResourceTabIndex.Processing:
-                    ResourceText = "Processing";
+                case ResourceTabIndex.CPU:
+                    ResourceText = "CPU";
                     break;
                 case ResourceTabIndex.Memory:
                     ResourceText = "Memory";
@@ -102,40 +92,37 @@ namespace MetricsMonitorClient.ViewModels
         #endregion Methods
         #region System
 
-        //private bool hasStartedClockCycling;
-        //private void StartClock() {
-        //    clockLock.Wait();
-        //    if (hasStartedClockCycling) { return; }
-        //    Task.Run(() => RunClock());
-        //    clockLock.Release();
-        //}
-        //private SemaphoreSlim clockLock = new SemaphoreSlim(1);
-
-
+        private static readonly object _lock = new object();
+        private SemaphoreSlim SingleCycleLock;
 
         private void RunClock(object sender, ElapsedEventArgs e) {
-            Task.Run(() => MemoryViewModel.TickClock());
+            if((sender is Timer) == false) { return; }
+            SingleCycleLock.Wait();
+
+                switch ((ResourceTabIndex)selecetedResourceIndex) {
+                    case ResourceTabIndex.Overview:
+                        break;
+                    case ResourceTabIndex.CPU:
+                        CPUViewModel.TickClock();
+                        Console.WriteLine("Tick " + ClockCycle);
+                        break;
+                    case ResourceTabIndex.Memory:
+                        MemoryViewModel.TickClock();
+                        Console.WriteLine("Tick " + ClockCycle);
+                        break;
+                    case ResourceTabIndex.Storage:
+                        break;
+                    default:
+                        break;
+            }
+            SingleCycleLock.Release(1);
+
         }
 
-        //private void RunClock() {
-            
-        //    if (hasStartedClockCycling) { return; }
-
-        //    hasStartedClockCycling = true;
-              
-        //    while (true) {
-        //        ClockCycle++;
-        //        Thread.Sleep(MMConstants.SystemClockInterval);
-        //    }
-        //}
-
-        private void doCycle() {
-            MemoryViewModel.TickClock();
-            Console.WriteLine("Tick " + ClockCycle);
-        }
+    
 
 
-        
+
         #endregion
     }
 }

@@ -15,7 +15,7 @@ namespace MetricsMonitorClient {
 
         public enum ResourceTabIndex {
             Overview = 0,
-            Processing = 1,
+            CPU = 1,
             Memory = 2,
             Storage = 3
         };
