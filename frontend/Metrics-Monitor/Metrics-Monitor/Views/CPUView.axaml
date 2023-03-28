@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="550"
              xmlns:vm="using:MetricsMonitorClient.ViewModels.CPUViewMoel"
 			 			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              x:Class="MetricsMonitorClient.Views.CPUView">
@@ -10,17 +10,18 @@
 
 	<Grid Classes="ContentGrid">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="300"/>
+			<RowDefinition Height="250"/>
+			<RowDefinition Height="32"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<Grid Grid.Row="0">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
+				<RowDefinition Height="35"/>
+				<RowDefinition Height="35"/>
+				<RowDefinition Height="35"/>
+				<RowDefinition Height="35"/>
+				<RowDefinition Height="35"/>
 			</Grid.RowDefinitions>
 			<TextBlock Grid.Row="0" VerticalAlignment="Center" TextAlignment="Left" FontSize="38" Foreground="Black" Text="{Binding CurrentUsagePercentage}"/>
 			<TextBlock Grid.Row="1" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding ContextSwitches}"/>
@@ -29,8 +30,9 @@
 			<TextBlock Grid.Row="4" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding SysCalls}"/>
 			<TextBlock Grid.Row="5" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding CoreCountPhysical}"/>
 		</Grid>
-			<DataGrid
-			Grid.Row="1"
+		<TextBlock Padding="0,0,10,0" Grid.Row="1" VerticalAlignment="Center"  TextAlignment="Center" FontSize="20" Foreground="Black" Text="Usage Percentage By Core"/>
+		<DataGrid
+			Grid.Row="2"
 			FontSize="18"
 			VerticalAlignment="Center"
 			HorizontalAlignment="Center"
