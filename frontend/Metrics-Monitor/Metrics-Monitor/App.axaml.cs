@@ -22,7 +22,7 @@ namespace MetricsMonitorClient {
         public DataFactoryBootstrapper _dIPack { get; set; }
 
         public override void Initialize() {
-            System.Diagnostics.Process.Start("../../../startService.bat");
+          //  System.Diagnostics.Process.Start("../../../startService.bat");
             AvaloniaXamlLoader.Load(this);
         }
 

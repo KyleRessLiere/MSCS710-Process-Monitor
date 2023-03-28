@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 namespace MetricsMonitorClient.DataServices.CPU {
     public interface ICPUFactory {
-        Task<IEnumerable<CPUDto>> GetAllCPUPollsAsync();
-        Task<CPUDto> GetLatestCPUPollAsync();
+    
     }
 }
