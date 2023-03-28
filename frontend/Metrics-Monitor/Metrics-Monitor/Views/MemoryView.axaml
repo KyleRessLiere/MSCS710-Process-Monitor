@@ -3,7 +3,109 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm="using:MetricsMonitorClient.ViewModels"
+             xmlns:vm="using:MetricsMonitorClient.ViewModels.MemoryViewModel"
+			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              x:Class="MetricsMonitorClient.Views.MemoryView">
-  Welcome to Avalonia!
+	<Grid Classes="ContentGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Height=".85*"/>
+		</Grid.RowDefinitions>
+		
+		<!-- charts -->
+		<Grid >
+			<Grid.RowDefinitions>
+				<RowDefinition Height=".5*"/>
+				<RowDefinition Height=".5*"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width=".5*"/>
+				<ColumnDefinition Width=".5*"/>
+			</Grid.ColumnDefinitions>
+			
+			
+			<Grid Grid.Row="0" Grid.Column="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height=".18*"/>
+					<RowDefinition Height=".82*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width=".7*"/>
+					<ColumnDefinition Width=".3*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CurrentUsedPct}"/>
+				<lvc:CartesianChart
+							Grid.Row="1"
+							Grid.Column="0"
+							Grid.ColumnSpan="2"
+							Series="{Binding UsagePercentageGraph, Mode=OneWay}"
+							ZoomMode="X"
+							YAxes="{Binding YAxesPct}"
+							XAxes="{Binding XAxes}">
+				</lvc:CartesianChart>
+			</Grid>
+			<Grid Grid.Row="0" Grid.Column="1">
+				<Grid.RowDefinitions>
+					<RowDefinition Height=".18*"/>
+					<RowDefinition Height=".82*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width=".7*"/>
+					<ColumnDefinition Width=".3*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CurrentMemoryAvailable}"/>
+				<lvc:CartesianChart
+							Grid.Row="1"
+							Grid.Column="0"
+							Grid.ColumnSpan="2"
+							Series="{Binding AvailableMemoryGraph, Mode=OneWay}"
+							ZoomMode="X"
+							YAxes="{Binding YAxesGb}"
+							XAxes="{Binding XAxes}">
+				</lvc:CartesianChart>
+			</Grid>
+			
+			<Grid Grid.Row="1" Grid.Column="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height=".18*"/>
+					<RowDefinition Height=".82*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width=".7*"/>
+					<ColumnDefinition Width=".3*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CurrentTotal}"/>
+				<lvc:CartesianChart
+							Grid.Row="1"
+							Grid.Column="0"
+							Grid.ColumnSpan="2"
+							Series="{Binding TotalMemoryGraph, Mode=OneWay}"
+							ZoomMode="X"
+							YAxes="{Binding YAxesGb}"
+							XAxes="{Binding XAxes}">
+				</lvc:CartesianChart>
+			</Grid>
+			<Grid Grid.Row="1" Grid.Column="1">
+				<Grid.RowDefinitions>
+					<RowDefinition Height=".18*"/>
+					<RowDefinition Height=".82*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width=".7*"/>
+					<ColumnDefinition Width=".3*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CurrentUsedAmt}"/>
+				<lvc:CartesianChart
+							Grid.Row="1"
+							Grid.Column="0"
+							Grid.ColumnSpan="2"
+							Series="{Binding UsedMemoryGraph, Mode=OneWay}"
+							ZoomMode="X"
+							YAxes="{Binding YAxesGb}"
+							XAxes="{Binding XAxes}">
+				</lvc:CartesianChart>
+			</Grid>
+		
+		</Grid>
+	<!-- end charts-->
+	</Grid>
 </UserControl>

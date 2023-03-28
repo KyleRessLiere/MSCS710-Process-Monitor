@@ -1,50 +1,143 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:MetricsMonitorClient.ViewModels"
+		xmlns:v="using:MetricsMonitorClient.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="MetricsMonitorClient.Views.MainWindowView"
         Icon="/Assets/avalonia-logo.ico"
-        Title="MetricsMonitorClient">
+		xmlns:manager="clr-namespace:Avalonia.ThemeManager;assembly=Avalonia.ThemeManager"
+		xmlns:local="clr-namespace:MetricsMonitorClient.Views"
+        Title="Metrics Monitor">
+	<Window.Styles>
+		<Style Selector="ComboBox">
+			<Setter Property="FontSize" Value="26"/>
+			<Setter Property="Foreground" Value="DarkSlateGray"/>
+		</Style>
+		<Style Selector="Grid.ContentGrid">
+			<Setter Property="Background" Value="DarkSlateGray"/>
+		</Style>
+		
+		<Style Selector="TextBlock.h1">
+			<Setter Property="FontSize" Value="180"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
 
-    <Design.DataContext>
+		<Style Selector="TextBlock.h2">
+			<Setter Property="FontSize" Value="135"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+
+		<Style Selector="TextBlock.h3">
+			<Setter Property="FontSize" Value="105"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+
+		<Style Selector="TextBlock.h4">
+			<Setter Property="FontSize" Value="75"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+		
+
+		<Style Selector="TextBlock.h5">
+			<Setter Property="FontSize" Value="68"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+
+		<Style Selector="Label.h5">
+			<Setter Property="FontSize" Value="68"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+
+		<Style Selector="TextBlock.h6">
+			<Setter Property="FontSize" Value="26"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+
+		<Style Selector="Label.h6">
+			<Setter Property="FontSize" Value="26"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+
+		<Style Selector="TabItem.Header.NavButton">
+			<Setter Property="FontSize" Value="30"/>
+			<Setter Property="FontWeight" Value="DemiBold"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+		<Style Selector="TabItem.Header.NavButton:focus">
+			<Setter Property="FontSize" Value="30"/>
+			<Setter Property="FontWeight" Value="DemiBold"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Red}"/>
+		</Style>
+		<Style Selector="TabItem.Header.NavButton:pointerover">
+			<Setter Property="FontSize" Value="30"/>
+			<Setter Property="FontWeight" Value="DemiBold"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Red}"/>
+		</Style>
+
+
+		<Style Selector="TextBlock.TitleText">
+			<Setter Property="FontSize" Value="90"/>
+			<Setter Property="FontWeight" Value="DemiBold"/>
+			<Setter Property="FontFamily" Value="Eurostile"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Top"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+		</Style>
+	</Window.Styles>
+    
+	<Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+			<DockPanel Grid.Row="1" LastChildFill="True">
+				<Border Height="25" Background="{DynamicResource MM-Orange}" BorderBrush="Transparent" BorderThickness="0" DockPanel.Dock="Bottom">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width=".5*"/>
+							<ColumnDefinition Width=".5*"/>
+						</Grid.ColumnDefinitions>
+					<TextBlock Grid.Column="0" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black">Metrics Monitor v0.1</TextBlock>
+					<TextBlock Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black">Created by: Kyle R.L., Caleb R., and Sam A.</TextBlock>
+					</Grid>
+				</Border>
+				<Border Background="{DynamicResource MM-Black}" BorderBrush="Transparent" BorderThickness="0">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height=".16*"/>
+							<RowDefinition Height=".84*"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Classes="TitleText" Text="{Binding ResourceText}"/>
+						<TabControl Grid.Row="1" SelectedIndex="{Binding SelectedResourceIndex}" TabStripPlacement="Left">
+							<TabItem Header="Overview" Classes="NavButton" VerticalContentAlignment="Center">
+								<v:HomeView DataContext="{Binding HomeViewModel}"/>
+							</TabItem>
+							<TabItem Header="Processing" Classes="NavButton" VerticalContentAlignment="Center">
+								<v:CPUView DataContext="{Binding CPUViewModel}"/>
+							</TabItem>
+							<TabItem Header="Memory" Classes="NavButton" VerticalContentAlignment="Center">
+								<v:MemoryView DataContext="{Binding MemoryViewModel}"/>
+							</TabItem>
+							<TabItem Header="Storage" Classes="NavButton" VerticalContentAlignment="Center">
+								<v:StorageView DataContext="{Binding StorageViewModel}"/>
+							</TabItem>
+						</TabControl>
+					</Grid>
 
-
-
-
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width=".2*"/>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
-
-		<!-- Sidebar -->
-		<Grid Grid.Column="0">
-			<Grid.RowDefinitions>
-				<RowDefinition Height=".3*"/>
-				<RowDefinition Height="60"/>
-				<RowDefinition Height="60"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
-		
-		
-		</Grid>
-		
-		<!-- Main content area -->
-
-		<Grid Grid.Column="1">
-			<Grid.RowDefinitions>
-				<RowDefinition Height=".3*"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
-			<TextBlock Text="Test" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			
-			
-		</Grid>	
-		
-	</Grid>
-
+				</Border>
+			</DockPanel>
 </Window>

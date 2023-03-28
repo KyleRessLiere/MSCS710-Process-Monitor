@@ -3,7 +3,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm="using:MetricsMonitorClient.ViewModels"
+             xmlns:vm="using:MetricsMonitorClient.ViewModels.CPUViewMoel"
              x:Class="MetricsMonitorClient.Views.CPUView">
-  Welcome to Avalonia!
+
+
+	<Grid Classes="ContentGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="60"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="100"/>
+			<ColumnDefinition Width="200"/>
+		</Grid.ColumnDefinitions>
+		<Button Grid.Row="0" Grid.Column="0" Command="{Binding DoTheThing}">Load</Button>
+		<ComboBox Grid.Row="0" Grid.Column="1" Items="{Binding DataOptions}" SelectedItem="{Binding SelectedLabel}" />
+	</Grid>
+	
 </UserControl>

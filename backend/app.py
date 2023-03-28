@@ -7,22 +7,60 @@ from db.service import main_poll
 from db.db_init import *
 from sqlite3 import Error
 from api import polls, processes, memory, disks, network, cpu
-
+import time
+from datetime import datetime, timedelta
+from apscheduler.triggers.date import DateTrigger
 
 """
 run on percentage of minute intervals
 gets system info and logs it
 TODO:add awaiting till db is created to prevent error
 """
-def sensor(polling_rate):
+def sensor(polling_rate, poll_type):
     try:
         poll = poll_system()
-        main_poll(poll,polling_rate, "live")
-        #print(json.dumps(poll, indent=4, sort_keys=False))
+        main_poll(poll, polling_rate, poll_type)
+        # print(json.dumps(poll, indent=4, sort_keys=False))
     except Exception as e:
         print(e)
         print("monitor fail")
         pass
+
+def schedule_custom_poll(polling_rate, duration):
+    global sched
+    global custom_poll_job
+    global live_poll_job
+
+    # Stop the live polling job
+    if live_poll_job:
+        sched.remove_job(live_poll_job.id)
+
+    # Remove existing custom_poll_job if exists
+    if custom_poll_job:
+        sched.remove_job(custom_poll_job.id)
+
+    # Create a new job with custom polling rate and duration
+    custom_poll_job = sched.add_job(sensor, args=[polling_rate, "custom"], trigger='interval', minutes=polling_rate)
+
+    # Schedule the job to stop after the specified duration
+    stop_time = datetime.now() + timedelta(minutes=duration)
+    sched.add_job(stop_custom_poll, trigger=DateTrigger(stop_time))
+
+
+def stop_custom_poll():
+    global custom_poll_job
+    global live_poll_job
+
+    if custom_poll_job:
+        sched.remove_job(custom_poll_job.id)
+        custom_poll_job = None
+
+    # Resume the live polling job
+    live_poll_job = sched.add_job(sensor, args=[polling_rate, "live"], trigger='interval', minutes=polling_rate)
+
+
+# Initialize custom_poll_job to None
+custom_poll_job = None
 
 
 """
@@ -30,13 +68,25 @@ Start monitoring at specified rate
 """
 polling_rate = 0.07
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(sensor,args=[polling_rate],trigger ='interval',minutes=polling_rate)
+
+live_poll_job = sched.add_job(sensor,args=[polling_rate,"live"],trigger ='interval',minutes=polling_rate)
 sched.start()
 
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+@app.route('/api/schedule_poll', methods=['POST'])
+def handle_polling():
+    polling_rate = request.json.get("polling_rate")
+    duration = request.json.get("duration")
+
+    if polling_rate is not None and duration is not None:
+        schedule_custom_poll(polling_rate, duration)
+        return jsonify({"message": "Polling scheduled successfully"})
+    else:
+        return jsonify({"message": "Invalid request"}), 400
+    
 
 @app.route('/api/metrics', methods=['GET'])
 def api_get_metrics():

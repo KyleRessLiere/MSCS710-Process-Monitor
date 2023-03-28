@@ -1,126 +1,141 @@
+using Avalonia.Threading;
+using MetricsMonitorClient.DataServices.CPU;
+using MetricsMonitorClient.DataServices.Memory;
+using MetricsMonitorClient.DataServices.MonitorSystem;
 using Microsoft.VisualBasic;
+using NUnit.Framework.Constraints;
+using Org.BouncyCastle.Asn1.Crmf;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Reactive;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
+using ResourceTabIndex = MetricsMonitorClient.MMConstants.ResourceTabIndex;
+using Timer = System.Timers.Timer;
 
-namespace MetricsMonitorClient.ViewModels {
+namespace MetricsMonitorClient.ViewModels
+{
     public class MainWindowViewModel : ViewModelBase {
         public string Greeting => "Welcome to Avalonia!";
-        private Services.ICPUDataFactory _cpuData;
         #region Constructor
         public MainWindowViewModel() {
-            //CPUViewModel = new CPUViewModel();
-            SetToDefaultView();
+            CPUViewModel =  WorkspaceFactory.CreateWorkspace<CPUViewModel>();
+            MemoryViewModel = WorkspaceFactory.CreateWorkspace<MemoryViewModel>();
+            StorageViewModel = WorkspaceFactory.CreateWorkspace<StorageViewModel>();
+            HomeViewModel = WorkspaceFactory.CreateWorkspace<HomeViewModel>();
+            //ResourceText = "Overview";
+            SelectedResourceIndex = (int)ResourceTabIndex.Memory;
+            uiClock = new Timer(MMConstants.SystemClockInterval);
+            uiClock.Elapsed += RunClock;
+            uiClock.Start();
+
         }
+
+
         #endregion Constructor
-        #region Commands
-        public ReactiveCommand<string, Unit> SetActiveTabCommand =>  ReactiveCommand.Create<string>(SetActiveTab);
-        #endregion Commands
-        #region Fields
-        public string HomeScreenName => MMConstants.Home_Screen_Name;
-        public string CPUTabName => MMConstants.CPU_Tab_Name;
-        public string MemoryTabName => MMConstants.Memory_Tab_Name;
-        public string StorageTabName => MMConstants.Storage_Tab_Name;
-        public string NetworkTabName => MMConstants.Network_Tab_Name;
-        #endregion Fields
         #region Properties
+        private void MainWindowViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
+           if(e.PropertyName == nameof(ClockCycle)) {
+              
+                
+                Dispatcher.UIThread.InvokeAsync(() =>
+                    Parallel.Invoke(() => MemoryViewModel.TickClock(),
+                    () => CPUViewModel.TickClock()));
+                Console.WriteLine("Tick " + ClockCycle);
+           }
+        }
+
+        private long _clockCycle;
+        public long ClockCycle {
+            get { return _clockCycle; }
+            private set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
+        }
 
         CPUViewModel CPUViewModel { get; set; }
         MemoryViewModel MemoryViewModel { get; set; }
         StorageViewModel StorageViewModel { get; set; }
+        HomeViewModel HomeViewModel { get; set; }
 
-        private bool isHomeViewActive;
-        public bool IsHomeViewActive {
-            get { return isHomeViewActive; }
-            set { this.RaiseAndSetIfChanged(ref isHomeViewActive, value); }
-        }
-
-        private bool isCPUViewActive;
-        public bool IsCPUViewActive {
-            get { return isCPUViewActive; }
-            set { this.RaiseAndSetIfChanged(ref isCPUViewActive, value); }
+        private string resourceText;
+        public string ResourceText {
+            get { return resourceText; }
+            set { this.RaiseAndSetIfChanged(ref resourceText, value); }
         }
 
 
-        private bool isMemoryViewActive;
-        public bool IsMemoryViewActive {
-            get { return isMemoryViewActive; }
-            set { this.RaiseAndSetIfChanged(ref isMemoryViewActive, value); }
+        private int selecetedResourceIndex;
+        public int SelectedResourceIndex {
+            get { return selecetedResourceIndex; }
+            set { 
+                this.RaiseAndSetIfChanged(ref selecetedResourceIndex, value);
+                UpdateUI();
+            }
         }
 
-        private bool isStorageViewActive;
-        public bool IsStorageViewActive {
-            get { return isStorageViewActive; }
-            set { this.RaiseAndSetIfChanged(ref isStorageViewActive, value); }
-        }
 
-        private bool isNetworkViewActive;
-        public bool IsNetworkViewActive {
-            get { return isNetworkViewActive; }
-            set { this.RaiseAndSetIfChanged(ref isNetworkViewActive, value); }
-        }
-
-        private string titleText;
-        public string TitleText {
-            get { return titleText; }
-            set { this.RaiseAndSetIfChanged(ref titleText, value); }
-        }
+        private Timer uiClock { get; set; }
         #endregion Properties
         #region Methods
-        public void SetActiveTab(string tabName) {
-            if ((tabName == null) || (tabName is string) == false) { return; }
-
-            SetToDefaultView();
-
-            switch (tabName) {
-                case MMConstants.CPU_Tab_Name:
-                    TitleText = "CPU Metrics";
-                    IsCPUViewActive = true;
+        public void UpdateUI() {
+            switch ((ResourceTabIndex)SelectedResourceIndex) {
+                case ResourceTabIndex.Overview:
+                    ResourceText = "Overview";
                     break;
-                case MMConstants.Memory_Tab_Name:
-                    TitleText = "Memory Metrics";
-                    IsMemoryViewActive = true;
+                case ResourceTabIndex.Processing:
+                    ResourceText = "Processing";
                     break;
-                case MMConstants.Storage_Tab_Name:
-                    TitleText = "Storage Metrics";
-                    IsStorageViewActive = true;
+                case ResourceTabIndex.Memory:
+                    ResourceText = "Memory";
                     break;
-                case MMConstants.Network_Tab_Name:
-                    TitleText = "Network Metrics";
-                    IsNetworkViewActive = true;
-                    break;
-                case MMConstants.Home_Screen_Name:
-                    TitleText = "System Overview";
-                    IsHomeViewActive = true;
+                case ResourceTabIndex.Storage:
+                    ResourceText = "Storage";
                     break;
                 default:
+                    ResourceText= string.Empty;
                     break;
             }
 
         }
-        public void SetToDefaultView() {
-            TitleText = "System Overview";
-            IsCPUViewActive = false;
-            IsMemoryViewActive = false;
-            IsStorageViewActive = false;
-            IsNetworkViewActive = false;
-            IsHomeViewActive = true;
-        }
         #endregion Methods
+        #region System
+
+        //private bool hasStartedClockCycling;
+        //private void StartClock() {
+        //    clockLock.Wait();
+        //    if (hasStartedClockCycling) { return; }
+        //    Task.Run(() => RunClock());
+        //    clockLock.Release();
+        //}
+        //private SemaphoreSlim clockLock = new SemaphoreSlim(1);
 
 
 
+        private void RunClock(object sender, ElapsedEventArgs e) {
+            Task.Run(() => MemoryViewModel.TickClock());
+        }
+
+        //private void RunClock() {
+            
+        //    if (hasStartedClockCycling) { return; }
+
+        //    hasStartedClockCycling = true;
+              
+        //    while (true) {
+        //        ClockCycle++;
+        //        Thread.Sleep(MMConstants.SystemClockInterval);
+        //    }
+        //}
+
+        private void doCycle() {
+            MemoryViewModel.TickClock();
+            Console.WriteLine("Tick " + ClockCycle);
+        }
 
 
-
-
-
-
-
-
-
-
+        
+        #endregion
     }
 }

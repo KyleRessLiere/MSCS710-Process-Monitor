@@ -5,12 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MetricsMonitorClient {
-    public class MMConstants {
+    public static class MMConstants {
+        /// <summary>
+        /// sleep period between clock ticks in milliseconds
+        /// </summary>
+        public const int SystemClockInterval = 500;
+        public const int PollBufferSize = 15;
+        public const string BaseApiUrl = "http://127.0.0.1:5000/api";
 
-        public const string Home_Screen_Name = "Home Screen";
-        public const string CPU_Tab_Name = "CPU tab";
-        public const string Memory_Tab_Name = "Memory tab";
-        public const string Storage_Tab_Name = "Storage tab";
-        public const string Network_Tab_Name = "Network tab";
+        public enum ResourceTabIndex {
+            Overview = 0,
+            Processing = 1,
+            Memory = 2,
+            Storage = 3
+        };
+
     }
 }

@@ -5,8 +5,18 @@
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
-
-    <Application.Styles>
-        <FluentTheme Mode="Light"/>
-    </Application.Styles>
+	<Application.Resources>
+		<ResourceDictionary>
+			<Color x:Key="MM-Black">#000000</Color>
+			<Color x:Key="MM-Red">#CF0A0A</Color>
+			<Color x:Key="MM-Orange">#DC5F00</Color>
+			<Color x:Key="MM-Light">#EEEEEE</Color>
+		</ResourceDictionary>
+	</Application.Resources>
+	<Application.Styles>
+		<StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
+		<StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseLight.xaml"/>
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Default.xaml"/>
+		<StyleInclude Source="avares://NP.Avalonia.Visuals/Themes/ThemeStyles.axaml"/>
+	</Application.Styles>
 </Application>
