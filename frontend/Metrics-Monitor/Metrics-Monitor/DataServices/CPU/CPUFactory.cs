@@ -58,4 +58,4 @@ namespace MetricsMonitorClient.DataServices.CPU {
             }
         }
     }
-    }
+}

@@ -10,7 +10,7 @@
 
 	<Grid Classes="ContentGrid">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="350"/>
+			<RowDefinition Height="300"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<Grid Grid.Row="0">
@@ -29,18 +29,29 @@
 			<TextBlock Grid.Row="4" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding SysCalls}"/>
 			<TextBlock Grid.Row="5" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding CoreCountPhysical}"/>
 		</Grid>
-		<Grid Grid.Row="1">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
-			<lvc:PieChart Grid.Row="1"
-			Series="{Binding PCT}"
-			InitialRotation="-225"
-			MaxAngle="270"
-			Total="100">
-			</lvc:PieChart>
-		</Grid>
-		
+			<DataGrid
+			Grid.Row="1"
+			FontSize="18"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center"
+			GridLinesVisibility="All"
+			RowBackground="DarkGray"
+			AlternatingRowBackground="DarkGray"
+			Foreground="{DynamicResource MM-Light}"
+			AutoGenerateColumns="False"
+			Items="{Binding StatsContainers, Mode=OneWay}">
+				<DataGrid.Columns>
+					<DataGridTextColumn IsReadOnly="True" Header="Core" Binding="{Binding Id}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Current" Binding="{Binding Current}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Average" Binding="{Binding Avg}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Min" Binding="{Binding Min}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Max" Binding="{Binding Max}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="25th Percentile" Binding="{Binding FirstQ}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="50th Percentile" Binding="{Binding SecondQ}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="75th Percentile" Binding="{Binding ThirdQ}"/>
+				</DataGrid.Columns>
+			</DataGrid>
+			
 	</Grid>
 	
 </UserControl>
