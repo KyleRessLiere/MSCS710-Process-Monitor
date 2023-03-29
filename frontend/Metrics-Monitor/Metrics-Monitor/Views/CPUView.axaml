@@ -2,22 +2,58 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="550"
              xmlns:vm="using:MetricsMonitorClient.ViewModels.CPUViewMoel"
+			 			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              x:Class="MetricsMonitorClient.Views.CPUView">
 
 
 	<Grid Classes="ContentGrid">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="60"/>
+			<RowDefinition Height="250"/>
+			<RowDefinition Height="32"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="100"/>
-			<ColumnDefinition Width="200"/>
-		</Grid.ColumnDefinitions>
-		<Button Grid.Row="0" Grid.Column="0" Command="{Binding DoTheThing}">Load</Button>
-		<ComboBox Grid.Row="0" Grid.Column="1" Items="{Binding DataOptions}" SelectedItem="{Binding SelectedLabel}" />
+		<Grid Grid.Row="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="35"/>
+				<RowDefinition Height="35"/>
+				<RowDefinition Height="35"/>
+				<RowDefinition Height="35"/>
+				<RowDefinition Height="35"/>
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Row="0" VerticalAlignment="Center" TextAlignment="Left" FontSize="38" Foreground="Black" Text="{Binding CurrentUsagePercentage}"/>
+			<TextBlock Grid.Row="1" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding ContextSwitches}"/>
+			<TextBlock Grid.Row="2" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding Interrupts}"/>
+			<TextBlock Grid.Row="3" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding SoftInterrupts}"/>
+			<TextBlock Grid.Row="4" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding SysCalls}"/>
+			<TextBlock Grid.Row="5" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding CoreCountPhysical}"/>
+		</Grid>
+		<TextBlock Padding="0,0,10,0" Grid.Row="1" VerticalAlignment="Center"  TextAlignment="Center" FontSize="20" Foreground="Black" Text="Usage Percentage By Core"/>
+		<DataGrid
+			Grid.Row="2"
+			FontSize="18"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center"
+			GridLinesVisibility="All"
+			RowBackground="DarkGray"
+			AlternatingRowBackground="DarkGray"
+			Foreground="{DynamicResource MM-Light}"
+			AutoGenerateColumns="False"
+			Items="{Binding StatsContainers, Mode=OneWay}">
+				<DataGrid.Columns>
+					<DataGridTextColumn IsReadOnly="True" Header="Core" Binding="{Binding Id}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Current" Binding="{Binding Current}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Average" Binding="{Binding Avg}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Min" Binding="{Binding Min}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="Max" Binding="{Binding Max}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="25th Percentile" Binding="{Binding FirstQ}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="50th Percentile" Binding="{Binding SecondQ}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="75th Percentile" Binding="{Binding ThirdQ}"/>
+				</DataGrid.Columns>
+			</DataGrid>
+			
 	</Grid>
 	
 </UserControl>

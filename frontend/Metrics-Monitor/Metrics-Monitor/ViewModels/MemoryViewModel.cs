@@ -19,15 +19,19 @@ using LiveChartsCore.Drawing;
 using NUnit.Framework.Constraints;
 using Org.BouncyCastle.Asn1.BC;
 using System.Runtime.CompilerServices;
+using Castle.Core.Logging;
+using log4net;
 
 namespace MetricsMonitorClient.ViewModels
 {
     public class MemoryViewModel : ViewModelBase{
         private readonly IMemoryFactory _memoryFactory;
+        private readonly ILog _logger;
         #region Constructor
 
-        public MemoryViewModel(IMemoryFactory memoryFactory) {
+        public MemoryViewModel(IMemoryFactory memoryFactory, ILog logger) {
             _memoryFactory = memoryFactory;
+            _logger = logger;
             UsagePolls = new AvaloniaList<MemoryUsagePollDto>();
             ClockLock = new SemaphoreSlim(1, 1);
             InitGraph();
@@ -224,10 +228,9 @@ namespace MetricsMonitorClient.ViewModels
 
                 PreloadGraphsAndLabels();
             }catch(Exception ex) {
-                //TODO: add logger here
-            
+                _logger.Error(ex);
             }
-          
+
 
         }
         public void PreloadGraphsAndLabels() {

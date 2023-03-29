@@ -12,10 +12,11 @@ namespace MetricsMonitorClient {
         public const int SystemClockInterval = 500;
         public const int PollBufferSize = 15;
         public const string BaseApiUrl = "http://127.0.0.1:5000/api";
+        public const int StatsContainerMaxBuffer = 300;
 
         public enum ResourceTabIndex {
             Overview = 0,
-            Processing = 1,
+            CPU = 1,
             Memory = 2,
             Storage = 3
         };

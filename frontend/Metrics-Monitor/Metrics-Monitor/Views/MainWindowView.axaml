@@ -4,7 +4,7 @@
 		xmlns:v="using:MetricsMonitorClient.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
         x:Class="MetricsMonitorClient.Views.MainWindowView"
         Icon="/Assets/avalonia-logo.ico"
 		xmlns:manager="clr-namespace:Avalonia.ThemeManager;assembly=Avalonia.ThemeManager"
@@ -126,7 +126,7 @@
 							<TabItem Header="Overview" Classes="NavButton" VerticalContentAlignment="Center">
 								<v:HomeView DataContext="{Binding HomeViewModel}"/>
 							</TabItem>
-							<TabItem Header="Processing" Classes="NavButton" VerticalContentAlignment="Center">
+							<TabItem Header="CPU" Classes="NavButton" VerticalContentAlignment="Center">
 								<v:CPUView DataContext="{Binding CPUViewModel}"/>
 							</TabItem>
 							<TabItem Header="Memory" Classes="NavButton" VerticalContentAlignment="Center">

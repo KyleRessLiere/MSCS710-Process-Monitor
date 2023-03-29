@@ -1,4 +1,5 @@
-﻿using MetricsMonitorClient.DataServices.Memory.Dtos;
+﻿using log4net;
+using MetricsMonitorClient.DataServices.Memory.Dtos;
 using MetricsMonitorClient.DataServices.MonitorSystem.Dtos;
 using Newtonsoft.Json;
 using Splat;
@@ -12,8 +13,8 @@ using System.Threading.Tasks;
 
 namespace MetricsMonitorClient.DataServices.Memory {
     public class MemoryFactory : IMemoryFactory {
-        private readonly ILogger _logger;
-        public MemoryFactory(ILogger logger) {
+        private readonly ILog _logger;
+        public MemoryFactory(ILog logger) {
             this._logger = logger;
         }
         public async Task<MemoryUsagePollDto> GetLatestMemoryPollAsync() {
@@ -33,7 +34,7 @@ namespace MetricsMonitorClient.DataServices.Memory {
                    throw new HttpRequestException("An Error occured making a get request");
                 }
             } catch(Exception ex) {
-                _logger.Write($"an error occurred.\n{ex.Message}", LogLevel.Error);
+                _logger.Error(ex);
                 throw;
             }
         }
@@ -57,7 +58,7 @@ namespace MetricsMonitorClient.DataServices.Memory {
                     throw new HttpRequestException("An Error occured making a get request");
                 }
             } catch (Exception ex) {
-                _logger.Write($"an error occurred.\n{ex.Message}", LogLevel.Error);
+                _logger.Error(ex);
                 throw;
             }
         }

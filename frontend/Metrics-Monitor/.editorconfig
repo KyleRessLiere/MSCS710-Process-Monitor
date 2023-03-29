@@ -14,3 +14,6 @@ dotnet_diagnostic.CS8603.severity = suggestion
 
 # CS8622: Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 dotnet_diagnostic.CS8622.severity = suggestion
+
+# CS8619: Nullability of reference types in value doesn't match target type.
+dotnet_diagnostic.CS8619.severity = suggestion
