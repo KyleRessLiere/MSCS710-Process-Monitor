@@ -148,7 +148,7 @@ namespace MetricsMonitorClient.ViewModels
 
         private void UpdateUIData() {
             
-            var poll = Task.Run(() => _memoryFactory.GetLatestMemoryPollAsync()).Result;
+            var poll = Task.Run(() => _memoryFactory.GetLatestMemoryPollAsync()).Result as MemoryUsagePollDto;
 
             if (poll == null) { return; }
 
