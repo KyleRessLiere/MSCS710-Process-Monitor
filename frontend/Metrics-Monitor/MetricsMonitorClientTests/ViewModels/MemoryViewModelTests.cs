@@ -23,18 +23,8 @@ namespace MetricsMonitorClientTests.ViewModels {
         public void TearDown()
         {
             _factory.Reset();
-           
             _logger.Reset();
         }
-
-        //[TearDown]
-        //public void TearDown() {
-        //    _factory.Reset();
-        //    _logger.Reset();
-        //}
-
-
-
 
         [Test]
         public void MemoryViewModel_GraphsInitOnLoad()
