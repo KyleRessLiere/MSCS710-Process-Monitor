@@ -18,14 +18,10 @@ jobs:
         dotnet-version: '6.0.0'
 
     - name: Restore dependencies on client
-      run: dotnet restore frontend/Metrics-Monitor/Metrics-Monitor/MetricsMonitorClient.csproj
+      run: dotnet restore 
 
     - name: Build
-      run: dotnet build frontend/Metrics-Monitor/Metrics-Monitor/MetricsMonitorClient.csproj
-
-      
-     - name: Restore dependencies on client
-      run: dotnet restore frontend/Metrics-Monitor/Metrics-Monitor/MetricsMonitorClientTests.csproj
+      run: dotnet build frontend/Metrics-Monitor/Metrics-Monitor/MetricsMonitorClient.sln
 
     - name: Run Tests
       run: dotnet test frontend/Metrics-Monitor/MetricsMonitorClientTests/MetricsMonitorClientTests.csproj
