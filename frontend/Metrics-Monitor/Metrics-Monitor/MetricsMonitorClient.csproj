@@ -11,6 +11,7 @@
     <StartupObject>MetricsMonitorClient.Program</StartupObject>
     <Title>Metrics Monitor Client</Title>
     <Authors>Sam Alcosser</Authors>
+    <ApplicationIcon>Assets\MMM.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
@@ -19,6 +20,10 @@
     <EmbeddedResource Remove="Models\MonitorSystem\**" />
     <None Remove="Models\MonitorSystem\**" />
     <None Remove=".gitignore" />
+    <None Remove="Assets\MMM.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\MMM.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
@@ -36,6 +41,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3-beta1" />
     <PackageReference Include="NP.Avalonia.Visuals" Version="1.0.35" />
     <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="Splat" Version="14.6.8" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />

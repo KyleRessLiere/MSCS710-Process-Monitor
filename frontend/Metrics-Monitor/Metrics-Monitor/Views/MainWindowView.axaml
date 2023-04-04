@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
         x:Class="MetricsMonitorClient.Views.MainWindowView"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="Assets/avalonia-logo.ico"
 		xmlns:manager="clr-namespace:Avalonia.ThemeManager;assembly=Avalonia.ThemeManager"
 		xmlns:local="clr-namespace:MetricsMonitorClient.Views"
         Title="Metrics Monitor">
