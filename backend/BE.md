@@ -8,15 +8,15 @@
 
 Change to backend directory:
 
-	'cd backend/'
+    'cd backend/'
 
 Install Local Dependencies:
 
-	'pip install -r requirements.txt'
+    'pip install -r requirements.txt'
 
 Run Flask server, start metrics monitor script and initialize SQLite DB:
 
-	'python3 app.py'
+    'python3 app.py'
 
 ## View DB
 
@@ -27,20 +27,24 @@ Install VScode extension: "SQLite Viewer" by Florian Klampfer
 Download "DB Browser for SQLite" (https://sqlitebrowser.org/)
 
 ## Build
-Change to backend directory:  
 
-	‘cd backend/’
+Change to backend directory:
+
+    ‘cd backend/’
+
 Install PyInstaller
 
-	pip install Pyinstaller
+    pip install Pyinstaller
+
 Run a clean build
 
-	pyinstaller --clean app.py
+    pyinstaller --clean app.py
+
 Enter into debugging mode
 
-	--Open app.spec in backend and toggle debug
-		
-	exe = EXE(
+    --Open app.spec in backend and toggle debug
+
+    exe = EXE(
     pyz,
     a.scripts,
     [],
@@ -56,10 +60,17 @@ Enter into debugging mode
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-	)
+    )
+
 Toggle Window for backend Server
 
-	cd backend
-	pyinstaller --noconsole app.py`
-	--OR--
-	pyinstaller --console app.py`
+    cd backend
+    pyinstaller --noconsole app.py`
+    --OR--
+    pyinstaller --console app.py`
+
+## Testing
+
+- Run Flask server from terminal (reference "How To Use" section)
+- Open second terminal, navigate to '/backend/tests' directory
+- Run tests with command: "pytest"

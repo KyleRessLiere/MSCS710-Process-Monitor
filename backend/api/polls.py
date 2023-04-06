@@ -40,7 +40,7 @@ def get_latest_poll():
                 "poll_id": latest_poll[0],
                 "poll_rate": latest_poll[1],
                 "operating_system": latest_poll[2],
-                "time": latest_poll[3]
+                "time": datetime.datetime.strptime(latest_poll[3], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
             }
     except Error as e:
         print(e)
