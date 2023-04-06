@@ -86,7 +86,7 @@ def handle_polling():
         return jsonify({"message": "Polling scheduled successfully"})
     else:
         return jsonify({"message": "Invalid request"}), 400
-    
+
 
 @app.route('/api/metrics', methods=['GET'])
 def api_get_metrics():
