@@ -103,7 +103,6 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
         }
 
-
         public Axis[] YAxesPct { get; set; } =
 {
         new Axis
@@ -170,39 +169,15 @@ namespace MetricsMonitorClient.ViewModels
 
             }catch(Exception ex) {
                 _logger.Error(ex);
+               // var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+               //.GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
+               // messageBoxStandardWindow.Show();
             }
             
 
         }
 
-        //public void UpdateGraphs(CPUDto poll) {
-
-
-        //    for (int i = 0; i < poll.cpu_percentage_per_core.Length; i++) {
-        //        CoreGraphs[i].Values = newData;
-        //    }
-        //}
-
-
-        //public void UpdateGraphs(CPUDto poll) {
-
-        //}
-
-        //public void InitGraphs() {
-        //    CoreGraphs = new ObservableCollection<ISeries>();
-        //    for (int i = 0; i < CoreCount; i++) {
-        //        //CoreGraphs
-        //        var coreGraph = new LineSeries<ObservableValue> {
-        //            Name = $"Core {i}",
-        //            Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 0 },
-        //            ZIndex = 0,
-        //            LineSmoothness = 0,
-        //            EasingFunction = null,
-        //            AnimationsSpeed = TimeSpan.Zero,
-        //            Values = new ObservableValue[MMConstants.PollBufferSize]
-        //        };
-        //    };
-        //}
+       
 
         public void InitData(CPUDto poll) {
             CoreCountPhysical = $"Physical Cores: {poll.cpu_count_physical}";
@@ -234,9 +209,6 @@ namespace MetricsMonitorClient.ViewModels
             SysCalls = $"System Calls: {poll.syscalls}";
             SoftInterrupts = $"Software Interrupts: {poll.soft_interrupts}";
         }
-       
-
-       
 
     }
 }

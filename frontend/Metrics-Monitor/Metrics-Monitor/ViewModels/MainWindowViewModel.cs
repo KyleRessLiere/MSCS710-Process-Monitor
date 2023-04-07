@@ -1,4 +1,5 @@
 using Avalonia.Threading;
+using log4net;
 using MetricsMonitorClient.DataServices.CPU;
 using MetricsMonitorClient.DataServices.Memory;
 using MetricsMonitorClient.DataServices.MonitorSystem;
@@ -19,7 +20,7 @@ using Timer = System.Timers.Timer;
 namespace MetricsMonitorClient.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase {
-        public string Greeting => "Welcome to Avalonia!";
+        private readonly ILog _logger;
         #region Constructor
         public MainWindowViewModel() {
             CPUViewModel =  WorkspaceFactory.CreateWorkspace<CPUViewModel>();
@@ -31,6 +32,7 @@ namespace MetricsMonitorClient.ViewModels
             uiClock.Elapsed += RunClock;
             uiClock.Start();
             SingleCycleLock = new SemaphoreSlim(1, 1);
+           _logger =  log4net.LogManager.GetLogger(typeof(MainWindowViewModel));
 
         }
 
@@ -97,7 +99,8 @@ namespace MetricsMonitorClient.ViewModels
 
         private void RunClock(object sender, ElapsedEventArgs e) {
             if((sender is Timer) == false) { return; }
-            SingleCycleLock.Wait();
+            try {
+                SingleCycleLock.Wait();
 
                 switch ((ResourceTabIndex)selecetedResourceIndex) {
                     case ResourceTabIndex.Overview:
@@ -114,8 +117,15 @@ namespace MetricsMonitorClient.ViewModels
                         break;
                     default:
                         break;
+                }
+                SingleCycleLock.Release(1);
+            } catch (Exception ex) {
+                _logger.Error(ex);
+                var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
+                messageBoxStandardWindow.Show();
             }
-            SingleCycleLock.Release(1);
+           
 
         }
 
