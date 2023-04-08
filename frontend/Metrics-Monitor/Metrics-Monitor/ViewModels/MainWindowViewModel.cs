@@ -91,10 +91,7 @@ namespace MetricsMonitorClient.ViewModels
         }
         #endregion Methods
         #region System
-
-        private static readonly object _lock = new object();
         private SemaphoreSlim SingleCycleLock;
-
         private void RunClock(object sender, ElapsedEventArgs e) {
             if((sender is Timer) == false) { return; }
             SingleCycleLock.Wait();
@@ -111,6 +108,8 @@ namespace MetricsMonitorClient.ViewModels
                         Console.WriteLine("Tick " + ClockCycle);
                         break;
                     case ResourceTabIndex.Storage:
+                        StorageViewModel.TickClock();
+                        Console.WriteLine("Tick " + ClockCycle);
                         break;
                     default:
                         break;

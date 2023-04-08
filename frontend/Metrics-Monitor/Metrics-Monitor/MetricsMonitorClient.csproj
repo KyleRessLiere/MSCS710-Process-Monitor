@@ -20,7 +20,6 @@
     <EmbeddedResource Remove="Models\MonitorSystem\**" />
     <None Remove="Models\MonitorSystem\**" />
     <None Remove=".gitignore" />
-    <None Remove="Assets\MMM.ico" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\MMM.ico" />
