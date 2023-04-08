@@ -26,11 +26,12 @@ namespace MetricsMonitorClient.ViewModels
     public class CPUViewModel : ViewModelBase {
         private readonly ICPUFactory _factory;
         private readonly ILog _logger;
+        private readonly SemaphoreSlim _clockLock;
         #region Constructor
         public CPUViewModel(ICPUFactory factory, ILog logger) {
             _factory = factory;
             _logger = logger;
-            ClockLock = new SemaphoreSlim(1, 1);
+            _clockLock = new SemaphoreSlim(1, 1);
             CPUPolls = new List<CPUDto>();
             StatsContainers = new AvaloniaList<CpuStatsContainer>();
             this.PropertyChanged += CPUViewModel_PropertyChanged;
@@ -45,7 +46,6 @@ namespace MetricsMonitorClient.ViewModels
 
         #region Properties
 
-        public SemaphoreSlim ClockLock { get; private set; }
 
         public List<CPUDto> CPUPolls { get; }
 
@@ -91,18 +91,11 @@ namespace MetricsMonitorClient.ViewModels
 
         public int CoreCount { get; set; }
 
-        private ObservableCollection<ISeries> _coreGraphs;
-        public ObservableCollection<ISeries> CoreGraphs {
-            get { return _coreGraphs; }
-            set { this.RaiseAndSetIfChanged(ref _coreGraphs, value); }
-        }
-
         private long _clockCycle;
         public long ClockCycle {
             get { return _clockCycle; }
             set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
         }
-
 
         public Axis[] YAxesPct { get; set; } =
 {
@@ -136,9 +129,9 @@ namespace MetricsMonitorClient.ViewModels
 
         #endregion Properties
         public void TickClock() {
-            ClockLock.Wait();
+            _clockLock.Wait();
             ClockCycle = ClockCycle + 1;
-            ClockLock.Release();
+            _clockLock.Release();
         }
         public void UpdateUiData() {
             try {
@@ -150,9 +143,7 @@ namespace MetricsMonitorClient.ViewModels
 
                 if (!IsInitialized) {
                     InitData(poll);
-                    CPUPolls.Add(poll);
                     IsInitialized = true;
-                    return;
                 }
 
 
@@ -170,39 +161,15 @@ namespace MetricsMonitorClient.ViewModels
 
             }catch(Exception ex) {
                 _logger.Error(ex);
+               // var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+               //.GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
+               // messageBoxStandardWindow.Show();
             }
             
 
         }
 
-        //public void UpdateGraphs(CPUDto poll) {
-
-
-        //    for (int i = 0; i < poll.cpu_percentage_per_core.Length; i++) {
-        //        CoreGraphs[i].Values = newData;
-        //    }
-        //}
-
-
-        //public void UpdateGraphs(CPUDto poll) {
-
-        //}
-
-        //public void InitGraphs() {
-        //    CoreGraphs = new ObservableCollection<ISeries>();
-        //    for (int i = 0; i < CoreCount; i++) {
-        //        //CoreGraphs
-        //        var coreGraph = new LineSeries<ObservableValue> {
-        //            Name = $"Core {i}",
-        //            Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 0 },
-        //            ZIndex = 0,
-        //            LineSmoothness = 0,
-        //            EasingFunction = null,
-        //            AnimationsSpeed = TimeSpan.Zero,
-        //            Values = new ObservableValue[MMConstants.PollBufferSize]
-        //        };
-        //    };
-        //}
+       
 
         public void InitData(CPUDto poll) {
             CoreCountPhysical = $"Physical Cores: {poll.cpu_count_physical}";
@@ -234,9 +201,6 @@ namespace MetricsMonitorClient.ViewModels
             SysCalls = $"System Calls: {poll.syscalls}";
             SoftInterrupts = $"Software Interrupts: {poll.soft_interrupts}";
         }
-       
-
-       
 
     }
 }

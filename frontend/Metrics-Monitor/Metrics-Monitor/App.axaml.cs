@@ -25,7 +25,7 @@ namespace MetricsMonitorClient {
 
         public override void Initialize() {
             //System.Diagnostics.Process.Start("../../../startService.bat");
-         //   startFlaskServer();
+            startFlaskServer();
          //   startFlaskServer();
             AvaloniaXamlLoader.Load(this);
         }
@@ -38,12 +38,15 @@ namespace MetricsMonitorClient {
             start.Arguments = "app.py";
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
-            using (Process process = Process.Start(start)) {
-                using (StreamReader reader = process.StandardOutput) {
-                    string result = reader.ReadToEnd();
-                    Console.Write(result);
-                }
-            }
+
+           // Task.Run(() => Process.Start(start));
+
+            //using (Process process = Process.Start(start)) {
+            //    using (StreamReader reader = process.StandardOutput) {
+            //        string result = reader.ReadToEnd();
+            //        Console.Write(result);
+            //    }
+            //}
         }
 
         public override void OnFrameworkInitializationCompleted() {
@@ -61,5 +64,7 @@ namespace MetricsMonitorClient {
             }
 
         }
+
+       
     }
 }
