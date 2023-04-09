@@ -20,6 +20,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
+using System.Globalization;
 
 namespace MetricsMonitorClient.ViewModels
 {
@@ -201,11 +202,11 @@ namespace MetricsMonitorClient.ViewModels
         }
 
         public void UpdateCurrentStats(CPUDto poll) {
-            CurrentUsagePercentage = $"Current Usage: {poll.cpu_percent}%";
-            ContextSwitches = $"Context Switches: {poll.cpu_ctx_switches}";
-            Interrupts = $"Interrupts: {poll.interrupts}";
-            SysCalls = $"System Calls: {poll.syscalls}";
-            SoftInterrupts = $"Software Interrupts: {poll.soft_interrupts}";
+            CurrentUsagePercentage = $"Current Usage: {(poll.cpu_percent / 100.0).ToString("P", CultureInfo.InvariantCulture)}";
+            ContextSwitches = $"Context Switches: {poll.cpu_ctx_switches.ToString("N0", CultureInfo.InvariantCulture)}";
+            Interrupts = $"Interrupts: {poll.interrupts.ToString("N0", CultureInfo.InvariantCulture)}";
+            SysCalls = $"System Calls: {poll.syscalls.ToString("N0", CultureInfo.InvariantCulture)}";
+            SoftInterrupts = $"Software Interrupts: {poll.soft_interrupts.ToString("N0", CultureInfo.InvariantCulture)}";
         }
 
     }

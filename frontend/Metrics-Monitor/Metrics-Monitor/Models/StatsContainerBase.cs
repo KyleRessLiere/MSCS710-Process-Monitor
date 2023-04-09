@@ -66,7 +66,7 @@ namespace MetricsMonitorClient.Models {
 
             double nPlusOne = (double)PollList.Count + 1.0;
 
-            PollList.Sort();
+            //PollList.Sort();
 
             FirstQ = Percentile(PollList, .25);
             SecondQ = Percentile(PollList, .50);

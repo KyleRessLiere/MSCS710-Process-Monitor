@@ -12,7 +12,7 @@ namespace MetricsMonitorClient {
         // yet and stuff might break.
         [STAThread]
         public static void Main(string[] args) {
-            startFlaskServer();
+            //startFlaskServer();
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
        

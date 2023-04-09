@@ -20,6 +20,10 @@ namespace MetricsMonitorClient {
             Memory = 2,
             Storage = 3
         };
+        /// <summary>
+        /// used when converting b <-> gb 
+        /// </summary>
+        public const double OneBillion = 1000000000.0;
 
     }
 }

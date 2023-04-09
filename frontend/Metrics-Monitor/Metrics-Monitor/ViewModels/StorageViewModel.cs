@@ -1,14 +1,20 @@
-﻿using LiveChartsCore;
+﻿using Avalonia.Collections;
+using JetBrains.Annotations;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using log4net;
 using MetricsMonitorClient.DataServices.Storage;
 using ReactiveUI;
 using SkiaSharp;
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
+
 namespace MetricsMonitorClient.ViewModels {
     public class StorageViewModel : ViewModelBase {
         private readonly IStorageFactory _factory;
@@ -19,8 +25,10 @@ namespace MetricsMonitorClient.ViewModels {
             this._factory = factory;
             this._logger = logger;
             _clockLock = new SemaphoreSlim(1, 1);
+            DiskFree = new ObservableValue();
+            DiskUsed = new ObservableValue();
+            InitChart();
             this.PropertyChanged += StorageViewModel_PropertyChanged;
-
         }
 
         private void StorageViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
@@ -37,29 +45,47 @@ namespace MetricsMonitorClient.ViewModels {
             set { this.RaiseAndSetIfChanged(ref _clock, value); }
         }
 
+        private string _diskTotalInfo;
+        public string DiskTotalInfo {
+            get { return _diskTotalInfo; }
+            set { this.RaiseAndSetIfChanged(ref _diskTotalInfo, value); }
+        }
+
+        private string _diskUsageInfo;
+        public string DiskUsageInfo {
+            get { return _diskUsageInfo; }
+            set { this.RaiseAndSetIfChanged(ref _diskUsageInfo, value); }
+        }
+
+
         private double _diskPercentage;
         public double DiskPercentage {
             get { return _diskPercentage; }
             set { this.RaiseAndSetIfChanged(ref _diskPercentage, value); }
         }
 
-        private long _diskFree;
-        public long DiskFree {
+        private ObservableValue _diskFree;
+        public ObservableValue DiskFree {
             get { return _diskFree; }
             set { this.RaiseAndSetIfChanged(ref _diskFree, value); }
         }
-        private long _diskTotal;
-        public long DiskTotal {
+        private double _diskTotal;
+        public double DiskTotal {
             get { return _diskTotal; }
             set { this.RaiseAndSetIfChanged(ref _diskTotal, value); }
         }
-        private long _diskUsed;
-        public long DiskUsed {
+        private ObservableValue _diskUsed;
+        public ObservableValue DiskUsed {
             get { return _diskUsed; }
             set { this.RaiseAndSetIfChanged(ref _diskUsed, value); }
         }
-        
-        public IEnumerable<ISeries> StorageUsagePieChart { get; set; }
+
+        private AvaloniaList<ISeries> _storageUsagePieChart;
+        public AvaloniaList<ISeries> StorageUsagePieChart {
+            get { return _storageUsagePieChart; }
+            set { this.RaiseAndSetIfChanged(ref _storageUsagePieChart, value); }
+        }
+
 
         #endregion Properties
 
@@ -71,16 +97,12 @@ namespace MetricsMonitorClient.ViewModels {
                 if (poll == null) { return; }
 
                 DiskPercentage = poll.disk_percentage;
-                DiskFree = poll.disk_free;
-                DiskTotal = poll.disk_total;
-                DiskUsed = poll.disk_used;
-                
-                StorageUsagePieChart = new ISeries[]{
-                    new PieSeries<long> { Values = new long[] { DiskFree }, Name = "Free Space" },
-                    new PieSeries<long> { Values = new long[] { DiskUsed }, Name = "Used Space" },
-                };
+                DiskTotal = (double)poll.disk_total / MMConstants.OneBillion;
+                DiskFree.Value = (double)poll.disk_free / MMConstants.OneBillion; // converting to gb
+                DiskUsed.Value = (double)poll.disk_used / MMConstants.OneBillion;
 
-                this.RaisePropertyChanged(nameof(StorageUsagePieChart));
+                DiskTotalInfo = $"Total Space: {DiskTotal.ToString("N7", CultureInfo.InvariantCulture)} Gb";
+                DiskUsageInfo = $"Percentage Used: {DiskPercentage.ToString("N7", CultureInfo.InvariantCulture)}%";
 
             }catch(Exception ex) {
                 _logger.Error(ex);
@@ -92,6 +114,17 @@ namespace MetricsMonitorClient.ViewModels {
             Clock = Clock + 1;
             _clockLock.Release();
         }
+
+
+        public void InitChart() {
+            DiskFree.Value = 100;
+            StorageUsagePieChart = new AvaloniaList<ISeries> {
+                new PieSeries<ObservableValue> { Values = new ObservableValue[] { DiskFree }, Name = "Free Space (Gb)", InnerRadius = 50 },
+                new PieSeries<ObservableValue> { Values = new ObservableValue[] { DiskUsed }, Name = "Used Space (Gb)", InnerRadius = 50 }
+            };
+        }
+
         #endregion Methods
+      
     }
 }

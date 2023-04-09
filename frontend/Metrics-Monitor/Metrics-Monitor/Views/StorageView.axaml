@@ -7,7 +7,21 @@
              x:Class="MetricsMonitorClient.Views.StorageView">
 	<Grid Classes="ContentGrid">
 		<Grid>
-			<lvc:PieChart Series="{Binding StorageUsagePieChart}" />
+			<Grid.RowDefinitions>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width=".5*"/>
+					<ColumnDefinition Width=".5*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Column="0" HorizontalAlignment="Center" Text="{Binding DiskTotalInfo}" Classes="h6"/>
+				<TextBlock Grid.Column="1" HorizontalAlignment="Center" Text="{Binding DiskUsageInfo}" Classes="h6"/>
+			</Grid>
+			<Grid Grid.Row="1">
+				<lvc:PieChart Height="500" Series="{Binding StorageUsagePieChart}" />
+			</Grid>
 		</Grid>
 	</Grid>
 </UserControl>
