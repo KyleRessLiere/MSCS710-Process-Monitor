@@ -20,32 +20,36 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
+using System.Globalization;
 
 namespace MetricsMonitorClient.ViewModels
 {
     public class CPUViewModel : ViewModelBase {
         private readonly ICPUFactory _factory;
         private readonly ILog _logger;
+        private readonly SemaphoreSlim _clockLock;
         #region Constructor
         public CPUViewModel(ICPUFactory factory, ILog logger) {
             _factory = factory;
             _logger = logger;
-            ClockLock = new SemaphoreSlim(1, 1);
+            _clockLock = new SemaphoreSlim(1, 1);
             CPUPolls = new List<CPUDto>();
-            StatsContainers = new AvaloniaList<CpuStatsContainer>();
+            StatsContainers = new List<CpuStatsContainer>();
             this.PropertyChanged += CPUViewModel_PropertyChanged;
         }
 
         private void CPUViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
            if(string.Equals(e.PropertyName, nameof(ClockCycle))){
-                Dispatcher.UIThread.InvokeAsync(() => UpdateUiData());
+                //Dispatcher.UIThread.InvokeAsync(() => UpdateUiData());
+                UpdateUiData();
+                //Application.Current.Dispatcher.BeginInvoke(new Action(() => UpdateUiData());
+                ////var d  = new De(() => UpdateUiData());
            }
         }
         #endregion Constructor
 
         #region Properties
 
-        public SemaphoreSlim ClockLock { get; private set; }
 
         public List<CPUDto> CPUPolls { get; }
 
@@ -85,24 +89,17 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref _currentUsagePercentage, value); }
         }
 
-        public AvaloniaList<CpuStatsContainer> StatsContainers { get; private set; }
+        public List<CpuStatsContainer> StatsContainers { get; private set; }
 
         public bool IsInitialized { get; set; }
 
         public int CoreCount { get; set; }
-
-        private ObservableCollection<ISeries> _coreGraphs;
-        public ObservableCollection<ISeries> CoreGraphs {
-            get { return _coreGraphs; }
-            set { this.RaiseAndSetIfChanged(ref _coreGraphs, value); }
-        }
 
         private long _clockCycle;
         public long ClockCycle {
             get { return _clockCycle; }
             set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
         }
-
 
         public Axis[] YAxesPct { get; set; } =
 {
@@ -136,9 +133,9 @@ namespace MetricsMonitorClient.ViewModels
 
         #endregion Properties
         public void TickClock() {
-            ClockLock.Wait();
+            _clockLock.Wait();
             ClockCycle = ClockCycle + 1;
-            ClockLock.Release();
+            _clockLock.Release();
         }
         public void UpdateUiData() {
             try {
@@ -150,9 +147,7 @@ namespace MetricsMonitorClient.ViewModels
 
                 if (!IsInitialized) {
                     InitData(poll);
-                    CPUPolls.Add(poll);
                     IsInitialized = true;
-                    return;
                 }
 
 
@@ -170,39 +165,16 @@ namespace MetricsMonitorClient.ViewModels
 
             }catch(Exception ex) {
                 _logger.Error(ex);
+                throw;
+               // var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+               //.GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
+               // messageBoxStandardWindow.Show();
             }
             
 
         }
 
-        //public void UpdateGraphs(CPUDto poll) {
-
-
-        //    for (int i = 0; i < poll.cpu_percentage_per_core.Length; i++) {
-        //        CoreGraphs[i].Values = newData;
-        //    }
-        //}
-
-
-        //public void UpdateGraphs(CPUDto poll) {
-
-        //}
-
-        //public void InitGraphs() {
-        //    CoreGraphs = new ObservableCollection<ISeries>();
-        //    for (int i = 0; i < CoreCount; i++) {
-        //        //CoreGraphs
-        //        var coreGraph = new LineSeries<ObservableValue> {
-        //            Name = $"Core {i}",
-        //            Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 0 },
-        //            ZIndex = 0,
-        //            LineSmoothness = 0,
-        //            EasingFunction = null,
-        //            AnimationsSpeed = TimeSpan.Zero,
-        //            Values = new ObservableValue[MMConstants.PollBufferSize]
-        //        };
-        //    };
-        //}
+       
 
         public void InitData(CPUDto poll) {
             CoreCountPhysical = $"Physical Cores: {poll.cpu_count_physical}";
@@ -219,24 +191,23 @@ namespace MetricsMonitorClient.ViewModels
                 container.Id = i;
                 StatsContainers.Add(container);
             }
+            this.RaisePropertyChanged(nameof(StatsContainers));
         }
         public void UpdateDataSets(CPUDto poll) {
             var usageList = poll.cpu_percentage_per_core;
             for (int i = 0; i < CoreCount; i++) {
                 StatsContainers[i].AddAndUpdate(usageList[i]);
             }
+            this.RaisePropertyChanged(nameof(StatsContainers));
         }
 
         public void UpdateCurrentStats(CPUDto poll) {
-            CurrentUsagePercentage = $"Current Usage: {poll.cpu_percent}%";
-            ContextSwitches = $"Context Switches: {poll.cpu_ctx_switches}";
-            Interrupts = $"Interrupts: {poll.interrupts}";
-            SysCalls = $"System Calls: {poll.syscalls}";
-            SoftInterrupts = $"Software Interrupts: {poll.soft_interrupts}";
+            CurrentUsagePercentage = $"Current Usage: {(poll.cpu_percent / 100.0).ToString("P", CultureInfo.InvariantCulture)}";
+            ContextSwitches = $"Context Switches: {poll.cpu_ctx_switches.ToString("N0", CultureInfo.InvariantCulture)}";
+            Interrupts = $"Interrupts: {poll.interrupts.ToString("N0", CultureInfo.InvariantCulture)}";
+            SysCalls = $"System Calls: {poll.syscalls.ToString("N0", CultureInfo.InvariantCulture)}";
+            SoftInterrupts = $"Software Interrupts: {poll.soft_interrupts.ToString("N0", CultureInfo.InvariantCulture)}";
         }
-       
-
-       
 
     }
 }
