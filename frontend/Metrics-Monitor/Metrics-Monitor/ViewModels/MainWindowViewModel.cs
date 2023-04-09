@@ -120,9 +120,9 @@ namespace MetricsMonitorClient.ViewModels
                 SingleCycleLock.Release(1);
             } catch (Exception ex) {
                 _logger.Error(ex);
-                var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
-                .GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
-                messageBoxStandardWindow.Show();
+                //var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                //.GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
+                //messageBoxStandardWindow.Show();
             }
            
 

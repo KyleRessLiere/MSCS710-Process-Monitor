@@ -33,13 +33,16 @@ namespace MetricsMonitorClient.ViewModels
             _logger = logger;
             _clockLock = new SemaphoreSlim(1, 1);
             CPUPolls = new List<CPUDto>();
-            StatsContainers = new AvaloniaList<CpuStatsContainer>();
+            StatsContainers = new List<CpuStatsContainer>();
             this.PropertyChanged += CPUViewModel_PropertyChanged;
         }
 
         private void CPUViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
            if(string.Equals(e.PropertyName, nameof(ClockCycle))){
-                Dispatcher.UIThread.InvokeAsync(() => UpdateUiData());
+                //Dispatcher.UIThread.InvokeAsync(() => UpdateUiData());
+                UpdateUiData();
+                //Application.Current.Dispatcher.BeginInvoke(new Action(() => UpdateUiData());
+                ////var d  = new De(() => UpdateUiData());
            }
         }
         #endregion Constructor
@@ -85,7 +88,7 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref _currentUsagePercentage, value); }
         }
 
-        public AvaloniaList<CpuStatsContainer> StatsContainers { get; private set; }
+        public List<CpuStatsContainer> StatsContainers { get; private set; }
 
         public bool IsInitialized { get; set; }
 
@@ -161,6 +164,7 @@ namespace MetricsMonitorClient.ViewModels
 
             }catch(Exception ex) {
                 _logger.Error(ex);
+                throw;
                // var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
                //.GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
                // messageBoxStandardWindow.Show();
@@ -186,12 +190,14 @@ namespace MetricsMonitorClient.ViewModels
                 container.Id = i;
                 StatsContainers.Add(container);
             }
+            this.RaisePropertyChanged(nameof(StatsContainers));
         }
         public void UpdateDataSets(CPUDto poll) {
             var usageList = poll.cpu_percentage_per_core;
             for (int i = 0; i < CoreCount; i++) {
                 StatsContainers[i].AddAndUpdate(usageList[i]);
             }
+            this.RaisePropertyChanged(nameof(StatsContainers));
         }
 
         public void UpdateCurrentStats(CPUDto poll) {

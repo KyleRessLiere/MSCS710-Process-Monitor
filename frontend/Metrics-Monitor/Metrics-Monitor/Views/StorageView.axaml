@@ -1,14 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
+             xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:vms="using:ViewModelsSamples.Pies.Basic"
              xmlns:vm="using:MetricsMonitorClient.ViewModels.StorageViewModel"
              x:Class="MetricsMonitorClient.Views.StorageView">
 	<Grid Classes="ContentGrid">
-		<lvc:PieChart Series="{Binding StorageUsagePieChart}" />
+		<Grid>
+			<lvc:PieChart Series="{Binding StorageUsagePieChart}" />
+		</Grid>
 	</Grid>
 </UserControl>

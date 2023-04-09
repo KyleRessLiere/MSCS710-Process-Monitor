@@ -79,7 +79,8 @@ namespace MetricsMonitorClient.ViewModels {
                     new PieSeries<long> { Values = new long[] { DiskFree }, Name = "Free Space" },
                     new PieSeries<long> { Values = new long[] { DiskUsed }, Name = "Used Space" },
                 };
-                
+
+                this.RaisePropertyChanged(nameof(StorageUsagePieChart));
 
             }catch(Exception ex) {
                 _logger.Error(ex);
