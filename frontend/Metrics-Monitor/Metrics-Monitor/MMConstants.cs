@@ -18,7 +18,8 @@ namespace MetricsMonitorClient {
             Overview = 0,
             CPU = 1,
             Memory = 2,
-            Storage = 3
+            Storage = 3,
+            Network = 4
         };
         /// <summary>
         /// used when converting b <-> gb 

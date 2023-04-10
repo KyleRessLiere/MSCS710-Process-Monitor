@@ -91,7 +91,7 @@ namespace MetricsMonitorClient.Models {
         }
 
 
-        protected void NotifyUi() {
+        protected virtual void NotifyUi() {
             foreach(var property in propertiesToTrack) {
                 this.RaisePropertyChanged(property);
             }

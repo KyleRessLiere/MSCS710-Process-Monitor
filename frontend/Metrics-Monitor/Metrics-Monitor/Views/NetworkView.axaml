@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Pies.Basic"
+             xmlns:vm="using:MetricsMonitorClient.ViewModels.NetworkViewModel"
+             x:Class="MetricsMonitorClient.Views.NetworkView">
+	<Grid Classes="ContentGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="100"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<TextBlock Classes="h4" Text="Network Speeds" Grid.Row="0" HorizontalAlignment="Center"/>
+		<DataGrid
+			Grid.Row="2"
+			FontSize="18"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center"
+			GridLinesVisibility="All"
+			RowBackground="DarkGray"
+			AlternatingRowBackground="DarkGray"
+			Foreground="{DynamicResource MM-Light}"
+			AutoGenerateColumns="False"
+			Items="{Binding StatsContainers, Mode=OneWay}">
+			<DataGrid.Columns>
+				<DataGridTextColumn IsReadOnly="True" Header="Interface" Binding="{Binding Name, Mode=OneWay}"/>
+				<DataGridTextColumn IsReadOnly="True" Header="Status" Binding="{Binding Status, Mode=OneWay}"/>
+				<DataGridTextColumn IsReadOnly="True" Header="Current" Binding="{Binding Current, Mode=OneWay}"/>
+				<DataGridTextColumn IsReadOnly="True" Header="Average" Binding="{Binding Avg, Mode=OneWay}"/>
+				<DataGridTextColumn IsReadOnly="True" Header="Min" Binding="{Binding Min, Mode=OneWay}"/>
+				<DataGridTextColumn IsReadOnly="True" Header="Max" Binding="{Binding Max, Mode=OneWay}"/>
+				<DataGridTextColumn IsReadOnly="True" Header="25th Percentile" Binding="{Binding FirstQ, Mode=OneWay}"/>
+				<DataGridTextColumn IsReadOnly="True" Header="50th Percentile" Binding="{Binding SecondQ, Mode=OneWay}"/>
+				<DataGridTextColumn IsReadOnly="True" Header="75th Percentile" Binding="{Binding ThirdQ, Mode=OneWay}"/>
+			</DataGrid.Columns>
+		</DataGrid>
+	</Grid>
+
+</UserControl>
