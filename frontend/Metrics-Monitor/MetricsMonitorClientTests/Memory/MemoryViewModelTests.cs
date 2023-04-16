@@ -53,7 +53,9 @@ namespace MetricsMonitorClientTests.ViewModels {
         [TestCase (32, ExpectedResult = MMConstants.PollBufferSize)]
         public int MemoryViewModel_RogueClockThreads_DoNot_OverFillTheBuffer(int threadCount) {
            
-            var memDto = new MemoryUsagePollDto { available_memory = 1.1, memory_id = 1, percentage_used = 11.2, poll_id = 1, total_memory = 32.1, used_memory = 11.0 };
+            var memDto = new MemoryUsagePollDto { available_memory = 1.1, memory_id = 1,
+                percentage_used = 11.2, poll_id = 1, total_memory = 32.1, used_memory = 11.0 };
+
             _factory.Setup(f => f.GetLatestMemoryPollAsync()).ReturnsAsync(memDto);
             var vm = new MemoryViewModel(_factory.Object, _logger.Object);
 
