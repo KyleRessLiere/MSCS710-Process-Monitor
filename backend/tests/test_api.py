@@ -3,6 +3,59 @@ import json
 import datetime
 
 
+## METRICS API ##
+
+def test_get_metrics():
+    response = requests.get('http://127.0.0.1:5000/api/metrics')
+    assert response.status_code == 200
+    data = response.json()
+    assert 'poll' in data
+    assert 'processes' in data
+    assert 'network' in data
+    assert 'disk' in data
+    assert 'memory' in data
+    assert 'cpu' in data
+
+def test_get_latest_metrics():
+    response = requests.get('http://127.0.0.1:5000/api/metrics/latest')
+    assert response.status_code == 200
+    data = response.json()
+    assert 'poll' in data
+    assert 'processes' in data
+    assert 'network' in data
+    assert 'disk' in data
+    assert 'memory' in data
+    assert 'cpu' in data
+
+def test_get_metrics_by_poll_id():
+    response = requests.get('http://127.0.0.1:5000/api/metrics/1')
+    assert response.status_code == 200
+    data = response.json()
+    assert 'poll' in data
+    assert data['poll']['poll_id'] == 1
+    assert 'processes' in data
+    assert 'network' in data
+    assert 'disk' in data
+    assert 'memory' in data
+    assert 'cpu' in data
+
+
+
+def test_get_metrics_by_time_interval():
+    # use 'get_poll_by_id' endpoint to return and parse example start and end times
+    metrics1 = requests.get('http://127.0.0.1:5000/api/metrics/1')
+    metrics3 = requests.get('http://127.0.0.1:5000/api/metrics/3')
+    metrics1_time = json.loads(metrics1.text)['poll']['time']
+    metrics3_time = json.loads(metrics3.text)['poll']['time']
+
+    # use example start and end times to test endpoint
+    metrics_between = requests.get(f'http://127.0.0.1:5000/api/metrics/{metrics1_time}/{metrics3_time}')
+    metrics_between_list = json.loads(metrics_between.text)
+    assert len(metrics_between_list) == 3             # CHECK: array of 3 objects
+    assert metrics_between_list[0]['poll']['poll_id'] == 1    # CHECK: first object has Poll ID == 1
+    assert metrics_between_list[-1]['poll']['poll_id'] == 3   # CHECK: last object has Poll ID == 3
+
+
 ## POLLS API ##
 
 def test_get_polls():
@@ -35,21 +88,19 @@ def test_get_poll_by_poll_id():
     assert "poll_rate" in data
     assert "time" in data
 
-#def test_get_poll_by_time_interval():
+def test_get_polls_by_time_interval():
     # use 'get_poll_by_id' endpoint to return and parse example start and end times
-    #poll1 = requests.get('http://127.0.0.1:5000/api/polls/1')
-    #poll3 = requests.get('http://127.0.0.1:5000/api/polls/3')
-    #poll1_time = json.loads(poll1.text)['time']
-    #poll3_time = json.loads(poll3.text)['time']
-    #print("poll times: " + poll1_time + poll3_time)
+    poll1 = requests.get('http://127.0.0.1:5000/api/polls/1')
+    poll3 = requests.get('http://127.0.0.1:5000/api/polls/3')
+    poll1_time = json.loads(poll1.text)['time']
+    poll3_time = json.loads(poll3.text)['time']
 
     # use example start and end times to test endpoint
-    #polls_between = requests.get(f'http://127.0.0.1:5000/api/polls/{poll1_time}/{poll3_time}')
-    #polls_between_list = json.loads(polls_between.text)
-    #assert polls_between_list[0]['poll_id'] == 1
-    #assert polls_between_list[-1]['poll_id'] == 3
-
-#def test_get_metrics_by_time_interval():
+    polls_between = requests.get(f'http://127.0.0.1:5000/api/polls/{poll1_time}/{poll3_time}')
+    polls_between_list = json.loads(polls_between.text)
+    assert len(polls_between_list) == 3             # CHECK: array of 3 objects
+    assert polls_between_list[0]['poll_id'] == 1    # CHECK: first object has Poll ID == 1
+    assert polls_between_list[-1]['poll_id'] == 3   # CHECK: last object has Poll ID == 3
 
 
 ## PROCESSES API ##

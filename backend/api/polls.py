@@ -64,7 +64,9 @@ def get_poll_by_poll_id(poll_id):
                 "poll_id": poll[0],
                 "poll_rate": poll[1],
                 "operating_system": poll[2],
-                "time": poll[3]
+                "operating_system_version": poll[3],
+                "poll_type": poll[4],
+                "time": poll[5]
             }
         else:
             abort(404, description=f"Poll ID {poll_id} not found")
@@ -84,7 +86,9 @@ def get_polls_by_time_interval(start_time, end_time):
                 "poll_id": i[0],
                 "poll_rate": i[1],
                 "operating_system": i[2],
-                "time": i[3]
+                "operating_system_version": i[3],
+                "poll_type": i[4],
+                "time": i[5]
             }
             poll_list.append(poll)
     except Error as e:
