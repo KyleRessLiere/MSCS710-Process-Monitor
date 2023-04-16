@@ -3,6 +3,8 @@ import json
 import datetime
 
 
+## POLLS API ##
+
 def test_get_polls():
     response = requests.get('http://127.0.0.1:5000/api/polls')
     assert response.status_code == 200
@@ -49,6 +51,8 @@ def test_get_poll_by_poll_id():
 
 #def test_get_metrics_by_time_interval():
 
+
+## PROCESSES API ##
 
 def test_get_processes():
     response = requests.get('http://127.0.0.1:5000/api/processes')
@@ -123,3 +127,54 @@ def test_get_processes_by_poll_id():
         assert 'process_id' in process
         assert 'process_name' in process
         assert 'process_status' in process
+
+
+## MEMORY API ##
+
+def test_get_memory():
+    response = requests.get('http://127.0.0.1:5000/api/memory')
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+    for memory in response.json():
+        assert 'memory_id' in memory
+        assert 'poll_id' in memory
+        assert 'total_memory' in memory
+        assert 'available_memory' in memory
+        assert 'used_memory' in memory
+        assert 'percentage_used' in memory
+
+def test_get_latest_memory():
+    url = "http://127.0.0.1:5000/api/memory/latest"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert 'memory_id' in data
+    assert 'poll_id' in data
+    assert 'total_memory' in data
+    assert 'available_memory' in data
+    assert 'used_memory' in data
+    assert 'percentage_used' in data
+
+def test_get_memory_by_memory_id():
+    url = "http://127.0.0.1:5000/api/memory/1"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["memory_id"] == 1
+    assert data["poll_id"] == 1
+    assert 'total_memory' in data
+    assert 'available_memory' in data
+    assert 'used_memory' in data
+    assert 'percentage_used' in data
+
+def test_get_memory_by_poll_id():
+    url = "http://127.0.0.1:5000/api/memory/poll/1"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["memory_id"] == 1
+    assert data["poll_id"] == 1
+    assert 'total_memory' in data
+    assert 'available_memory' in data
+    assert 'used_memory' in data
+    assert 'percentage_used' in data
