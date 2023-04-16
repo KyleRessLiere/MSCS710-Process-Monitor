@@ -44,7 +44,7 @@ namespace MetricsMonitorClient {
 
         public static Dictionary<int, string> NetworkStatus_IdToName_Map = MMConstants.NetworkStatus_NameToId_Map.ToDictionary(k => k.Value, v => v.Key);
 
-        public const string ProcessStatus_Unkown = "?";
+        public const string ProcessStatus_Unknown = "?";
         public const string ProcessStatus_Stopped = "stopped";
         public const string ProcessStatus_Running = "running";
 
@@ -53,13 +53,13 @@ namespace MetricsMonitorClient {
         public const int ProcessStatusId_Running = 1;
 
 
-        public static Dictionary<string, int> ProcessStatus_IdToName_Map = new Dictionary<string, int> {
-            { ProcessStatus_Unknown, ProcessStatusId_Unkonwn},
+        public static Dictionary<string, int> ProcessStatus_NameToId_Map = new Dictionary<string, int> {
+            { ProcessStatus_Unknown, ProcessStatusId_Unknown},
             { ProcessStatus_Stopped, ProcessStatusId_Stopped},
             { ProcessStatus_Running, ProcessStatusId_Running}
         };
 
-        public static Dictionary<int, string> ProcessStatus_NameToId_Map = ProcessStatus_IdToName_Map.ToDictionary(k => k.Value, v => v.Key);
+        public static Dictionary<int, string> ProcessStatus_IdToName_Map = ProcessStatus_NameToId_Map.ToDictionary(k => k.Value, v => v.Key);
 
     }
 }

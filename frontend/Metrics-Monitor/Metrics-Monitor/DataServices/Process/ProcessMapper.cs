@@ -21,6 +21,7 @@ namespace MetricsMonitorClient.DataServices.Process {
             target.ProcessName = source.process_name;
             target.ProcessStatus = ProcessStatNameToId(source._process_status);
 
+            return target;
 
         }
 
@@ -30,7 +31,7 @@ namespace MetricsMonitorClient.DataServices.Process {
 
         public static int ProcessStatNameToId(string status) => MMConstants.ProcessStatus_NameToId_Map.TryGetValue(status, out var procStatus) ? procStatus : MMConstants.ProcessStatusId_Unknown;
 
-        public static string ProcessStatIdToName(int id) => MMConstants.ProcessStatus_IdToName_Map.TryGetValue(id, out var procStatus) ? procStatus : MMConstants.ProcessStatus_Unkown;
+        public static string ProcessStatIdToName(int id) => MMConstants.ProcessStatus_IdToName_Map.TryGetValue(id, out var procStatus) ? procStatus : MMConstants.ProcessStatus_Unknown;
 
 
 
