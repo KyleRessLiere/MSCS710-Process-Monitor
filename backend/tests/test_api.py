@@ -187,45 +187,93 @@ def test_get_disks():
     assert response.status_code == 200
     assert isinstance(response.json(), list)
     for disk in response.json():
+        assert 'disk_free' in disk
         assert 'disk_id' in disk
-        assert 'poll_id' in disk
+        assert 'disk_percentage' in disk
         assert 'disk_total' in disk
         assert 'disk_used' in disk
-        assert 'disk_free' in disk
-        assert 'disk_percentage' in disk
+        assert 'poll_id' in disk
 
 def test_get_latest_disk():
     url = "http://127.0.0.1:5000/api/disks/latest"
     response = requests.get(url)
     assert response.status_code == 200
     data = response.json()
+    assert 'disk_free' in data
     assert 'disk_id' in data
-    assert 'poll_id' in data
+    assert 'disk_percentage' in data
     assert 'disk_total' in data
     assert 'disk_used' in data
-    assert 'disk_free' in data
-    assert 'disk_percentage' in data
+    assert 'poll_id' in data
 
 def test_get_disk_by_disk_id():
     url = "http://127.0.0.1:5000/api/disks/1"
     response = requests.get(url)
     assert response.status_code == 200
     data = response.json()
+    assert 'disk_free' in data
     assert data["disk_id"] == 1
-    assert data["poll_id"] == 1
+    assert 'disk_percentage' in data
     assert 'disk_total' in data
     assert 'disk_used' in data
-    assert 'disk_free' in data
-    assert 'disk_percentage' in data
+    assert data["poll_id"] == 1
 
 def test_get_disk_by_poll_id():
     url = "http://127.0.0.1:5000/api/disks/poll/1"
     response = requests.get(url)
     assert response.status_code == 200
     data = response.json()
+    assert 'disk_free' in data
     assert data["disk_id"] == 1
-    assert data["poll_id"] == 1
+    assert 'disk_percentage' in data
     assert 'disk_total' in data
     assert 'disk_used' in data
-    assert 'disk_free' in data
-    assert 'disk_percentage' in data
+    assert data["poll_id"] == 1
+
+
+## NETWORK API ##
+
+def test_get_network():
+    response = requests.get('http://127.0.0.1:5000/api/network')
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+    for network in response.json():
+        assert 'network_id' in network
+        assert 'poll_id' in network
+        assert 'network_interface' in network
+        assert 'network_status' in network
+        assert 'network_speed' in network
+
+def test_get_latest_network():
+    url = "http://127.0.0.1:5000/api/network/latest"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    for network in response.json():
+        assert 'network_id' in network
+        assert 'poll_id' in network
+        assert 'network_interface' in network
+        assert 'network_status' in network
+        assert 'network_speed' in network
+
+def test_get_network_by_network_id():
+    url = "http://127.0.0.1:5000/api/network/1"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["network_id"] == 1
+    assert data["poll_id"] == 1
+    assert 'network_interface' in data
+    assert 'network_status' in data
+    assert 'network_speed' in data
+
+def test_get_network_by_poll_id():
+    url = "http://127.0.0.1:5000/api/network/poll/1"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["network_id"] == 1
+    assert data["poll_id"] == 1
+    assert 'network_interface' in data
+    assert 'network_status' in data
+    assert 'network_speed' in data
