@@ -277,3 +277,70 @@ def test_get_network_by_poll_id():
     assert 'network_interface' in data
     assert 'network_status' in data
     assert 'network_speed' in data
+
+
+## CPU API ##
+
+def test_get_cpu():
+    response = requests.get('http://127.0.0.1:5000/api/cpu')
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+    for cpu in response.json():
+        assert 'cpu_count_physical' in cpu
+        assert 'cpu_count_virtual' in cpu
+        assert 'cpu_ctx_switches' in cpu
+        assert 'cpu_id' in cpu
+        assert 'cpu_percent' in cpu
+        assert 'cpu_percentage_per_core' in cpu
+        assert 'interrupts' in cpu
+        assert 'poll_id' in cpu
+        assert 'soft_interrupts' in cpu
+        assert 'syscalls' in cpu
+
+def test_get_latest_cpu():
+    url = "http://127.0.0.1:5000/api/cpu/latest"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert 'cpu_count_physical' in data
+    assert 'cpu_count_virtual' in data
+    assert 'cpu_ctx_switches' in data
+    assert 'cpu_id' in data
+    assert 'cpu_percent' in data
+    assert 'cpu_percentage_per_core' in data
+    assert 'interrupts' in data
+    assert 'poll_id' in data
+    assert 'soft_interrupts' in data
+    assert 'syscalls' in data
+
+def test_get_disk_by_disk_id():
+    url = "http://127.0.0.1:5000/api/cpu/1"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert 'cpu_count_physical' in data
+    assert 'cpu_count_virtual' in data
+    assert 'cpu_ctx_switches' in data
+    assert data["cpu_id"] == 1
+    assert 'cpu_percent' in data
+    assert 'cpu_percentage_per_core' in data
+    assert 'interrupts' in data
+    assert data["poll_id"] == 1
+    assert 'soft_interrupts' in data
+    assert 'syscalls' in data
+
+def test_get_disk_by_poll_id():
+    url = "http://127.0.0.1:5000/api/cpu/poll/1"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert 'cpu_count_physical' in data
+    assert 'cpu_count_virtual' in data
+    assert 'cpu_ctx_switches' in data
+    assert data["cpu_id"] == 1
+    assert 'cpu_percent' in data
+    assert 'cpu_percentage_per_core' in data
+    assert 'interrupts' in data
+    assert data["poll_id"] == 1
+    assert 'soft_interrupts' in data
+    assert 'syscalls' in data
