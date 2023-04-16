@@ -30,7 +30,7 @@ def get_processes():
             conn.close()
     return process_list
 
-def get_latest_process():
+def get_latest_processes():
     process_list = []
     try:
         db_file = r"./db/MMM-SQLite.db"
@@ -99,22 +99,25 @@ def get_processes_by_process_id(process_id):
             abort(404, description=f"Process ID {process_id} not found")
     return process_list
 
-def get_process_by_poll_id(poll_id):
+def get_processes_by_poll_id(poll_id):
+    process_list = []
     db_file = r"./db/MMM-SQLite.db"
     with sqlite3.connect(db_file) as conn:
         cur = conn.cursor()
-        res = cur.execute("SELECT * FROM processes WHERE poll_id = ?", (poll_id,))
-        process = res.fetchone()
-        if process:
-            process = {
-                        "poll_id": process[0],
-                        "process_id": process[1],
-                        "process_name": process[2],
-                        "process_status": process[3],
-                        "cpu_percent": process[4],
-                        "num_thread": process[5],
-                        "memory_usage": process[6]
-            }
+        res = cur.execute("SELECT * FROM processes WHERE poll_id = ? ORDER BY process_id ASC", (poll_id,))
+        processes = res.fetchall()
+        if processes:
+            for i in processes:
+                process = {
+                    "poll_id": i[0],
+                    "process_id": i[1],
+                    "process_name": i[2],
+                    "process_status": i[3],
+                    "cpu_percent": i[4],
+                    "num_thread": i[5],
+                    "memory_usage": i[6]
+                }
+                process_list.append(process)
         else:
             abort(404, description=f"Process ID {poll_id} not found")
-    return process
+    return process_list
