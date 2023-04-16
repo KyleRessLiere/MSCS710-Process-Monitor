@@ -40,7 +40,7 @@ def get_latest_poll():
                 "poll_id": latest_poll[0],
                 "poll_rate": latest_poll[1],
                 "operating_system": latest_poll[2],
-                "time": datetime.datetime.strptime(latest_poll[3], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+                "time": latest_poll[3],
             }
     except Error as e:
         print(e)
@@ -108,6 +108,8 @@ def get_metrics_by_time_interval(start_time, end_time):
             conn.close()
     return poll_ids
 
+
+#### HELPER METHOD #####
 
 def datetime_validation(start_time, end_time):
     if len(start_time) == 19:
