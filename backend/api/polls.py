@@ -18,7 +18,9 @@ def get_polls():
                 "poll_id": i[0],
                 "poll_rate": i[1],
                 "operating_system": i[2],
-                "time": i[3]
+                "operating_system_version": i[3],
+                "poll_type": i[4],
+                "time": i[5]
             }
             poll_list.append(poll)
     except Error as e:
@@ -40,7 +42,9 @@ def get_latest_poll():
                 "poll_id": latest_poll[0],
                 "poll_rate": latest_poll[1],
                 "operating_system": latest_poll[2],
-                "time": latest_poll[3],
+                "operating_system_version": latest_poll[3],
+                "poll_type": latest_poll[4],
+                "time": latest_poll[5]
             }
     except Error as e:
         print(e)
