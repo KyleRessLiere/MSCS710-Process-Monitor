@@ -11,62 +11,26 @@ namespace MetricsMonitorClient.Models {
 
         protected virtual int _MaxBufferSize => MMConstants.StatsContainerMaxBuffer;
         
-        public double _firstQ;
         public double FirstQ { get; set; }
-        //    {
-        //    get { return _firstQ; }
-        //    set { this.RaiseAndSetIfChanged(ref _firstQ, value); }
-        //}
-        private double _secondQ;
+     
         public double SecondQ { get; set; }
-        //    {
-        //    get { return _secondQ; }
-        //    set { this.RaiseAndSetIfChanged(ref _secondQ, value); }
-        //}
-        private double _thirdQ;
+    
         public double ThirdQ { get; set; }
-        //    {
-        //    get { return _thirdQ; }
-        //    set { this.RaiseAndSetIfChanged(ref _thirdQ, value); }
-        //}
-        private double _min;
+       
         public double Min { get; set; }
-        //    {
-        //    get { return _min; }
-        //    set { this.RaiseAndSetIfChanged(ref _min, value); }
-        //}
-        private double _max;
+       
         public double Max { get; set; }
-        //    {
-        //    get { return _max; }
-        //    set { this.RaiseAndSetIfChanged(ref _max, value); }
-        //}
-
-        private double _avg;
+       
         public double Avg { get; set; }
-        //    {
-        //    get { return _avg; }
-        //    set { this.RaiseAndSetIfChanged(ref _avg, value); }
-        //}
-        private double _current;
         public double Current { get; set; }
-        //    {
-        //    get { return _current; }
-        //    set { this.RaiseAndSetIfChanged(ref _current, value); }
-        //}
 
         public int Id { get; set; }
         public virtual void AddAndUpdate(double poll) {
-            //TODO: do this stuff right, redo percentiles and avg
             
             AddPoll(poll);
 
             Min = Math.Min(Min, poll);
             Max = Math.Max(Max, poll);
-
-            double nPlusOne = (double)PollList.Count + 1.0;
-
-            //PollList.Sort();
 
             FirstQ = Percentile(PollList, .25);
             SecondQ = Percentile(PollList, .50);
@@ -81,13 +45,11 @@ namespace MetricsMonitorClient.Models {
         }
         
         protected void AddPoll(double poll) {
-
             if (PollList.Count >= _MaxBufferSize) {
                 PollList.RemoveRange(0, 1);
             }
 
             PollList.Add(poll);
-           
         }
 
 

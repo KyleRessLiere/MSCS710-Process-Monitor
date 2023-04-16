@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using MetricsMonitorClient.DataServices.Network;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,15 @@ namespace MetricsMonitorClient.Models.Network {
             Name = interfaceName;
         }
         public string Name { get; set; }
+
+        private int _statusId;
+        public int StatusId {
+            get { return _statusId; }
+            set { 
+                _statusId = value;
+                Status = NetworkMapper.NetStatIdToName(value);
+            }
+        }
         public string Status { get; set; }
 
 

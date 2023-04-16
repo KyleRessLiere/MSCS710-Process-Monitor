@@ -2,11 +2,11 @@
 using JetBrains.Annotations;
 using log4net;
 using MetricsMonitorClient.DataServices.Network;
-using MetricsMonitorClient.DataServices.Network.Dtos;
 using MetricsMonitorClient.Models.Network;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -21,12 +21,13 @@ namespace MetricsMonitorClient.ViewModels {
         public NetworkViewModel(INetworkFactory factory, ILog logger) {
             _factory = factory;
             _logger = logger;
+            InterfaceStatsIndexDict = new Dictionary<string, int>();
             _clockLock = new SemaphoreSlim(1, 1);
             this.PropertyChanged += NetworkViewModel_PropertyChanged;
         }
 
         private void NetworkViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
-            if(string.Equals(e.PropertyName, nameof(ClockCycle))) {
+            if (string.Equals(e.PropertyName, nameof(ClockCycle))) {
                 UpdateUiData();
             }
         }
@@ -35,7 +36,7 @@ namespace MetricsMonitorClient.ViewModels {
         public bool IsInitialized { get; set; }
         public int InterfaceCount { get; set; }
 
-
+        public Dictionary<string, int> InterfaceStatsIndexDict {get; set;}
 
         private long _clockCycle;
         public long ClockCycle {
@@ -68,29 +69,48 @@ namespace MetricsMonitorClient.ViewModels {
 
         }
 
-        public void InitData(List<NetworkDto> pollSet) {
+        public void InitData(List<NetworkPoll> pollSet) {
             InterfaceCount = pollSet.Count();
             StatsContainers = new AvaloniaList<NetworkStatsContainer>();
+
             for(int i = 0; i < InterfaceCount; i++) {
-                var container = new NetworkStatsContainer(pollSet[i].network_interface);
-                container.AddAndUpdate(pollSet[i].network_speed);
-                container.Status = pollSet[i].network_status;
+                var container = new NetworkStatsContainer(pollSet[i].Interface);
+                container.AddAndUpdate(pollSet[i].Speed);
+                container.StatusId = pollSet[i].Status;
                 StatsContainers.Add(container);
+                InterfaceStatsIndexDict.Add(pollSet[i].Interface, i);
             }
             this.RaisePropertyChanged(nameof(StatsContainers));
         }
 
 
-        public void UpdateDataSets(List<NetworkDto> pollSet) {
-            for (int i = 0; i < InterfaceCount; i++) {
-                StatsContainers[i].AddAndUpdate(pollSet[i].network_speed);
-                StatsContainers[i].Status = pollSet[i].network_status;
+        public void UpdateDataSets(List<NetworkPoll> pollSet) {
+            var pollSetInterfaces = pollSet.Select(p => p.Interface).ToHashSet();
+            var missingInterfaces = InterfaceStatsIndexDict.Keys.Where(ifc => !pollSetInterfaces.Contains(ifc)).ToList();
+            
+            for (int i = 0; i < pollSet.Count; i++) {
+                var idx = InterfaceStatsIndexDict.TryGetValue(pollSet[i].Interface, out var intIdx) ? intIdx : -1;
+                if (idx == -1) { continue; }
+                StatsContainers[idx].AddAndUpdate(pollSet[i].Speed);
+                StatsContainers[idx].StatusId = pollSet[i].Status;
             }
+
+            for(int j = 0;j <  missingInterfaces.Count; j++) {
+                var idx = InterfaceStatsIndexDict.TryGetValue(missingInterfaces[j], out var intIdx) ? intIdx : -1;
+                if (idx == -1) { continue; }
+                StatsContainers[idx].AddAndUpdate(0.0);
+                StatsContainers[idx].StatusId = MMConstants.NetworkStatus_Unknown_Id;
+            }
+
             this.RaisePropertyChanged(nameof(StatsContainers));
         }
 
 
 
-
+        public NetworkPoll GetPlaceholderPollForInterface(string interfaceName, int pollId, int networkId) {
+            if(interfaceName == null || pollId < 0 || networkId < 0) { return null; }
+            return new NetworkPoll { Id = networkId, Interface = interfaceName, Speed = 0, Status = MMConstants.NetworkStatus_Unknown_Id, PollId = pollId };
+        }
+        
     }
 }

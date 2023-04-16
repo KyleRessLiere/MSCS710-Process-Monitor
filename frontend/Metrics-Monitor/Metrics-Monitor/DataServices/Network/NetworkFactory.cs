@@ -8,7 +8,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClient.DataServices.Network {
+namespace MetricsMonitorClient.DataServices.Network
+{
     public class NetworkFactory : INetworkFactory {
         private readonly ILog _logger;
 
@@ -16,7 +17,7 @@ namespace MetricsMonitorClient.DataServices.Network {
             this._logger = logger;
         }
 
-        public async Task<IEnumerable<NetworkDto>> GetLatestNetworkPollAsync() {
+        public async Task<IEnumerable<NetworkPoll>> GetLatestNetworkPollAsync() {
             try {
                 using (var client = new HttpClient()) {
 
@@ -26,8 +27,8 @@ namespace MetricsMonitorClient.DataServices.Network {
                         var responseContent = await response.Content.ReadAsStringAsync();
 
                         var result = JsonConvert.DeserializeObject<List<NetworkDto>>(responseContent);
-
-                        return result;
+                        var mappedResult = result.Select(n => n.ToModel()).ToList();
+                        return mappedResult;
                     }
 
                     throw new HttpRequestException("An error occured making a get request.");
