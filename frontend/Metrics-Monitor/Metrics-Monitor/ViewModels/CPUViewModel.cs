@@ -1,29 +1,20 @@
-﻿using Avalonia.Collections;
-using Castle.Core.Logging;
-using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView.Painting;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using log4net;
 using MetricsMonitorClient.DataServices.CPU;
 using MetricsMonitorClient.DataServices.CPU.Dtos;
 using MetricsMonitorClient.Models.CPU;
-using Org.BouncyCastle.Asn1.Mozilla;
 using ReactiveUI;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
-using System.Reactive;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Threading;
-using System.Globalization;
 
-namespace MetricsMonitorClient.ViewModels
-{
+namespace MetricsMonitorClient.ViewModels {
     public class CPUViewModel : ViewModelBase {
         private readonly ICPUFactory _factory;
         private readonly ILog _logger;
@@ -40,10 +31,7 @@ namespace MetricsMonitorClient.ViewModels
 
         private void CPUViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
            if(string.Equals(e.PropertyName, nameof(ClockCycle))){
-                //Dispatcher.UIThread.InvokeAsync(() => UpdateUiData());
                 UpdateUiData();
-                //Application.Current.Dispatcher.BeginInvoke(new Action(() => UpdateUiData());
-                ////var d  = new De(() => UpdateUiData());
            }
         }
         #endregion Constructor
@@ -142,9 +130,6 @@ namespace MetricsMonitorClient.ViewModels
                 var poll = Task.Run(() => _factory.GetLatestCPUPollAsync()).Result;
                 if (poll == null) { return; }
 
-                //UpdateCurrentStats();
-               
-
                 if (!IsInitialized) {
                     InitData(poll);
                     IsInitialized = true;
@@ -153,22 +138,15 @@ namespace MetricsMonitorClient.ViewModels
 
                 UpdateCurrentStats(poll);
                 UpdateDataSets(poll);
-
-
+                
                 CPUPolls.Add(poll);
 
                 if (!CPUPolls.Any()) { return; }
 
                 if (CPUPolls.Count > MMConstants.PollBufferSize) { CPUPolls.RemoveRange(0, 1); }
 
-                //UpdateGraphs(poll);
-
             }catch(Exception ex) {
                 _logger.Error(ex);
-                throw;
-               // var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
-               //.GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
-               // messageBoxStandardWindow.Show();
             }
             
 

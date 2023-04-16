@@ -4,6 +4,7 @@ using log4net;
 using MetricsMonitorClient.DataServices.CPU;
 using MetricsMonitorClient.DataServices.Memory;
 using MetricsMonitorClient.DataServices.MonitorSystem;
+using MetricsMonitorClient.DataServices.Network;
 using MetricsMonitorClient.DataServices.Storage;
 using Splat;
 
@@ -16,18 +17,24 @@ namespace MetricsMonitorClient.DI {
             Locator.CurrentMutable.RegisterLazySingleton(() => {
                 var logger = log4net.LogManager.GetLogger(typeof(ICPUFactory));
                 return new CPUFactory(logger);
-            },
-                 typeof(ICPUFactory));
+            },typeof(ICPUFactory));
+         
             Locator.CurrentMutable.RegisterLazySingleton(() => {
                 var logger = log4net.LogManager.GetLogger(typeof(IMemoryFactory));
                 return new MemoryFactory(logger);
                 },
                 typeof(IMemoryFactory));
+           
             Locator.CurrentMutable.RegisterLazySingleton(() => {
                 var logger = log4net.LogManager.GetLogger(typeof(IStorageFactory));
                 return new StorageFactory(logger);
-            },
-                typeof(IStorageFactory));
+            }, typeof(IStorageFactory));
+         
+            Locator.CurrentMutable.RegisterLazySingleton(() => {
+                var logger = log4net.LogManager.GetLogger(typeof(INetworkFactory));
+                return new NetworkFactory(logger);
+            },typeof(INetworkFactory));
+           
             Locator.CurrentMutable.RegisterLazySingleton(() => new MonitorSystemFactory(), typeof(IMonitorSystemFactory));
         }
     }

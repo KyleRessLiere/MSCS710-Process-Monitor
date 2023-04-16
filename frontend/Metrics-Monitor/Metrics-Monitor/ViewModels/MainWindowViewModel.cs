@@ -27,6 +27,7 @@ namespace MetricsMonitorClient.ViewModels
             MemoryViewModel = WorkspaceFactory.CreateWorkspace<MemoryViewModel>();
             StorageViewModel = WorkspaceFactory.CreateWorkspace<StorageViewModel>();
             HomeViewModel = WorkspaceFactory.CreateWorkspace<HomeViewModel>();
+            NetworkViewModel = WorkspaceFactory.CreateWorkspace<NetworkViewModel>();
             ResourceText = "Overview";
             uiClock = new Timer(MMConstants.SystemClockInterval);
             uiClock.Elapsed += RunClock;
@@ -49,7 +50,10 @@ namespace MetricsMonitorClient.ViewModels
         CPUViewModel CPUViewModel { get; set; }
         MemoryViewModel MemoryViewModel { get; set; }
         StorageViewModel StorageViewModel { get; set; }
+        
+        NetworkViewModel NetworkViewModel { get; set; }
         HomeViewModel HomeViewModel { get; set; }
+
 
         private string resourceText;
         public string ResourceText {
@@ -85,6 +89,9 @@ namespace MetricsMonitorClient.ViewModels
                 case ResourceTabIndex.Storage:
                     ResourceText = "Storage";
                     break;
+                case ResourceTabIndex.Network:
+                    ResourceText = "Network";
+                    break;
                 default:
                     ResourceText= string.Empty;
                     break;
@@ -112,6 +119,10 @@ namespace MetricsMonitorClient.ViewModels
                         break;
                     case ResourceTabIndex.Storage:
                         StorageViewModel.TickClock();
+                        Console.WriteLine("Tick " + ClockCycle);
+                        break;
+                    case ResourceTabIndex.Network:
+                        NetworkViewModel.TickClock();
                         Console.WriteLine("Tick " + ClockCycle);
                         break;
                     default:
