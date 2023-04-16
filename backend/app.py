@@ -92,7 +92,7 @@ def handle_polling():
 def api_get_metrics():
     metrics = {}
     metrics['poll'] = polls.get_polls()
-    metrics['process'] = processes.get_processes()
+    metrics['processes'] = processes.get_processes()
     metrics['network'] = network.get_network()
     metrics['disk'] = disks.get_disks()
     metrics['memory'] = memory.get_memory()
