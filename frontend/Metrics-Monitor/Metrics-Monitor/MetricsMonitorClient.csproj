@@ -20,10 +20,14 @@
     <EmbeddedResource Remove="Models\MonitorSystem\**" />
     <None Remove="Models\MonitorSystem\**" />
     <None Remove=".gitignore" />
-    <None Remove="Assets\MMM.ico" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\MMM.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\MMM.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
@@ -45,6 +49,11 @@
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="Splat" Version="14.6.8" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Update="Assets\MMM.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AvaloniaResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Views\MainWindowView.axaml.cs">

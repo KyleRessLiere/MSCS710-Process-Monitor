@@ -12,41 +12,48 @@ namespace MetricsMonitorClient.Models {
         protected virtual int _MaxBufferSize => MMConstants.StatsContainerMaxBuffer;
         
         public double _firstQ;
-        public double FirstQ {
-            get { return _firstQ; }
-            set { this.RaiseAndSetIfChanged(ref _firstQ, value); }
-        }
+        public double FirstQ { get; set; }
+        //    {
+        //    get { return _firstQ; }
+        //    set { this.RaiseAndSetIfChanged(ref _firstQ, value); }
+        //}
         private double _secondQ;
-        public double SecondQ {
-            get { return _secondQ; }
-            set { this.RaiseAndSetIfChanged(ref _secondQ, value); }
-        }
+        public double SecondQ { get; set; }
+        //    {
+        //    get { return _secondQ; }
+        //    set { this.RaiseAndSetIfChanged(ref _secondQ, value); }
+        //}
         private double _thirdQ;
-        public double ThirdQ {
-            get { return _thirdQ; }
-            set { this.RaiseAndSetIfChanged(ref _thirdQ, value); }
-        }
+        public double ThirdQ { get; set; }
+        //    {
+        //    get { return _thirdQ; }
+        //    set { this.RaiseAndSetIfChanged(ref _thirdQ, value); }
+        //}
         private double _min;
-        public double Min {
-            get { return _min; }
-            set { this.RaiseAndSetIfChanged(ref _min, value); }
-        }
+        public double Min { get; set; }
+        //    {
+        //    get { return _min; }
+        //    set { this.RaiseAndSetIfChanged(ref _min, value); }
+        //}
         private double _max;
-        public double Max {
-            get { return _max; }
-            set { this.RaiseAndSetIfChanged(ref _max, value); }
-        }
+        public double Max { get; set; }
+        //    {
+        //    get { return _max; }
+        //    set { this.RaiseAndSetIfChanged(ref _max, value); }
+        //}
 
         private double _avg;
-        public double Avg {
-            get { return _avg; }
-            set { this.RaiseAndSetIfChanged(ref _avg, value); }
-        }
+        public double Avg { get; set; }
+        //    {
+        //    get { return _avg; }
+        //    set { this.RaiseAndSetIfChanged(ref _avg, value); }
+        //}
         private double _current;
-        public double Current {
-            get { return _current; }
-            set { this.RaiseAndSetIfChanged(ref _current, value); }
-        }
+        public double Current { get; set; }
+        //    {
+        //    get { return _current; }
+        //    set { this.RaiseAndSetIfChanged(ref _current, value); }
+        //}
 
         public int Id { get; set; }
         public virtual void AddAndUpdate(double poll) {
@@ -59,7 +66,7 @@ namespace MetricsMonitorClient.Models {
 
             double nPlusOne = (double)PollList.Count + 1.0;
 
-            PollList.Sort();
+            //PollList.Sort();
 
             FirstQ = Percentile(PollList, .25);
             SecondQ = Percentile(PollList, .50);
@@ -68,6 +75,9 @@ namespace MetricsMonitorClient.Models {
             Avg = PollList.Average();
 
             Current = poll;
+
+             NotifyUi();
+            
         }
         
         protected void AddPoll(double poll) {
@@ -79,6 +89,26 @@ namespace MetricsMonitorClient.Models {
             PollList.Add(poll);
            
         }
+
+
+        protected void NotifyUi() {
+            foreach(var property in propertiesToTrack) {
+                this.RaisePropertyChanged(property);
+            }
+        }
+
+
+
+        protected static string[] propertiesToTrack = new string[] {
+            nameof(FirstQ),
+            nameof(SecondQ),
+            nameof(ThirdQ),
+            nameof(Min),
+            nameof(Max),
+            nameof(Avg),
+            nameof(Current)
+        };
+
 
 
         protected static double Percentile(IEnumerable<double> seq, double percentile) {
