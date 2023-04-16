@@ -86,7 +86,7 @@ def handle_polling():
         return jsonify({"message": "Polling scheduled successfully"})
     else:
         return jsonify({"message": "Invalid request"}), 400
-    
+
 
 @app.route('/api/metrics', methods=['GET'])
 def api_get_metrics():
@@ -103,7 +103,7 @@ def api_get_metrics():
 def api_get_latest_metrics():
     metrics = {}
     metrics['poll'] = polls.get_latest_poll()
-    metrics['process'] = processes.get_latest_process()
+    metrics['processes'] = processes.get_latest_processes()
     metrics['network'] = network.get_latest_network()
     metrics['disk'] = disks.get_latest_disk()
     metrics['memory'] = memory.get_latest_memory()
@@ -114,7 +114,7 @@ def api_get_latest_metrics():
 def api_get_metrics_by_poll_id(poll_id):
     metrics = {}
     metrics['poll'] = polls.get_poll_by_poll_id(poll_id)
-    metrics['process'] = processes.get_process_by_poll_id(poll_id)
+    metrics['processes'] = processes.get_processes_by_poll_id(poll_id)
     metrics['network'] = network.get_network_by_poll_id(poll_id)
     metrics['disk'] = disks.get_disk_by_poll_id(poll_id)
     metrics['memory'] = memory.get_memory_by_poll_id(poll_id)
@@ -128,7 +128,7 @@ def api_get_metrics_by_time_interval(start_time, end_time):
     for poll_id in polls_ids:
         metrics = {}
         metrics['poll'] = polls.get_poll_by_poll_id(poll_id)
-        metrics['process'] = processes.get_process_by_poll_id(poll_id)
+        metrics['process'] = processes.get_processes_by_poll_id(poll_id)
         metrics['network'] = network.get_network_by_poll_id(poll_id)
         metrics['disk'] = disks.get_disk_by_poll_id(poll_id)
         metrics['memory'] = memory.get_memory_by_poll_id(poll_id)
@@ -149,7 +149,7 @@ def api_get_poll_by_poll_id(poll_id):
     return polls.get_poll_by_poll_id(poll_id)
 
 @app.route('/api/polls/<start_time>/<end_time>', methods=['GET'])
-def api_get_poll_by_time_interval(start_time, end_time):
+def api_get_polls_by_time_interval(start_time, end_time):
     return polls.get_polls_by_time_interval(start_time, end_time)
 
 @app.route('/api/processes', methods=['GET'])
@@ -157,8 +157,8 @@ def api_get_processes():
     return processes.get_processes()
 
 @app.route('/api/processes/latest', methods=['GET'])
-def api_get_latest_process():
-    return processes.get_latest_process()
+def api_get_latest_processes():
+    return processes.get_latest_processes()
 
 @app.route('/api/processes/latest/<process_id>', methods=['GET'])
 def api_get_latest_process_by_process_id(process_id):
@@ -170,7 +170,7 @@ def api_get_processes_by_process_id(process_id):
 
 @app.route('/api/processes/poll/<poll_id>', methods=['GET'])
 def api_get_processes_by_poll_id(poll_id):
-    return processes.get_process_by_poll_id(poll_id)
+    return processes.get_processes_by_poll_id(poll_id)
 
 @app.route('/api/memory', methods=['GET'])
 def api_get_memory():
