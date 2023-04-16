@@ -73,7 +73,7 @@
 			<Setter Property="FontWeight" Value="DemiBold"/>
 			<Setter Property="HorizontalAlignment" Value="Center"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
-			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+			<Setter Property="Foreground" Value="Black"/>
 		</Style>
 		<Style Selector="TabItem.Header.NavButton:focus">
 			<Setter Property="FontSize" Value="30"/>
@@ -97,7 +97,7 @@
 			<Setter Property="FontFamily" Value="Eurostile"/>
 			<Setter Property="HorizontalAlignment" Value="Center"/>
 			<Setter Property="VerticalAlignment" Value="Top"/>
-			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Red}"/>
 		</Style>
 	</Window.Styles>
     
@@ -115,7 +115,7 @@
 					<TextBlock Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black">Created by: Kyle R.L., Caleb R., and Sam A.</TextBlock>
 					</Grid>
 				</Border>
-				<Border Background="{DynamicResource MM-Black}" BorderBrush="Transparent" BorderThickness="0">
+				<Border Background="{DynamicResource MM-Light}" BorderBrush="Transparent" BorderThickness="0">
 					<Grid>
 						<Grid.RowDefinitions>
 							<RowDefinition Height=".16*"/>
@@ -134,6 +134,9 @@
 							</TabItem>
 							<TabItem Header="Storage" Classes="NavButton" VerticalContentAlignment="Center">
 								<v:StorageView DataContext="{Binding StorageViewModel}"/>
+							</TabItem>
+							<TabItem Header="Network" Classes="NavButton" VerticalContentAlignment="Center">
+								<v:NetworkView DataContext="{Binding NetworkViewModel}"/>
 							</TabItem>
 						</TabControl>
 					</Grid>
