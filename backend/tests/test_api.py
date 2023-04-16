@@ -178,3 +178,54 @@ def test_get_memory_by_poll_id():
     assert 'available_memory' in data
     assert 'used_memory' in data
     assert 'percentage_used' in data
+
+
+## DISKS API ##
+
+def test_get_disks():
+    response = requests.get('http://127.0.0.1:5000/api/disks')
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+    for disk in response.json():
+        assert 'disk_id' in disk
+        assert 'poll_id' in disk
+        assert 'disk_total' in disk
+        assert 'disk_used' in disk
+        assert 'disk_free' in disk
+        assert 'disk_percentage' in disk
+
+def test_get_latest_disk():
+    url = "http://127.0.0.1:5000/api/disks/latest"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert 'disk_id' in data
+    assert 'poll_id' in data
+    assert 'disk_total' in data
+    assert 'disk_used' in data
+    assert 'disk_free' in data
+    assert 'disk_percentage' in data
+
+def test_get_disk_by_disk_id():
+    url = "http://127.0.0.1:5000/api/disks/1"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["disk_id"] == 1
+    assert data["poll_id"] == 1
+    assert 'disk_total' in data
+    assert 'disk_used' in data
+    assert 'disk_free' in data
+    assert 'disk_percentage' in data
+
+def test_get_disk_by_poll_id():
+    url = "http://127.0.0.1:5000/api/disks/poll/1"
+    response = requests.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["disk_id"] == 1
+    assert data["poll_id"] == 1
+    assert 'disk_total' in data
+    assert 'disk_used' in data
+    assert 'disk_free' in data
+    assert 'disk_percentage' in data
