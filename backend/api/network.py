@@ -4,7 +4,7 @@ import sqlite3
 from sqlite3 import Error
 from flask import abort
 
-def get_network():
+def get_networks():
     network_list = []
     try:
         db_file = r"./db/MMM-SQLite.db"
@@ -28,7 +28,7 @@ def get_network():
             conn.close()
     return network_list
 
-def get_latest_network():
+def get_latest_networks():
     network_list = []
     try:
         db_file = r"./db/MMM-SQLite.db"
@@ -71,21 +71,23 @@ def get_network_by_network_id(network_id):
             abort(404, description=f"Network ID {network_id} not found")
     return network
 
-def get_network_by_poll_id(poll_id):
-    network = {}
+def get_networks_by_poll_id(poll_id):
+    network_list = []
     db_file = r"./db/MMM-SQLite.db"
     with sqlite3.connect(db_file) as conn:
         cur = conn.cursor()
         res = cur.execute("SELECT * FROM network WHERE poll_id = ?", (poll_id,))
-        network = res.fetchone()
-        if network:
-            network = {
-                    "network_id": network[0],
-                    "poll_id": network[1],
-                    "network_interface": network[2],
-                    "network_status": network[3],
-                    "network_speed": network[4]
+        networks = res.fetchall()
+        if networks:
+            for i in networks:
+                network = {
+                    "network_id": i[0],
+                    "poll_id": i[1],
+                    "network_interface": i[2],
+                    "network_status": i[3],
+                    "network_speed": i[4]
                 }
+                network_list.append(network)
         else:
             abort(404, description=f"Poll ID {poll_id} not found")
-    return network
+    return network_list

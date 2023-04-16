@@ -285,7 +285,7 @@ def test_get_disk_by_poll_id():
 ## NETWORK API ##
 
 def test_get_network():
-    response = requests.get('http://127.0.0.1:5000/api/network')
+    response = requests.get('http://127.0.0.1:5000/api/networks')
     assert response.status_code == 200
     assert isinstance(response.json(), list)
     for network in response.json():
@@ -296,7 +296,7 @@ def test_get_network():
         assert 'network_speed' in network
 
 def test_get_latest_network():
-    url = "http://127.0.0.1:5000/api/network/latest"
+    url = "http://127.0.0.1:5000/api/networks/latest"
     response = requests.get(url)
     assert response.status_code == 200
     data = response.json()
@@ -308,7 +308,7 @@ def test_get_latest_network():
         assert 'network_speed' in network
 
 def test_get_network_by_network_id():
-    url = "http://127.0.0.1:5000/api/network/1"
+    url = "http://127.0.0.1:5000/api/networks/1"
     response = requests.get(url)
     assert response.status_code == 200
     data = response.json()
@@ -319,15 +319,16 @@ def test_get_network_by_network_id():
     assert 'network_speed' in data
 
 def test_get_network_by_poll_id():
-    url = "http://127.0.0.1:5000/api/network/poll/1"
+    url = "http://127.0.0.1:5000/api/networks/poll/1"
     response = requests.get(url)
     assert response.status_code == 200
-    data = response.json()
-    assert data["network_id"] == 1
-    assert data["poll_id"] == 1
-    assert 'network_interface' in data
-    assert 'network_status' in data
-    assert 'network_speed' in data
+    assert isinstance(response.json(), list)
+    for process in response.json():
+        assert 'network_id' in process
+        assert process["poll_id"] == 1
+        assert 'network_interface' in process
+        assert 'network_status' in process
+        assert 'network_speed' in process
 
 
 ## CPU API ##

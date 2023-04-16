@@ -93,7 +93,7 @@ def api_get_metrics():
     metrics = {}
     metrics['poll'] = polls.get_polls()
     metrics['processes'] = processes.get_processes()
-    metrics['network'] = network.get_network()
+    metrics['network'] = network.get_networks()
     metrics['disk'] = disks.get_disks()
     metrics['memory'] = memory.get_memory()
     metrics['cpu'] = cpu.get_cpu()
@@ -104,7 +104,7 @@ def api_get_latest_metrics():
     metrics = {}
     metrics['poll'] = polls.get_latest_poll()
     metrics['processes'] = processes.get_latest_processes()
-    metrics['network'] = network.get_latest_network()
+    metrics['network'] = network.get_latest_networks()
     metrics['disk'] = disks.get_latest_disk()
     metrics['memory'] = memory.get_latest_memory()
     metrics['cpu'] = cpu.get_latest_cpu()
@@ -115,7 +115,7 @@ def api_get_metrics_by_poll_id(poll_id):
     metrics = {}
     metrics['poll'] = polls.get_poll_by_poll_id(poll_id)
     metrics['processes'] = processes.get_processes_by_poll_id(poll_id)
-    metrics['network'] = network.get_network_by_poll_id(poll_id)
+    metrics['network'] = network.get_networks_by_poll_id(poll_id)
     metrics['disk'] = disks.get_disk_by_poll_id(poll_id)
     metrics['memory'] = memory.get_memory_by_poll_id(poll_id)
     metrics['cpu'] = cpu.get_cpu_by_poll_id(poll_id)
@@ -129,7 +129,7 @@ def api_get_metrics_by_time_interval(start_time, end_time):
         metrics = {}
         metrics['poll'] = polls.get_poll_by_poll_id(poll_id)
         metrics['process'] = processes.get_processes_by_poll_id(poll_id)
-        metrics['network'] = network.get_network_by_poll_id(poll_id)
+        metrics['network'] = network.get_networks_by_poll_id(poll_id)
         metrics['disk'] = disks.get_disk_by_poll_id(poll_id)
         metrics['memory'] = memory.get_memory_by_poll_id(poll_id)
         metrics['cpu'] = cpu.get_cpu_by_poll_id(poll_id)
@@ -204,21 +204,21 @@ def api_get_disk_by_disk_id(disk_id):
 def api_get_disk_by_poll_id(poll_id):
     return disks.get_disk_by_poll_id(poll_id)
 
-@app.route('/api/network', methods=['GET'])
+@app.route('/api/networks', methods=['GET'])
 def api_get_network():
-    return network.get_network()
+    return network.get_networks()
 
-@app.route('/api/network/latest', methods=['GET'])
+@app.route('/api/networks/latest', methods=['GET'])
 def api_get_latest_network():
-    return network.get_latest_network()
+    return network.get_latest_networks()
 
-@app.route('/api/network/<network_id>', methods=['GET'])
+@app.route('/api/networks/<network_id>', methods=['GET'])
 def api_get_network_by_disk_id(network_id):
     return network.get_network_by_network_id(network_id)
 
-@app.route('/api/network/poll/<poll_id>', methods=['GET'])
+@app.route('/api/networks/poll/<poll_id>', methods=['GET'])
 def api_get_network_by_network_id(poll_id):
-    return network.get_network_by_poll_id(poll_id)
+    return network.get_networks_by_poll_id(poll_id)
 
 @app.route('/api/cpu', methods=['GET'])
 def api_get_cpu():
