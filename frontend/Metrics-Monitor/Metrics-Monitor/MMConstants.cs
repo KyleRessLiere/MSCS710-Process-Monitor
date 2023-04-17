@@ -20,7 +20,8 @@ namespace MetricsMonitorClient {
             CPU = 1,
             Memory = 2,
             Storage = 3,
-            Network = 4
+            Network = 4,
+            Processes = 5
         };
         /// <summary>
         /// used when converting b <-> gb 
@@ -43,6 +44,23 @@ namespace MetricsMonitorClient {
         };
 
         public static Dictionary<int, string> NetworkStatus_IdToName_Map = MMConstants.NetworkStatus_NameToId_Map.ToDictionary(k => k.Value, v => v.Key);
+
+        public const string ProcessStatus_Unknown = "?";
+        public const string ProcessStatus_Stopped = "stopped";
+        public const string ProcessStatus_Running = "running";
+
+        public const int ProcessStatusId_Unknown = -1;
+        public const int ProcessStatusId_Stopped = 0;
+        public const int ProcessStatusId_Running = 1;
+
+
+        public static Dictionary<string, int> ProcessStatus_NameToId_Map = new Dictionary<string, int> {
+            { ProcessStatus_Unknown, ProcessStatusId_Unknown},
+            { ProcessStatus_Stopped, ProcessStatusId_Stopped},
+            { ProcessStatus_Running, ProcessStatusId_Running}
+        };
+
+        public static Dictionary<int, string> ProcessStatus_IdToName_Map = ProcessStatus_NameToId_Map.ToDictionary(k => k.Value, v => v.Key);
 
     }
 }
