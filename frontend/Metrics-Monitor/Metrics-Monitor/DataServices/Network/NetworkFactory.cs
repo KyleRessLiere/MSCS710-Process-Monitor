@@ -21,7 +21,7 @@ namespace MetricsMonitorClient.DataServices.Network
             try {
                 using (var client = new HttpClient()) {
 
-                    var response = await client.GetAsync(MMConstants.BaseApiUrl + "/network/latest");
+                    var response = await client.GetAsync(MMConstants.BaseApiUrl + "/networks/latest");
 
                     if (response?.IsSuccessStatusCode ?? false) {
                         var responseContent = await response.Content.ReadAsStringAsync();
