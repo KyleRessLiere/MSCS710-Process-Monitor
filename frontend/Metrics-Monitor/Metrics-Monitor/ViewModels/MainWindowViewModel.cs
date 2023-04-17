@@ -73,6 +73,14 @@ namespace MetricsMonitorClient.ViewModels
             }
         }
 
+        private int _pollRate;
+        public int PollRate {
+            get { return _pollRate; }
+            set {
+                this.RaiseAndSetIfChanged(ref _pollRate, value);
+            }
+        }
+
 
         private Timer uiClock { get; set; }
         #endregion Properties

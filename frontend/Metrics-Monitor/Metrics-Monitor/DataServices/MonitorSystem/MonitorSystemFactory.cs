@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
@@ -36,6 +37,12 @@ namespace MetricsMonitorClient.DataServices.MonitorSystem {
                 throw;
             }
         }
+
+        //public async Task<bool> SetPollRate(int pollRate) {
+        //    try {
+               
+        //    }
+        //}
 
 
 

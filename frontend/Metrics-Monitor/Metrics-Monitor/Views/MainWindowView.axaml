@@ -143,10 +143,16 @@
 								<v:ProcessView DataContext="{Binding ProcessViewModel}"/>
 							</TabItem>
 						</TabControl>
-						<Button Command="{Binding TogglePolling}"
+						<Grid Grid.Row="2">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="20"/>
+								<RowDefinition Height="20"/>
+							</Grid.RowDefinitions>
+						</Grid>
+						<Button Grid.Row="0"
+								Command="{Binding TogglePolling}"
 								Classes.IsClockEnabled="{Binding ClockEnabled, Mode=OneWay}"
-								Classes.NotClockEnabled="{Binding !ClockEnabled, Mode=OneWay}"
-								Grid.Row="2" >
+								Classes.NotClockEnabled="{Binding !ClockEnabled, Mode=OneWay}" >
 							<Button.Styles>
 								<Style Selector="Button.IsClockEnabled">
 									<Style.Setters>
@@ -162,6 +168,13 @@
 								</Style>
 							</Button.Styles>
 						</Button>
+						<Grid Grid.Row="1">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="70"/>
+								<ColumnDefinition Width="100"/>
+							</Grid.ColumnDefinitions>
+							<TextBlock Grid.Column="0">Poll Rate (s):</TextBlock> <Slider Grid.Column="1" Minimum="1" Maximum="10"  Value="{Binding PollRate}"/>
+						</Grid>
 					</Grid>
 
 				</Border>
