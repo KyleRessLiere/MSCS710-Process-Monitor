@@ -119,7 +119,8 @@
 					<Grid>
 						<Grid.RowDefinitions>
 							<RowDefinition Height=".16*"/>
-							<RowDefinition Height=".84*"/>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height=".05*"/>
 						</Grid.RowDefinitions>
 						<TextBlock Grid.Row="0" Classes="TitleText" Text="{Binding ResourceText}"/>
 						<TabControl Grid.Row="1" SelectedIndex="{Binding SelectedResourceIndex}" TabStripPlacement="Left">
@@ -138,7 +139,29 @@
 							<TabItem Header="Network" Classes="NavButton" VerticalContentAlignment="Center">
 								<v:NetworkView DataContext="{Binding NetworkViewModel}"/>
 							</TabItem>
+							<TabItem Header="Processes" Classes="NavButton" VerticalContentAlignment="Center">
+								<v:ProcessView DataContext="{Binding ProcessViewModel}"/>
+							</TabItem>
 						</TabControl>
+						<Button Command="{Binding TogglePolling}"
+								Classes.IsClockEnabled="{Binding ClockEnabled, Mode=OneWay}"
+								Classes.NotClockEnabled="{Binding !ClockEnabled, Mode=OneWay}"
+								Grid.Row="2" >
+							<Button.Styles>
+								<Style Selector="Button.IsClockEnabled">
+									<Style.Setters>
+										<Setter Property="Background" Value="{DynamicResource MM-Orange}"/>
+										<Setter Property="Content" Value="Stop Polling"/>
+									</Style.Setters>
+								</Style>
+								<Style Selector="Button.NotClockEnabled">
+									<Style.Setters>
+										<Setter Property="Background" Value="Green"/>
+										<Setter Property="Content" Value="Start Polling"/>
+									</Style.Setters>
+								</Style>
+							</Button.Styles>
+						</Button>
 					</Grid>
 
 				</Border>

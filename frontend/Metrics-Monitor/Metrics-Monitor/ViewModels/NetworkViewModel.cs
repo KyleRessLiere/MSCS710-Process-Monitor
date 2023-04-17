@@ -64,7 +64,6 @@ namespace MetricsMonitorClient.ViewModels {
                 UpdateDataSets(pollList);
             }catch(Exception ex) {
                 _logger.Error(ex);
-                throw;
             }
 
         }
