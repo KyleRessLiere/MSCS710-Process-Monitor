@@ -107,13 +107,12 @@ namespace MetricsMonitorClient.ViewModels
         #region System
         private SemaphoreSlim SingleCycleLock;
         private void RunClock(object sender, ElapsedEventArgs e) {
-
+            SingleCycleLock.Wait();
             if (ClockEnabled == false) { return; }
 
 
             if ((sender is Timer) == false) { return; }
             try {
-                SingleCycleLock.Wait();
 
                 switch ((ResourceTabIndex)selecetedResourceIndex) {
                     case ResourceTabIndex.Overview:
