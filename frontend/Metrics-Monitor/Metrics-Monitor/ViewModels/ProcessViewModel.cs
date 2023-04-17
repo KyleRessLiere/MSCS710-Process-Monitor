@@ -83,25 +83,25 @@ namespace MetricsMonitorClient.ViewModels {
                 if (procList == null || !procList.Any()) { return; };
 
 
-                var treeItems = new List<ProcessPoll>();
-                var treeItemMap = new Dictionary<string, int>();
+            var treeItems = new List<ProcessPoll>();
+            var treeItemMap = new Dictionary<string, int>();
                 foreach (var proc in procList) {
-                    int idx;
+                int idx;
                     if (treeItemMap.TryGetValue(proc.ProcessName, out idx) == false) {
-                        var tHeader = new ProcessPoll(proc);
-                        tHeader.ProcessName = proc.ProcessName;
-                        treeItems.Add(tHeader);
-                        idx = treeItems.Count() - 1;
-                        treeItemMap.Add(proc.ProcessName, idx);
-                        continue;
-                    }
-                    treeItems[idx].Processes.Add(proc);
-                    treeItems[idx].CpuUsagePctTotal = treeItems[idx].Processes.Sum(p => p.CpuPercent);
-                    treeItems[idx].MemoryUsagePctTotal = treeItems[idx].Processes.Sum(p => p.MemoryUsage);
+                    var tHeader = new ProcessPoll(proc);
+                    tHeader.ProcessName = proc.ProcessName;
+                    treeItems.Add(tHeader);
+                    idx = treeItems.Count() - 1;
+                    treeItemMap.Add(proc.ProcessName, idx);
+                    continue;
                 }
-                if (treeItems == null || !treeItems.Any()) { return; };
-                ProcessDataRows.Clear();
-                ProcessDataRows.AddRange(treeItems.ToArray());
+                treeItems[idx].Processes.Add(proc);
+                treeItems[idx].CpuUsagePctTotal = treeItems[idx].Processes.Sum(p => p.CpuPercent);
+                treeItems[idx].MemoryUsagePctTotal = treeItems[idx].Processes.Sum(p => p.MemoryUsage);
+            }
+            if(treeItems == null || !treeItems.Any()) { return; };
+            ProcessDataRows.Clear();
+            ProcessDataRows.AddRange(treeItems.ToArray());
             }catch(Exception ex) {
                 _logger.Error(ex);
             }
