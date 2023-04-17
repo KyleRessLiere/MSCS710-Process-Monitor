@@ -28,12 +28,14 @@ namespace MetricsMonitorClient.ViewModels
             StorageViewModel = WorkspaceFactory.CreateWorkspace<StorageViewModel>();
             HomeViewModel = WorkspaceFactory.CreateWorkspace<HomeViewModel>();
             NetworkViewModel = WorkspaceFactory.CreateWorkspace<NetworkViewModel>();
+            ProcessViewModel = WorkspaceFactory.CreateWorkspace<ProcessViewModel>();
             ResourceText = "Overview";
             uiClock = new Timer(MMConstants.SystemClockInterval);
             uiClock.Elapsed += RunClock;
             uiClock.Start();
             SingleCycleLock = new SemaphoreSlim(1, 1);
            _logger =  log4net.LogManager.GetLogger(typeof(MainWindowViewModel));
+            ClockEnabled = true;
 
         }
 
@@ -50,7 +52,7 @@ namespace MetricsMonitorClient.ViewModels
         CPUViewModel CPUViewModel { get; set; }
         MemoryViewModel MemoryViewModel { get; set; }
         StorageViewModel StorageViewModel { get; set; }
-        
+        ProcessViewModel ProcessViewModel { get; set; }
         NetworkViewModel NetworkViewModel { get; set; }
         HomeViewModel HomeViewModel { get; set; }
 
@@ -92,6 +94,9 @@ namespace MetricsMonitorClient.ViewModels
                 case ResourceTabIndex.Network:
                     ResourceText = "Network";
                     break;
+                case ResourceTabIndex.Processes:
+                    ResourceText = "Processes";
+                    break;
                 default:
                     ResourceText= string.Empty;
                     break;
@@ -102,7 +107,11 @@ namespace MetricsMonitorClient.ViewModels
         #region System
         private SemaphoreSlim SingleCycleLock;
         private void RunClock(object sender, ElapsedEventArgs e) {
-            if((sender is Timer) == false) { return; }
+
+            if (ClockEnabled == false) { return; }
+
+
+            if ((sender is Timer) == false) { return; }
             try {
                 SingleCycleLock.Wait();
 
@@ -125,6 +134,10 @@ namespace MetricsMonitorClient.ViewModels
                         NetworkViewModel.TickClock();
                         Console.WriteLine("Tick " + ClockCycle);
                         break;
+                    case ResourceTabIndex.Processes:
+                        ProcessViewModel.TickClock();
+                        Console.WriteLine("Tick " + ClockCycle);
+                        break;
                     default:
                         break;
                 }
@@ -135,14 +148,23 @@ namespace MetricsMonitorClient.ViewModels
                 //.GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
                 //messageBoxStandardWindow.Show();
             }
-           
-
         }
-
-    
-
-
-
+           private bool _clockEnabled;
+           public bool ClockEnabled {
+            get { return _clockEnabled; }
+            set { this.RaiseAndSetIfChanged(ref _clockEnabled, value); }
+           }
+           public void TogglePolling() {
+                if (ClockEnabled) {
+                    uiClock.Stop();
+                    ClockEnabled = false;
+                } else {
+                    uiClock.Start();
+                    ClockEnabled = true;
+                }
+           }
         #endregion
+
     }
+
 }

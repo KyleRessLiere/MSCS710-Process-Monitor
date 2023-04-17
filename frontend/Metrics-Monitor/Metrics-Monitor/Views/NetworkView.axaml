@@ -14,7 +14,8 @@
 		<DataGrid
 			Grid.Row="2"
 			FontSize="18"
-			VerticalAlignment="Center"
+			MinHeight="400"
+			VerticalAlignment="Bottom"
 			HorizontalAlignment="Center"
 			GridLinesVisibility="All"
 			RowBackground="DarkGray"

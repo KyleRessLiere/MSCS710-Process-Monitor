@@ -34,7 +34,8 @@
 		<DataGrid
 			Grid.Row="2"
 			FontSize="18"
-			VerticalAlignment="Center"
+			MinHeight="400"
+			VerticalAlignment="Bottom"
 			HorizontalAlignment="Center"
 			GridLinesVisibility="All"
 			RowBackground="DarkGray"
@@ -43,7 +44,7 @@
 			AutoGenerateColumns="False"
 			Items="{Binding StatsContainers, Mode=OneWay}">
 				<DataGrid.Columns>
-					<DataGridTextColumn IsReadOnly="True" Header="Core" Binding="{Binding Id, Mode=OneWay}"/>
+					<DataGridTextColumn  IsReadOnly="True" Header="Core" Binding="{Binding Id, Mode=OneWay}"/>
 					<DataGridTextColumn IsReadOnly="True" Header="Current" Binding="{Binding Current, Mode=OneWay}"/>
 					<DataGridTextColumn IsReadOnly="True" Header="Average" Binding="{Binding Avg, Mode=OneWay}"/>
 					<DataGridTextColumn IsReadOnly="True" Header="Min" Binding="{Binding Min, Mode=OneWay}"/>

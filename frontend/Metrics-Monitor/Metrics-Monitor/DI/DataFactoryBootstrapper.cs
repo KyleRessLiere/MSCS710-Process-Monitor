@@ -5,6 +5,7 @@ using MetricsMonitorClient.DataServices.CPU;
 using MetricsMonitorClient.DataServices.Memory;
 using MetricsMonitorClient.DataServices.MonitorSystem;
 using MetricsMonitorClient.DataServices.Network;
+using MetricsMonitorClient.DataServices.Process;
 using MetricsMonitorClient.DataServices.Storage;
 using Splat;
 
@@ -34,7 +35,12 @@ namespace MetricsMonitorClient.DI {
                 var logger = log4net.LogManager.GetLogger(typeof(INetworkFactory));
                 return new NetworkFactory(logger);
             },typeof(INetworkFactory));
-           
+
+            Locator.CurrentMutable.RegisterLazySingleton(() => {
+                var logger = log4net.LogManager.GetLogger(typeof(IProcessFactory));
+                return new ProcessFactory(logger);
+            }, typeof(IProcessFactory));
+
             Locator.CurrentMutable.RegisterLazySingleton(() => new MonitorSystemFactory(), typeof(IMonitorSystemFactory));
         }
     }

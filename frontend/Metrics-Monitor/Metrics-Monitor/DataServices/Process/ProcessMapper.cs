@@ -26,10 +26,11 @@ namespace MetricsMonitorClient.DataServices.Process {
         }
 
 
-
-
-
-        public static int ProcessStatNameToId(string status) => MMConstants.ProcessStatus_NameToId_Map.TryGetValue(status, out var procStatus) ? procStatus : MMConstants.ProcessStatusId_Unknown;
+        public static int ProcessStatNameToId(string status) {
+            if(status == null) return MMConstants.ProcessStatusId_Unknown;
+            
+           return MMConstants.ProcessStatus_NameToId_Map.TryGetValue(status, out var procStatus) ? procStatus : MMConstants.ProcessStatusId_Unknown;
+        }
 
         public static string ProcessStatIdToName(int id) => MMConstants.ProcessStatus_IdToName_Map.TryGetValue(id, out var procStatus) ? procStatus : MMConstants.ProcessStatus_Unknown;
 

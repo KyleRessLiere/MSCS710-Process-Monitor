@@ -20,7 +20,8 @@ namespace MetricsMonitorClient {
             CPU = 1,
             Memory = 2,
             Storage = 3,
-            Network = 4
+            Network = 4,
+            Processes = 5
         };
         /// <summary>
         /// used when converting b <-> gb 
