@@ -1,4 +1,5 @@
 ﻿using MetricsMonitorClient.DataServices.Process.Dtos;
+using MetricsMonitorClient.Models.Process;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClient.DataServices.Process {
+namespace MetricsMonitorClient.DataServices.Process
+{
     public static class ProcessMapper {
 
 

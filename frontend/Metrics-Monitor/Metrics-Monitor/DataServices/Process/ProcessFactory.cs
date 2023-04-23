@@ -1,6 +1,7 @@
 ﻿using log4net;
 using MetricsMonitorClient.DataServices.CPU.Dtos;
 using MetricsMonitorClient.DataServices.Process.Dtos;
+using MetricsMonitorClient.Models.Process;
 using Newtonsoft.Json;
 using NUnit.Framework.Constraints;
 using System;
@@ -10,7 +11,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClient.DataServices.Process {
+namespace MetricsMonitorClient.DataServices.Process
+{
     public class ProcessFactory : IProcessFactory {
 
         private readonly ILog _logger;

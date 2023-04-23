@@ -1,4 +1,5 @@
-﻿using LiveChartsCore;
+﻿using Avalonia.Collections;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using log4net;

@@ -105,7 +105,7 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 			<DockPanel Grid.Row="1" LastChildFill="True">
-				<Border Height="25" Background="{DynamicResource MM-Orange}" BorderBrush="Transparent" BorderThickness="0" DockPanel.Dock="Bottom">
+				<!--<Border Height="25" Background="{DynamicResource MM-Orange}" BorderBrush="Transparent" BorderThickness="0" DockPanel.Dock="Bottom">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width=".5*"/>
@@ -114,15 +114,43 @@
 					<TextBlock Grid.Column="0" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black">Metrics Monitor v0.1</TextBlock>
 					<TextBlock Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black">Created by: Kyle R.L., Caleb R., and Sam A.</TextBlock>
 					</Grid>
-				</Border>
-				<Border Background="{DynamicResource MM-Light}" BorderBrush="Transparent" BorderThickness="0">
+				</Border>-->
 					<Grid>
 						<Grid.RowDefinitions>
-							<RowDefinition Height=".16*"/>
-							<RowDefinition Height="*"/>
-							<RowDefinition Height=".05*"/>
+							<RowDefinition Height=".1*"/>
+							<RowDefinition Height=".9*"/>
 						</Grid.RowDefinitions>
-						<TextBlock Grid.Row="0" Classes="TitleText" Text="{Binding ResourceText}"/>
+						<Grid Grid.Row="0">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width=".12*"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width=".12*"/>
+							</Grid.ColumnDefinitions>
+							
+							<Button Command="{Binding TogglePolling}"
+							Classes.IsClockEnabled="{Binding ClockEnabled, Mode=OneWay}"
+							Classes.NotClockEnabled="{Binding !ClockEnabled, Mode=OneWay}"
+									HorizontalAlignment="Left"
+								 Margin="10,0,0,0"
+							Grid.Column="0" >
+								<Button.Styles>
+									<Style Selector="Button.IsClockEnabled">
+										<Style.Setters>
+											<Setter Property="Background" Value="{DynamicResource MM-Orange}"/>
+											<Setter Property="Content" Value="Stop Polling"/>
+										</Style.Setters>
+									</Style>
+									<Style Selector="Button.NotClockEnabled">
+										<Style.Setters>
+											<Setter Property="Background" Value="Green"/>
+											<Setter Property="Content" Value="Start Polling"/>
+										</Style.Setters>
+									</Style>
+								</Button.Styles>
+							</Button>
+								<TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Classes="TitleText" Text="{Binding ResourceText}"/>
+
+						</Grid>
 						<TabControl Grid.Row="1" SelectedIndex="{Binding SelectedResourceIndex}" TabStripPlacement="Left">
 							<TabItem Header="Overview" Classes="NavButton" VerticalContentAlignment="Center">
 								<v:HomeView DataContext="{Binding HomeViewModel}"/>
@@ -143,27 +171,8 @@
 								<v:ProcessView DataContext="{Binding ProcessViewModel}"/>
 							</TabItem>
 						</TabControl>
-						<Button Command="{Binding TogglePolling}"
-								Classes.IsClockEnabled="{Binding ClockEnabled, Mode=OneWay}"
-								Classes.NotClockEnabled="{Binding !ClockEnabled, Mode=OneWay}"
-								Grid.Row="2" >
-							<Button.Styles>
-								<Style Selector="Button.IsClockEnabled">
-									<Style.Setters>
-										<Setter Property="Background" Value="{DynamicResource MM-Orange}"/>
-										<Setter Property="Content" Value="Stop Polling"/>
-									</Style.Setters>
-								</Style>
-								<Style Selector="Button.NotClockEnabled">
-									<Style.Setters>
-										<Setter Property="Background" Value="Green"/>
-										<Setter Property="Content" Value="Start Polling"/>
-									</Style.Setters>
-								</Style>
-							</Button.Styles>
-						</Button>
+						
 					</Grid>
 
-				</Border>
 			</DockPanel>
 </Window>
