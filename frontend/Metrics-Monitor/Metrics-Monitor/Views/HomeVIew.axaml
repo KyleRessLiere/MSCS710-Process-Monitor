@@ -7,7 +7,18 @@
 			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:vms="using:ViewModelsSamples.Pies.Basic"
              x:Class="MetricsMonitorClient.Views.HomeView">
-	<Grid Height="800" Classes="ContentGrid">
+
+	<UserControl.Styles>
+		<Style Selector="TextBlock.HeaderText">
+			<Setter Property="FontSize" Value="26"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource MM-Light}"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="TextAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Top"/>
+		</Style>
+	</UserControl.Styles>
+	<Grid  Classes="ContentGrid">
 
 		<!--
 			grid layout:
@@ -52,16 +63,11 @@
 					<RowDefinition Height="30"/>
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width=".7*"/>
-					<ColumnDefinition Width=".3*"/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CpuChart.Graph.Name, Mode=OneWay}"/>
+				<TextBlock Grid.Row="0"  Classes="HeaderText"  Text="{Binding CpuChart.GraphName, Mode=OneWay}"/>
 				<lvc:CartesianChart
 							Grid.Row="1"
 							Height="350"
 							Grid.Column="0"
-							Grid.ColumnSpan="2"
 							Series="{Binding CpuChart.Graph, Mode=OneWay}"
 							ZoomMode="Y"
 							YAxes="{Binding CpuChart.YAxis, Mode=OneWay}"
@@ -78,7 +84,10 @@
 					<ColumnDefinition Width=".7*"/>
 					<ColumnDefinition Width=".3*"/>
 				</Grid.ColumnDefinitions>
-				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding MemoryChart.Graph.Name, Mode=OneWay}"/>
+				<TextBlock Grid.Row="0"
+						   Classes="HeaderText"
+						   Grid.Column="0"
+						   Text="{Binding MemoryChart.GraphName, Mode=OneWay}"/>
 				<lvc:CartesianChart
 							Grid.Row="1"
 							Grid.Column="0"
@@ -103,7 +112,10 @@
 					<RowDefinition Height="32"/>
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
-				<TextBlock Padding="0,0,10,0" Grid.Row="1" VerticalAlignment="Center"  TextAlignment="Center" FontSize="20" Foreground="Black" Text="Top Process Types By System Usage"/>
+				<TextBlock 
+						   Grid.Row="1" 
+							Classes="HeaderText"
+						   Text="Top Process Types By System Usage"/>
 					<DataGrid
 						Grid.Row="2"
 						FontSize="10"
@@ -134,7 +146,7 @@
 					<ColumnDefinition Width=".7*"/>
 					<ColumnDefinition Width=".3*"/>
 				</Grid.ColumnDefinitions>
-				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding NetworkChart.Graph.Name, Mode=OneWay}"/>
+				<TextBlock Grid.Row="0" Classes="HeaderText"  Grid.Column="0" Text="{Binding NetworkChart.GraphName, Mode=OneWay}"/>
 				<lvc:CartesianChart
 							Grid.Row="1"
 							Grid.Column="0"

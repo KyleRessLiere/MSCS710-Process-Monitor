@@ -155,14 +155,14 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref _clockEnabled, value); }
            }
            public void TogglePolling() {
-                //if (ClockEnabled) {
-                //    uiClock.Stop();
-                //    ClockEnabled = false;
-                //} else {
-                //    uiClock.Start();
-                //    ClockEnabled = true;
-                //}
-           }
+            if (ClockEnabled) {
+                uiClock.Stop();
+                ClockEnabled = false;
+            } else {
+                uiClock.Start();
+                ClockEnabled = true;
+            }
+        }
         #endregion
 
     }
