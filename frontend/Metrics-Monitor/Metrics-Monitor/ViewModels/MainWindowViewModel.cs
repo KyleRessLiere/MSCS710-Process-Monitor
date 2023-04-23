@@ -113,9 +113,10 @@ namespace MetricsMonitorClient.ViewModels
 
             if ((sender is Timer) == false) { return; }
             try {
-
                 switch ((ResourceTabIndex)selecetedResourceIndex) {
                     case ResourceTabIndex.Overview:
+                        HomeViewModel.TickClock();
+                        Console.WriteLine("Tick " + ClockCycle);
                         break;
                     case ResourceTabIndex.CPU:
                         CPUViewModel.TickClock();
@@ -154,13 +155,13 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref _clockEnabled, value); }
            }
            public void TogglePolling() {
-                if (ClockEnabled) {
-                    uiClock.Stop();
-                    ClockEnabled = false;
-                } else {
-                    uiClock.Start();
-                    ClockEnabled = true;
-                }
+                //if (ClockEnabled) {
+                //    uiClock.Stop();
+                //    ClockEnabled = false;
+                //} else {
+                //    uiClock.Start();
+                //    ClockEnabled = true;
+                //}
            }
         #endregion
 
