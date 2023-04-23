@@ -8,11 +8,11 @@ namespace MetricsMonitorClient.DataServices.MonitorSystem.Dtos
 {
     public class PollDTO
     {
-        public int PollId { get; set; }
-        public int PollRate { get; set; }
-        public string OperatingSystem { get; set; }
-        public string OperatingSystemVersion { get; set; }
-        public string PollType { get; set; }
-        public DateTime Time { get; set; }
+        public int poll_id { get; set; }
+        public double poll_rate { get; set; }
+        public string operating_system { get; set; }
+        public string operating_system_version { get; set; }
+        public string poll_type { get; set; }
+        public DateTime time { get; set; }
     }
 }

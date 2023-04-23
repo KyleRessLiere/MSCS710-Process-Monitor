@@ -2,36 +2,170 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
              xmlns:vm="using:MetricsMonitorClient.ViewModels.HomeViewModel"
+			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Pies.Basic"
              x:Class="MetricsMonitorClient.Views.HomeView">
-	<Grid Classes="ContentGrid">
-		<Grid.RowDefinitions>
-			<RowDefinition Height=".15*"/>
-			<RowDefinition Height=".85*"/>
-		</Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" HorizontalAlignment="Center" Classes="h4" Foreground="{DynamicResource MM-Light}">Polls</TextBlock>
+	<Grid Height="800" Classes="ContentGrid">
 
-			<DataGrid
-			Grid.Row="1"
-			Width="800"
-			Height="400"
-			VerticalAlignment="Center"
-			HorizontalAlignment="Center"
-			GridLinesVisibility="None"
-			RowBackground="DarkGray"
-			AlternatingRowBackground="DarkGray"
-			Foreground="{DynamicResource MM-Light}"
-			AutoGenerateColumns="False"
-			Items="{Binding Polls, Mode=OneWay}">
-				<DataGrid.Columns>
-					<DataGridTextColumn IsReadOnly="True" Header="ID" Binding="{Binding PollId}"></DataGridTextColumn>
-					<DataGridTextColumn IsReadOnly="True" Header="Poll Rate" Binding="{Binding PollRate}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="Operating System" Binding="{Binding OperatingSystem}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="OS Version" Binding="{Binding OperatingSystemVersion}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="Poll Type" Binding="{Binding PollType}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="Timestamp" Binding="{Binding Time}"/>
-				</DataGrid.Columns>
-			</DataGrid>
+		<!--
+			grid layout:
+			
+					|system | CPU | RAM|
+					|__________________|
+					| procs | net | HDD| 
+		-->
+		
+		
+		
+		<Grid.RowDefinitions>
+			<RowDefinition Height=".5*"/>
+			<RowDefinition Height=".5*"/>
+		</Grid.RowDefinitions>
+
+		<Grid Grid.Row="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width=".33*"/>
+				<ColumnDefinition Width=".33*"/>
+				<ColumnDefinition Width=".33*"/>
+			</Grid.ColumnDefinitions>
+
+			<Grid Grid.Column="0">
+				<!--service/ system data-->
+				<Grid.RowDefinitions>
+					<RowDefinition Height="45"/>
+					<RowDefinition Height="45"/>
+					<RowDefinition Height="45"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Row="0" Grid.Column="0" Classes="h6" Text="Operating System: "/><TextBlock Grid.Row="0" Classes="h6" Grid.Column="1" Text="{Binding OS, Mode=OneWay}"/>
+				<TextBlock Grid.Row="1" Grid.Column="0" Classes="h6" Text="Version: "/><TextBlock Grid.Row="1" Classes="h6" Grid.Column="1" Text="{Binding OSVersion, Mode=OneWay}"/>
+				<TextBlock Grid.Row="2" Grid.Column="0" Classes="h6" Text="Current Poll Rate: "/><TextBlock Grid.Row="2" Classes="h6" Grid.Column="1" Text="{Binding CurrentPollRate, Mode=OneWay}"/>
+			</Grid>
+			<Grid Grid.Column="1">
+				<!--CPU data-->
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width=".7*"/>
+					<ColumnDefinition Width=".3*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding CpuChart.Graph.Name, Mode=OneWay}"/>
+				<lvc:CartesianChart
+							Grid.Row="1"
+							Height="350"
+							Grid.Column="0"
+							Grid.ColumnSpan="2"
+							Series="{Binding CpuChart.Graph, Mode=OneWay}"
+							ZoomMode="Y"
+							YAxes="{Binding CpuChart.YAxis, Mode=OneWay}"
+							XAxes="{Binding CpuChart.XAxis, Mode=OneWay}">
+				</lvc:CartesianChart>
+			</Grid>
+			<Grid Grid.Column="2">
+				<!--RAM data-->
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width=".7*"/>
+					<ColumnDefinition Width=".3*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding MemoryChart.Graph.Name, Mode=OneWay}"/>
+				<lvc:CartesianChart
+							Grid.Row="1"
+							Grid.Column="0"
+							Grid.ColumnSpan="2"
+							Height="350"
+							Series="{Binding MemoryChart.Graph, Mode=OneWay}"
+							ZoomMode="Y"
+							YAxes="{Binding MemoryChart.YAxis, Mode=OneWay}"
+							XAxes="{Binding MemoryChart.XAxis, Mode=OneWay}">
+				</lvc:CartesianChart>
+			</Grid>
+		</Grid>
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width=".33*"/>
+				<ColumnDefinition Width=".33*"/>
+				<ColumnDefinition Width=".33*"/>
+			</Grid.ColumnDefinitions>
+			<Grid Grid.Column="0">
+				<!--processes data-->
+				<Grid.RowDefinitions>
+					<RowDefinition Height="32"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<TextBlock Padding="0,0,10,0" Grid.Row="1" VerticalAlignment="Center"  TextAlignment="Center" FontSize="20" Foreground="Black" Text="Top Process Types By System Usage"/>
+					<DataGrid
+						Grid.Row="2"
+						FontSize="10"
+						MaxHeight="370"
+						MinHeight="340"
+						VerticalAlignment="Bottom"
+						HorizontalAlignment="Center"
+						GridLinesVisibility="All"
+						RowBackground="DarkGray"
+						AlternatingRowBackground="DarkGray"
+						Foreground="{DynamicResource MM-Light}"
+						AutoGenerateColumns="False"
+						Items="{Binding ProcessDataRows, Mode=OneWay}">
+						<DataGrid.Columns>
+							<DataGridTextColumn  IsReadOnly="True" Header="Process" Binding="{Binding ProcessName, Mode=OneWay}"/>
+							<DataGridTextColumn IsReadOnly="True" Header="CPU Usage Percent" Binding="{Binding CpuUsagePctTotal, Mode=OneWay}"/>
+							<DataGridTextColumn IsReadOnly="True" Header="Memory Usage Amount" Binding="{Binding MemoryUsagePctTotal, Mode=OneWay}"/>
+						</DataGrid.Columns>
+					</DataGrid>	   
+			</Grid>
+			<Grid Grid.Column="1">
+				<!--Network Data-->
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width=".7*"/>
+					<ColumnDefinition Width=".3*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Row="0" Padding="10,0,0,0" Classes="h6" Grid.Column="0" Text="{Binding NetworkChart.Graph.Name, Mode=OneWay}"/>
+				<lvc:CartesianChart
+							Grid.Row="1"
+							Grid.Column="0"
+							Grid.ColumnSpan="2"
+							Series="{Binding NetworkChart.Graph, Mode=OneWay}"
+							ZoomMode="Y"
+							Height="350"
+							ZoomingSpeed=".2"
+							YAxes="{Binding NetworkChart.YAxis, Mode=OneWay}"
+							XAxes="{Binding NetworkChart.XAxis, Mode=OneWay}">
+				</lvc:CartesianChart>
+			</Grid>
+			<Grid Grid.Column="2">
+				<!--Storage Data-->
+				<Grid.RowDefinitions>
+					<RowDefinition Height="80"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<Grid Grid.Row="0">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding StorageData.DiskTotalInfo, Mode=OneWay}" Classes="h6"/>
+					<TextBlock Grid.Row="1" HorizontalAlignment="Center" Text="{Binding StorageData.DiskUsageInfo, Mode=OneWay}" Classes="h6"/>
+				</Grid>
+				<Grid Grid.Row="1">
+					<lvc:PieChart Height="300" Series="{Binding StorageData.Graph, Mode=OneWay}" />
+				</Grid>
+			</Grid>
+		</Grid>
+			
 	</Grid>
 </UserControl>

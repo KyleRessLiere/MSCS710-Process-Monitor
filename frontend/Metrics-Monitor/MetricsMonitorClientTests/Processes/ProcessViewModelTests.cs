@@ -1,5 +1,6 @@
 ﻿using log4net;
 using MetricsMonitorClient.DataServices.Process;
+using MetricsMonitorClient.Models.Process;
 using MetricsMonitorClient.ViewModels;
 using Moq;
 using ReactiveUI;
@@ -9,7 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClientTests.Processes {
+namespace MetricsMonitorClientTests.Processes
+{
     public class ProcessViewModelTests {
         private readonly Mock<IProcessFactory> _factory;
         private readonly Mock<ILog> _logger;

@@ -1,4 +1,5 @@
-﻿using LiveChartsCore;
+﻿using Avalonia.Collections;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -12,20 +13,29 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MetricsMonitorClient.Models {
-    public abstract class ChartContainerBase : ReactiveObject {
+    /// <summary>
+    /// Wrapper class to maintain all data and UI components of LvCharts graphs
+    /// </summary>
+    public class ChartContainer : ReactiveObject {
         protected readonly int _bufferSize;
-
-        public ChartContainerBase(string graphName, string yAxisName, string xAxisName, int xMax = 100, int yMax = 100) {
+       
+        /// <param name="graphName">Title to display for the graph</param>
+        /// <param name="yAxisName">Label to show for the Y axis</param>
+        /// <param name="xAxisName">Label to show for the X axis</param>
+        /// <param name="yMax">Height of the graph</param>
+        public ChartContainer(string graphName, string yAxisName, string xAxisName, int yMax = 100) {
             _bufferSize = MMConstants.PollBufferSize;
+            Values = new AvaloniaList<ObservableValue>();
             GraphName = graphName;
             YAxisName = yAxisName;
             XAxisName = xAxisName;
             YMax = yMax;
-            XMax = xMax;
             InitGraphAndAxes();
         }
-        public ChartContainerBase() { }
-       
+        public ChartContainer() {
+            Values = new AvaloniaList<ObservableValue>();
+        }
+
         public string GraphName { get; set; }
         public string YAxisName { get; set; }
         public string XAxisName { get; set; }
@@ -41,8 +51,8 @@ namespace MetricsMonitorClient.Models {
 
 
         //series
-        private ISeries _graph;
-        public ISeries Graph {
+        private ObservableCollection<ISeries> _graph;
+        public ObservableCollection<ISeries> Graph {
             get { return _graph; }
             set { this.RaiseAndSetIfChanged(ref _graph, value); }
         }
@@ -67,7 +77,7 @@ namespace MetricsMonitorClient.Models {
         /// <summary>
         /// Stored list of the values backing the graph
         /// </summary>
-        public List<ObservableValue> Values { get; set; }
+        public AvaloniaList<ObservableValue> Values { get; set; }
 
 
         //update
@@ -77,15 +87,16 @@ namespace MetricsMonitorClient.Models {
             var newVal = new ObservableValue(newValue);
           
             Values.Add(newVal);
-         
-            Graph.Values = Values;
 
+            Graph[0].Values = Values;
+            var currentMax = Values.Max(v => v.Value);
+            YAxis[0].MaxLimit = currentMax + (currentMax * .2); 
             CurrentValue = newValue;
         }
 
         //clear
         public void Clear() {
-            Graph.Values = new ObservableValue[0];
+            Graph[0].Values = new ObservableValue[0];
             Values.Clear();
         }
 
@@ -104,13 +115,16 @@ namespace MetricsMonitorClient.Models {
         }
 
         public virtual void InitGraphAndAxes() {
-            Graph = new LineSeries<ObservableValue> {
-                Name = GraphName,
-                Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 0 },
-                ZIndex = 0,
-                LineSmoothness = 0,
-                EasingFunction = null,
-                AnimationsSpeed = TimeSpan.Zero
+            Graph = new ObservableCollection<ISeries> {
+                new LineSeries<ObservableValue>
+                {
+                    Name = GraphName,
+                    Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 0 },
+                    ZIndex = 2,
+                    LineSmoothness = 0,
+                    EasingFunction = null,
+                    AnimationsSpeed = TimeSpan.Zero
+                },
             };
 
             var yName = string.IsNullOrEmpty(YAxisName) ? "Amount" : YAxisName;
@@ -125,7 +139,7 @@ namespace MetricsMonitorClient.Models {
                     },
                     Labeler = Labelers.SevenRepresentativeDigits,
                     MinLimit = 0.0,
-                    MaxLimit = YMax
+                    MaxLimit = YMax == 0 ? 100 : YMax
                 }
             };
 
@@ -138,26 +152,11 @@ namespace MetricsMonitorClient.Models {
                     },
                     Labeler = Labelers.SevenRepresentativeDigits,
                     MinLimit = 0.0,
-                    MaxLimit = XMax
+                    MaxLimit = _bufferSize == 0 ? MMConstants.PollBufferSize : _bufferSize
                 }
             };
 
         }
-
-        //title
-
-
-
-
-        //current value
-
-
-
-        //x axis
-
-
-
-        //y axis
 
     }
 }

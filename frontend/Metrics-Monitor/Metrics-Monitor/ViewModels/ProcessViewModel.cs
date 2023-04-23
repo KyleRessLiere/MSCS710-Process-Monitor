@@ -4,6 +4,7 @@ using Avalonia.Controls.Models.TreeDataGrid;
 using DynamicData;
 using log4net;
 using MetricsMonitorClient.DataServices.Process;
+using MetricsMonitorClient.Models.Process;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClient.ViewModels {
+namespace MetricsMonitorClient.ViewModels
+{
     public class ProcessViewModel : ViewModelBase {
         private readonly IProcessFactory _factory;
         private readonly ILog _logger;

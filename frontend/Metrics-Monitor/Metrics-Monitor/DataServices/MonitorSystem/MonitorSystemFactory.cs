@@ -5,6 +5,7 @@ using MetricsMonitorClient.DataServices.MonitorSystem.Dtos;
 using MetricsMonitorClient.DataServices.Network.Dtos;
 using MetricsMonitorClient.Models;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Paddings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,7 +47,26 @@ namespace MetricsMonitorClient.DataServices.MonitorSystem {
             }
         }
 
+        public async Task<PollDTO> GetLatestServiceInfoAsync() {
+            try {
+                using (var client = new HttpClient()) {
 
+                    var response = await client.GetAsync(MMConstants.BaseApiUrl + "/polls/latest");
+
+                    if (response?.IsSuccessStatusCode ?? false) {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+
+                        var result = JsonConvert.DeserializeObject<PollDTO>(responseContent);
+                        return result;
+                    }
+
+                    throw new HttpRequestException("An error occured making a get request.");
+                }
+            } catch (Exception ex) {
+                _logger.Error(ex);
+                throw;
+            }
+        }
 
 
     }

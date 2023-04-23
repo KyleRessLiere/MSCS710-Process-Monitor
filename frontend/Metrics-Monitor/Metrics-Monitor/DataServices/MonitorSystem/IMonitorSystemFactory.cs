@@ -4,5 +4,6 @@ using System.Threading.Tasks;
 namespace MetricsMonitorClient.DataServices.MonitorSystem {
     public interface IMonitorSystemFactory {
         Task<CompositePollDto> GetAllLatestMetricsAsync();
+        Task<PollDTO> GetLatestServiceInfoAsync();
     }
 }
