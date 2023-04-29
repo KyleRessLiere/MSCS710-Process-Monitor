@@ -120,10 +120,12 @@ namespace MetricsMonitorClient.ViewModels
                 
 
                 //this will not change very often
-                if (ClockCycle % 10 == 0) { UpdateSystemData(); }
+                UpdateSystemData(); 
 
             }catch(Exception ex) {
                 _logger.Error(ex);
+                Alert("An error occurred refreshing the Overview screen.");
+
             }
 
 
@@ -131,11 +133,17 @@ namespace MetricsMonitorClient.ViewModels
 
 
         public void UpdateSystemData() {
-            PollDTO data = Task.Run(() => _factory.GetLatestServiceInfoAsync()).Result;
-
-            OS = data.operating_system;
-            OSVersion = data.operating_system_version;
-            CurrentPollRate = data.poll_rate;
+            try {
+                PollDTO data = Task.Run(() => _factory.GetLatestServiceInfoAsync()).Result;
+                if (data == null) { return; }
+                OS = data.operating_system;
+                OSVersion = data.operating_system_version;
+                CurrentPollRate = (data.poll_rate * 60);
+            }catch(Exception ex) {
+                _logger.Error(ex);
+                Alert("An error occurred refreshing information about the host computer.");
+            }
+           
 
         }
 

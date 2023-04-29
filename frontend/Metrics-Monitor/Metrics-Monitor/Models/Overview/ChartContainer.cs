@@ -140,7 +140,7 @@ namespace MetricsMonitorClient.Models.Overview
                     },
                     Labeler = Labelers.SevenRepresentativeDigits,
                     MinLimit = 0.0,
-                    MaxLimit = BufferSize
+                    MaxLimit = BufferSize,
                     IsInverted = true
                 }
             };

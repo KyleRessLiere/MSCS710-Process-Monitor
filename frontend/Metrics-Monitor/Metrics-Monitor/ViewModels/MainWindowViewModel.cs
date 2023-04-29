@@ -1,30 +1,21 @@
-using Avalonia.Threading;
-using JetBrains.Annotations;
 using log4net;
-using MetricsMonitorClient.DataServices.CPU;
-using MetricsMonitorClient.DataServices.Memory;
 using MetricsMonitorClient.DataServices.MonitorSystem;
-using Microsoft.VisualBasic;
-using NUnit.Framework.Constraints;
-using Org.BouncyCastle.Asn1.Crmf;
 using ReactiveUI;
+using Splat;
 using System;
-using System.Collections.Generic;
-using System.Reactive;
-using System.Runtime.InteropServices.ObjectiveC;
-using System.Text;
-using System.Threading;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Timers;
 using ResourceTabIndex = MetricsMonitorClient.MMConstants.ResourceTabIndex;
 using Timer = System.Timers.Timer;
 
-namespace MetricsMonitorClient.ViewModels
-{
+namespace MetricsMonitorClient.ViewModels {
     public class MainWindowViewModel : ViewModelBase {
         private readonly ILog _logger;
+        private readonly IMonitorSystemFactory _factory;
         #region Constructor
-        public MainWindowViewModel(IMonitorSystemFactory _factory) {
+        public MainWindowViewModel() {
+
             CPUViewModel =  WorkspaceFactory.CreateWorkspace<CPUViewModel>();
             MemoryViewModel = WorkspaceFactory.CreateWorkspace<MemoryViewModel>();
             StorageViewModel = WorkspaceFactory.CreateWorkspace<StorageViewModel>();
@@ -32,20 +23,17 @@ namespace MetricsMonitorClient.ViewModels
             NetworkViewModel = WorkspaceFactory.CreateWorkspace<NetworkViewModel>();
             ProcessViewModel = WorkspaceFactory.CreateWorkspace<ProcessViewModel>();
             ResourceText = "Overview";
-            uiClock = new Timer(MMConstants.SystemClockInterval);
+            SystemClockInterval = MMConstants.DefaultSystemClockInterval;
+            uiClock = new Timer(SystemClockInterval);
             uiClock.Elapsed += RunClock;
             uiClock.Start();
             //SingleCycleLock = new SemaphoreSlim(1, 1);
-           _logger =  log4net.LogManager.GetLogger(typeof(MainWindowViewModel));
+            _logger =  log4net.LogManager.GetLogger(typeof(MainWindowViewModel));
+            _factory = Locator.Current.GetService<IMonitorSystemFactory>();
             ClockEnabled = true;
-            this.PropertyChanged += MainWindowViewModel_PropertyChanged;
         }
 
-        private void MainWindowViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
-            if(string.Equals(e.PropertyName, nameof(PollRate), StringComparison.CurrentCultureIgnoreCase){
-                
-            }
-        }
+       
 
 
         #endregion Constructor
@@ -56,6 +44,7 @@ namespace MetricsMonitorClient.ViewModels
             get { return _clockCycle; }
             private set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
         }
+        public double SystemClockInterval { get; private set; } 
 
         CPUViewModel CPUViewModel { get; set; }
         MemoryViewModel MemoryViewModel { get; set; }
@@ -71,6 +60,11 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref resourceText, value); }
         }
 
+        private string currentRateText;
+        public string CurrentRateText {
+            get { return currentRateText; }
+            set { this.RaiseAndSetIfChanged(ref currentRateText, value); }
+        }
 
         private int selecetedResourceIndex;
         public int SelectedResourceIndex {
@@ -81,8 +75,8 @@ namespace MetricsMonitorClient.ViewModels
             }
         }
 
-        private int _pollRate;
-        public int PollRate {
+        private double _pollRate;
+        public double PollRate {
             get { return _pollRate; }
             set {
                 this.RaiseAndSetIfChanged(ref _pollRate, value);
@@ -160,10 +154,9 @@ namespace MetricsMonitorClient.ViewModels
 
                 }
             }catch (Exception ex) {
+                Error("An uncaught error occured within Metrics Monitor.", ex);
                 _logger.Error(ex);
-                //var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
-                //.GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
-                //messageBoxStandardWindow.Show();
+               
             }
         }
            private bool _clockEnabled;
@@ -187,13 +180,49 @@ namespace MetricsMonitorClient.ViewModels
             }
         }
         public void SetPollRate() {
-            if (ClockEnabled) { uiClock.Stop(); }
+            try {
 
-            //factory call
-            //if good response, update client
+                if (PollRate < .5) {
+                    Alert("Poll rate must be at least .5");
+                    return;
+                }
+                
+                if (ClockEnabled) { uiClock.Stop(); }
+
+                var updateSuccessful = Task.Run(() => _factory.SetPollRate(PollRate)).Result;
+
+                if (!updateSuccessful) {
+                    Alert("An error occurred while attempting to update the poll rate", "Poll Adjustment Error");
+                    uiClock.Start();
+                    return;
+                }
+              
+                SystemClockInterval = PollRate;
+                RestartPolling();
+                CurrentRateText = $"Poll Rate: {SystemClockInterval.ToString("N4", CultureInfo.InvariantCulture)} s";
+            
+            } catch (Exception ex) {
+                Alert("An error occurred while attempting to update the poll rate", "Poll Adjustment Error");
+                _logger.Error(ex);
+                RestartPolling(true);
+            }
         }
 
+        private void RestartPolling(bool defaultRate = false) {
+            if (ClockEnabled) {
+                uiClock.Stop();
+            }
 
+            uiClock.Elapsed -= RunClock;
+
+            var pollRate = defaultRate ? MMConstants.DefaultSystemClockInterval : SystemClockInterval;
+
+            uiClock = new Timer(pollRate);
+            
+            uiClock.Elapsed += RunClock;
+            
+            uiClock.Start();
+        }
         #endregion
 
     }

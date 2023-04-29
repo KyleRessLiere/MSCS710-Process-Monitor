@@ -148,8 +148,10 @@ namespace MetricsMonitorClient.ViewModels {
 
             }catch(Exception ex) {
                 _logger.Error(ex);
+                Alert("An error occurred refreshing the CPU screen.");
+
             }
-            
+
 
         }
 
