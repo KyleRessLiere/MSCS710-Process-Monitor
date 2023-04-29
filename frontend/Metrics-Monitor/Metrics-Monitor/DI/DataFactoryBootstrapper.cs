@@ -11,7 +11,6 @@ using Splat;
 
 namespace MetricsMonitorClient.DI {
     public class DataFactoryBootstrapper {
-        
         public DataFactoryBootstrapper() {
 
             //Splat's DI handling isnt the greatest, so this is needed to ensure that dependencies are resolved in the correct order
@@ -41,7 +40,10 @@ namespace MetricsMonitorClient.DI {
                 return new ProcessFactory(logger);
             }, typeof(IProcessFactory));
 
-            Locator.CurrentMutable.RegisterLazySingleton(() => new MonitorSystemFactory(), typeof(IMonitorSystemFactory));
+            Locator.CurrentMutable.RegisterLazySingleton(() => {
+                var logger = log4net.LogManager.GetLogger(typeof(IMonitorSystemFactory));
+                return new MonitorSystemFactory(logger);
+            }, typeof(IMonitorSystemFactory));
         }
     }
 }

@@ -36,7 +36,7 @@ def get_latest_poll():
         db_file = r"./db/MMM-SQLite.db"
         conn = sqlite3.connect(db_file)
         cur = conn.cursor()
-        res = cur.execute("SELECT * FROM polls ORDER BY poll_id DESC LIMIT 1")
+        res = cur.execute("SELECT * FROM polls ORDER BY id DESC LIMIT 1")
         latest_poll = res.fetchone()
         latest_poll = {
                 "poll_id": latest_poll[0],
