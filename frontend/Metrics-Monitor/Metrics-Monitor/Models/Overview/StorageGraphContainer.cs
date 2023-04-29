@@ -14,13 +14,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClient.Models {
+namespace MetricsMonitorClient.Models.Overview
+{
     /// <summary>
     /// Wrapper class to maintain all data for the storage chart
     /// </summary>
-    public class StorageGraphContainer : ReactiveObject {
+    public class StorageGraphContainer : ReactiveObject
+    {
         protected readonly int _bufferSize;
-        public StorageGraphContainer() {
+        public StorageGraphContainer()
+        {
             Init();
         }
         public AvaloniaList<ISeries> Graph { get; set; }
@@ -31,19 +34,22 @@ namespace MetricsMonitorClient.Models {
         public ObservableValue DiskUsed { get; set; }
 
         private string _diskTotalInfo;
-        public string DiskTotalInfo {
+        public string DiskTotalInfo
+        {
             get { return _diskTotalInfo; }
             set { this.RaiseAndSetIfChanged(ref _diskTotalInfo, value); }
         }
 
         private string _diskUsageInfo;
-        public string DiskUsageInfo {
+        public string DiskUsageInfo
+        {
             get { return _diskUsageInfo; }
             set { this.RaiseAndSetIfChanged(ref _diskUsageInfo, value); }
         }
 
-        public void Update(StorageDto poll) {
-            if(poll == null) { return; }
+        public void Update(StorageDto poll)
+        {
+            if (poll == null) { return; }
 
             Graph[0].Values = new ObservableValue[] { FreeAmount };
             Graph[1].Values = new ObservableValue[] { UsedAmount };
@@ -56,7 +62,8 @@ namespace MetricsMonitorClient.Models {
             DiskUsageInfo = $"Percentage Used: {poll.disk_percentage.ToString("N2", CultureInfo.InvariantCulture)}%";
 
         }
-        public virtual void Init() {
+        public virtual void Init()
+        {
 
             FreeAmount = new ObservableValue();
             UsedAmount = new ObservableValue();

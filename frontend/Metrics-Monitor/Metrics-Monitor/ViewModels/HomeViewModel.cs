@@ -4,7 +4,7 @@ using MetricsMonitorClient.DataServices.MonitorSystem;
 using MetricsMonitorClient.DataServices.MonitorSystem.Dtos;
 using MetricsMonitorClient.DataServices.Process;
 using MetricsMonitorClient.DataServices.Process.Dtos;
-using MetricsMonitorClient.Models;
+using MetricsMonitorClient.Models.Overview;
 using MetricsMonitorClient.Models.Process;
 using ReactiveUI;
 using System;
@@ -13,7 +13,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClient.ViewModels {
+namespace MetricsMonitorClient.ViewModels
+{
     public class HomeViewModel : ViewModelBase {
         private IMonitorSystemFactory _factory;
         private readonly ILog _logger;
@@ -100,6 +101,8 @@ namespace MetricsMonitorClient.ViewModels {
                 var cpuVal = data?.cpu.cpu_percent ?? 0.0;
                 CpuChart.Update(cpuVal);
 
+                //take the fastest network speed
+                //TODO: add a title so you know which one it is
                 var netVal = data?.network?.Where(n => n.network_status == MMConstants.NetworkStatus_Up).OrderByDescending(n => n.network_speed).FirstOrDefault().network_speed ?? 0.0;
                 netVal = netVal > 0? netVal / 1000 : 0.0;
                 NetworkChart.Update(netVal);
@@ -136,17 +139,24 @@ namespace MetricsMonitorClient.ViewModels {
 
         }
 
-
-        private static IEnumerable<ProcessPollSlim> GetProcessSummaryList(IEnumerable<ProcessDto> data) {
+        /// <summary>
+        /// Returns summarized records of active processes. Processes of the same name are aggregated and their cpu and memory usage values are combined.
+        /// </summary>
+        /// <param name="data">Discrete processeses running on the host computer</param>
+        /// <returns>A set of the most resource demanding process records containing n objects where n = <b>MMConstants.PollBufferSize</b> </returns>
+        public static IEnumerable<ProcessPollSlim> GetProcessSummaryList(IEnumerable<ProcessDto> data) {
             if(data == null || !data.Any()) { return new List<ProcessPollSlim>(); }
           
             var procs = data.Select(p => p.ToModel()).ToList();
 
+            // group processes by their names. For each grouping, take the name of the process and the sums of the CpuPercent values and MemoryUsage values
             var slimProcs = procs.GroupBy(p => p.ProcessName).Select(g => new ProcessPollSlim {
                 ProcessName = g.Key,
                 CpuUsagePctTotal = g.Select(gp => gp.CpuPercent).Sum(),
-                MemoryUsagePctTotal = g.Select(gp => gp.MemoryUsage).Sum()
+                MemoryUsagePctTotal = g.Select(gp => gp.MemoryUsage).Sum(),
+                ProcessCount = g.Count()
             }).ToList();
+
 
             var procSelection = slimProcs.OrderByDescending(sp => sp.CpuUsagePctTotal).Take(MMConstants.PollBufferSize);
             return procSelection;
