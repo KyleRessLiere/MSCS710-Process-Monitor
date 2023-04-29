@@ -12,27 +12,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClient.Models {
+namespace MetricsMonitorClient.Models.Overview
+{
     /// <summary>
     /// Wrapper class to maintain all data and UI components of LvCharts graphs
     /// </summary>
-    public class ChartContainer : ReactiveObject {
-        protected readonly int _bufferSize;
-       
+    public class ChartContainer : ReactiveObject
+    {
+        public static readonly int BufferSize = MMConstants.PollBufferSize;
+
         /// <param name="graphName">Title to display for the graph</param>
         /// <param name="yAxisName">Label to show for the Y axis</param>
         /// <param name="xAxisName">Label to show for the X axis</param>
-        /// <param name="yMax">Height of the graph</param>
-        public ChartContainer(string graphName, string yAxisName, string xAxisName, int yMax = 100) {
-            _bufferSize = MMConstants.PollBufferSize;
+        /// <param name="startingYMax">Height of the graph</param>
+        public ChartContainer(string graphName, string yAxisName, string xAxisName, int startingYMax = 100)
+        {
             Values = new AvaloniaList<ObservableValue>();
             GraphName = graphName;
             YAxisName = yAxisName;
             XAxisName = xAxisName;
-            YMax = yMax;
+            YMax = startingYMax;
             InitGraphAndAxes();
         }
-        public ChartContainer() {
+        public ChartContainer()
+        {
             Values = new AvaloniaList<ObservableValue>();
         }
 
@@ -52,25 +55,29 @@ namespace MetricsMonitorClient.Models {
 
         //series
         private ObservableCollection<ISeries> _graph;
-        public ObservableCollection<ISeries> Graph {
+        public ObservableCollection<ISeries> Graph
+        {
             get { return _graph; }
             set { this.RaiseAndSetIfChanged(ref _graph, value); }
         }
 
         private Axis[] _yAxis;
-        public Axis[] YAxis {
+        public Axis[] YAxis
+        {
             get { return _yAxis; }
             set { this.RaiseAndSetIfChanged(ref _yAxis, value); }
         }
 
         private Axis[] _xAxis;
-        public Axis[] XAxis {
+        public Axis[] XAxis
+        {
             get { return _xAxis; }
             set { this.RaiseAndSetIfChanged(ref _xAxis, value); }
         }
 
         private double _currentValue;
-        public double CurrentValue {
+        public double CurrentValue
+        {
             get { return _currentValue; }
             set { this.RaiseAndSetIfChanged(ref _currentValue, value); }
         }
@@ -79,42 +86,23 @@ namespace MetricsMonitorClient.Models {
         /// </summary>
         public AvaloniaList<ObservableValue> Values { get; set; }
 
-
         //update
-        public void Update(double newValue) {
-            if(Values.Count  >= _bufferSize) { Values.RemoveRange(0, 1); }
-           
+        public void Update(double newValue)
+        {
+            if (Values.Count >= BufferSize) { Values.RemoveRange(0, 1); }
+
             var newVal = new ObservableValue(newValue);
-          
+
             Values.Add(newVal);
 
             Graph[0].Values = Values;
             var currentMax = Values.Max(v => v.Value);
-            YAxis[0].MaxLimit = currentMax + (currentMax * .2); 
+            YAxis[0].MaxLimit = currentMax * 1.2;
             CurrentValue = newValue;
         }
 
-        //clear
-        public void Clear() {
-            Graph[0].Values = new ObservableValue[0];
-            Values.Clear();
-        }
-
-        /// <summary>
-        /// Allows the graph to be loaded with all needed data instantly instead of waiting for data to flow in over time
-        /// </summary>
-        /// <param name="values">values to load into the graph</param>
-        public void PreLoad(List<double> values) {
-            if(values == null || !values.Any()) { return; }
-
-            var selection = values.Count >= _bufferSize ? values.TakeLast(_bufferSize).ToList() : values;
-
-            var newValues = selection.Select(v =>  new ObservableValue(v)).ToList();
-
-            Values.AddRange(newValues);
-        }
-
-        public virtual void InitGraphAndAxes() {
+        public virtual void InitGraphAndAxes()
+        {
             Graph = new ObservableCollection<ISeries> {
                 new LineSeries<ObservableValue>
                 {
@@ -129,7 +117,7 @@ namespace MetricsMonitorClient.Models {
 
             var yName = string.IsNullOrEmpty(YAxisName) ? "Amount" : YAxisName;
             var xName = string.IsNullOrEmpty(XAxisName) ? "Time" : XAxisName;
-            
+
             YAxis = new Axis[] {
                 new Axis {
                     Name = yName,
@@ -152,7 +140,7 @@ namespace MetricsMonitorClient.Models {
                     },
                     Labeler = Labelers.SevenRepresentativeDigits,
                     MinLimit = 0.0,
-                    MaxLimit = _bufferSize == 0 ? MMConstants.PollBufferSize : _bufferSize,
+                    MaxLimit = BufferSize
                     IsInverted = true
                 }
             };

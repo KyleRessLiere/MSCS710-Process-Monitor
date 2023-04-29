@@ -21,7 +21,7 @@ namespace MetricsMonitorClient.DataServices.Process
             target.PollId = source.poll_id;
             target.Id = source.process_id;
             target.ProcessName = source.process_name;
-            target.ProcessStatus = ProcessStatNameToId(source._process_status);
+            target.ProcessStatus = ProcessStatNameToId(source.process_status);
 
             return target;
 
