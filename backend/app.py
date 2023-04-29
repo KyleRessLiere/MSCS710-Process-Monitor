@@ -26,41 +26,9 @@ def sensor(polling_rate, poll_type):
         print("monitor fail")
         pass
 
-def schedule_custom_poll(polling_rate, duration):
-    global sched
-    global custom_poll_job
-    global live_poll_job
-
-    # Stop the live polling job
-    if live_poll_job:
-        sched.remove_job(live_poll_job.id)
-
-    # Remove existing custom_poll_job if exists
-    if custom_poll_job:
-        sched.remove_job(custom_poll_job.id)
-
-    # Create a new job with custom polling rate and duration
-    custom_poll_job = sched.add_job(sensor, args=[polling_rate, "custom"], trigger='interval', minutes=polling_rate)
-
-    # Schedule the job to stop after the specified duration
-    stop_time = datetime.now() + timedelta(minutes=duration)
-    sched.add_job(stop_custom_poll, trigger=DateTrigger(stop_time))
 
 
-def stop_custom_poll():
-    global custom_poll_job
-    global live_poll_job
 
-    if custom_poll_job:
-        sched.remove_job(custom_poll_job.id)
-        custom_poll_job = None
-
-    # Resume the live polling job
-    live_poll_job = sched.add_job(sensor, args=[polling_rate, "live"], trigger='interval', minutes=polling_rate)
-
-
-# Initialize custom_poll_job to None
-custom_poll_job = None
 
 
 """
@@ -76,16 +44,22 @@ sched.start()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-@app.route('/api/schedule_poll', methods=['POST'])
-def handle_polling():
-    polling_rate = request.json.get("polling_rate")
-    duration = request.json.get("duration")
+@app.route('/api/polling_rate', methods=['POST'])
+def api_set_polling_rate():
+    global polling_rate
+    global live_poll_job
+    data = request.get_json()
+    new_rate = data.get('polling_rate')
+    polling_rate = new_rate
 
-    if polling_rate is not None and duration is not None:
-        schedule_custom_poll(polling_rate, duration)
-        return jsonify({"message": "Polling scheduled successfully"})
-    else:
-        return jsonify({"message": "Invalid request"}), 400
+    # Stop the current job
+    if live_poll_job:
+        live_poll_job.remove()
+
+    # Start a new job with the updated polling rate
+    live_poll_job = sched.add_job(sensor, args=[polling_rate, "live"], trigger='interval', minutes=polling_rate)
+
+    return jsonify({'message': f'Polling rate changed to {new_rate}'}), 200
 
 
 @app.route('/api/metrics', methods=['GET'])
