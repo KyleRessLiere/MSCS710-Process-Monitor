@@ -1,4 +1,5 @@
 using Avalonia.Threading;
+using JetBrains.Annotations;
 using log4net;
 using MetricsMonitorClient.DataServices.CPU;
 using MetricsMonitorClient.DataServices.Memory;
@@ -10,6 +11,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Reactive;
+using System.Runtime.InteropServices.ObjectiveC;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +24,7 @@ namespace MetricsMonitorClient.ViewModels
     public class MainWindowViewModel : ViewModelBase {
         private readonly ILog _logger;
         #region Constructor
-        public MainWindowViewModel() {
+        public MainWindowViewModel(IMonitorSystemFactory _factory) {
             CPUViewModel =  WorkspaceFactory.CreateWorkspace<CPUViewModel>();
             MemoryViewModel = WorkspaceFactory.CreateWorkspace<MemoryViewModel>();
             StorageViewModel = WorkspaceFactory.CreateWorkspace<StorageViewModel>();
@@ -33,10 +35,16 @@ namespace MetricsMonitorClient.ViewModels
             uiClock = new Timer(MMConstants.SystemClockInterval);
             uiClock.Elapsed += RunClock;
             uiClock.Start();
-            SingleCycleLock = new SemaphoreSlim(1, 1);
+            //SingleCycleLock = new SemaphoreSlim(1, 1);
            _logger =  log4net.LogManager.GetLogger(typeof(MainWindowViewModel));
             ClockEnabled = true;
+            this.PropertyChanged += MainWindowViewModel_PropertyChanged;
+        }
 
+        private void MainWindowViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
+            if(string.Equals(e.PropertyName, nameof(PollRate), StringComparison.CurrentCultureIgnoreCase){
+                
+            }
         }
 
 
@@ -113,44 +121,45 @@ namespace MetricsMonitorClient.ViewModels
         }
         #endregion Methods
         #region System
-        private SemaphoreSlim SingleCycleLock;
+        private readonly object _cycleLock = new object();
         private void RunClock(object sender, ElapsedEventArgs e) {
-            SingleCycleLock.Wait();
-            if (ClockEnabled == false) { return; }
-
-
-            if ((sender is Timer) == false) { return; }
             try {
-                switch ((ResourceTabIndex)selecetedResourceIndex) {
-                    case ResourceTabIndex.Overview:
-                        HomeViewModel.TickClock();
-                        Console.WriteLine("Tick " + ClockCycle);
-                        break;
-                    case ResourceTabIndex.CPU:
-                        CPUViewModel.TickClock();
-                        Console.WriteLine("Tick " + ClockCycle);
-                        break;
-                    case ResourceTabIndex.Memory:
-                        MemoryViewModel.TickClock();
-                        Console.WriteLine("Tick " + ClockCycle);
-                        break;
-                    case ResourceTabIndex.Storage:
-                        StorageViewModel.TickClock();
-                        Console.WriteLine("Tick " + ClockCycle);
-                        break;
-                    case ResourceTabIndex.Network:
-                        NetworkViewModel.TickClock();
-                        Console.WriteLine("Tick " + ClockCycle);
-                        break;
-                    case ResourceTabIndex.Processes:
-                        ProcessViewModel.TickClock();
-                        Console.WriteLine("Tick " + ClockCycle);
-                        break;
-                    default:
-                        break;
+
+                lock (_cycleLock) {
+                if (ClockEnabled == false) { return; }
+
+                if ((sender is Timer) == false) { return; }
+                    switch ((ResourceTabIndex)selecetedResourceIndex) {
+                        case ResourceTabIndex.Overview:
+                            HomeViewModel.TickClock();
+                            Console.WriteLine("Tick " + ClockCycle);
+                            break;
+                        case ResourceTabIndex.CPU:
+                            CPUViewModel.TickClock();
+                            Console.WriteLine("Tick " + ClockCycle);
+                            break;
+                        case ResourceTabIndex.Memory:
+                            MemoryViewModel.TickClock();
+                            Console.WriteLine("Tick " + ClockCycle);
+                            break;
+                        case ResourceTabIndex.Storage:
+                            StorageViewModel.TickClock();
+                            Console.WriteLine("Tick " + ClockCycle);
+                            break;
+                        case ResourceTabIndex.Network:
+                            NetworkViewModel.TickClock();
+                            Console.WriteLine("Tick " + ClockCycle);
+                            break;
+                        case ResourceTabIndex.Processes:
+                            ProcessViewModel.TickClock();
+                            Console.WriteLine("Tick " + ClockCycle);
+                            break;
+                        default:
+                            break;
+                    }
+
                 }
-                SingleCycleLock.Release(1);
-            } catch (Exception ex) {
+            }catch (Exception ex) {
                 _logger.Error(ex);
                 //var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
                 //.GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
@@ -162,15 +171,29 @@ namespace MetricsMonitorClient.ViewModels
             get { return _clockEnabled; }
             set { this.RaiseAndSetIfChanged(ref _clockEnabled, value); }
            }
+            private readonly object pollingToggleLock = new object(); 
            public void TogglePolling() {
-            if (ClockEnabled) {
-                uiClock.Stop();
-                ClockEnabled = false;
-            } else {
-                uiClock.Start();
-                ClockEnabled = true;
+            lock( pollingToggleLock ) {
+                if (ClockEnabled) {
+                    uiClock.Stop();
+                    //if (SingleCycleLock.CurrentCount == 0) {
+                    //    SingleCycleLock.Release();
+                    //}
+                    ClockEnabled = false;
+                } else {
+                    uiClock.Start();
+                    ClockEnabled = true;
+                }
             }
         }
+        public void SetPollRate() {
+            if (ClockEnabled) { uiClock.Stop(); }
+
+            //factory call
+            //if good response, update client
+        }
+
+
         #endregion
 
     }

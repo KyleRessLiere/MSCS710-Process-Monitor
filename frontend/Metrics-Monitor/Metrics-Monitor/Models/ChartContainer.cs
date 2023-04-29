@@ -152,7 +152,8 @@ namespace MetricsMonitorClient.Models {
                     },
                     Labeler = Labelers.SevenRepresentativeDigits,
                     MinLimit = 0.0,
-                    MaxLimit = _bufferSize == 0 ? MMConstants.PollBufferSize : _bufferSize
+                    MaxLimit = _bufferSize == 0 ? MMConstants.PollBufferSize : _bufferSize,
+                    IsInverted = true
                 }
             };
 
