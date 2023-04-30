@@ -1,4 +1,5 @@
 ﻿using Avalonia.Collections;
+using Avalonia.Threading;
 using JetBrains.Annotations;
 using log4net;
 using MetricsMonitorClient.DataServices.Network;
@@ -32,7 +33,7 @@ namespace MetricsMonitorClient.ViewModels
         #region Change Handling
         private void NetworkViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
             if (string.Equals(e.PropertyName, nameof(ClockCycle))) {
-                UpdateUiData();
+                Dispatcher.UIThread.InvokeAsync(() => Task.Run(() => UpdateUiData()));
             }
         }
         #endregion Change Handling
