@@ -34,7 +34,7 @@ namespace MetricsMonitorClient.ViewModels {
         #region Change Handling
         private void CPUViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
            if(string.Equals(e.PropertyName, nameof(ClockCycle))){
-                Dispatcher.UIThread.InvokeAsync(() => Task.Run(() => UpdateUiData()));
+                UpdateUiData();
            }
         }
         #endregion Change Handling
