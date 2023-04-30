@@ -28,7 +28,7 @@ namespace MetricsMonitorClient {
         /// </summary>
         /// <typeparam name="T">Desired type of returned object</typeparam>
         /// <returns> object of type T</returns>
-        public static T CreateWorkspace<T>() {
+        public static T CreateWorkspace<T>(){
             try {
                 T createdObject;
                 lock (_lock) {

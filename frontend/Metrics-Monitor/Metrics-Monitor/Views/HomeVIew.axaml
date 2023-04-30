@@ -55,7 +55,7 @@
 				</Grid.ColumnDefinitions>
 				<TextBlock Grid.Row="0" Grid.Column="0" Classes="h6" Text="Operating System: "/><TextBlock Grid.Row="0" Classes="h6" Grid.Column="1" Text="{Binding OS, Mode=OneWay}"/>
 				<TextBlock Grid.Row="1" Grid.Column="0" Classes="h6" Text="Version: "/><TextBlock Grid.Row="1" Classes="h6" Grid.Column="1" Text="{Binding OSVersion, Mode=OneWay}"/>
-				<TextBlock Grid.Row="2" Grid.Column="0" Classes="h6" Text="Current Poll Rate: "/><TextBlock Grid.Row="2" Classes="h6" Grid.Column="1" Text="{Binding CurrentPollRate, Mode=OneWay}"/>
+				<TextBlock Grid.Row="2" Grid.Column="0" Classes="h6" Text="Current Poll Rate (Monitor Service): "/><TextBlock Grid.Row="2" Classes="h6" Grid.Column="1" Text="{Binding CurrentPollRate, Mode=OneWay}"/>
 			</Grid>
 			<Grid Grid.Column="1">
 				<!--CPU data-->

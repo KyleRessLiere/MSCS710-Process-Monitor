@@ -12,7 +12,7 @@ namespace MetricsMonitorClient.DataServices.Process.Dtos {
         public int poll_id { get; set; }
         public int process_id { get; set; }
         public string process_name { get; set; }
-        public string _process_status { get; set; }
+        public string process_status { get; set; }
         
     }
 }

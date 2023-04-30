@@ -68,6 +68,30 @@ namespace MetricsMonitorClient.DataServices.MonitorSystem {
             }
         }
 
+        public async Task<bool> SetPollRate(double pollRateInSeconds) {
+            try {
+                if(pollRateInSeconds < 0.5) { return false;}
+
+                double pollRateInMinutes = pollRateInSeconds / 60.0;
+                double roundedRate = Math.Round(pollRateInMinutes, 4);
+
+                using (var client = new HttpClient()) {
+                    var response = await client.PostAsJsonAsync(MMConstants.BaseApiUrl + "/polling_rate", new PollAdjustmentDto { polling_rate = roundedRate });
+
+                    if (response?.IsSuccessStatusCode ?? false) {
+                        return true;
+                    }
+
+                    return false;
+
+                    throw new HttpRequestException("An error occured making a get request.");
+                }
+            } catch (Exception ex) {
+                _logger.Error(ex);
+                throw;
+            }
+        }
+
 
     }
 }

@@ -148,20 +148,25 @@ namespace MetricsMonitorClient.ViewModels
 
 
         private void UpdateUIData() {
-            
-            var poll = Task.Run(() => _memoryFactory.GetLatestMemoryPollAsync()).Result as MemoryUsagePollDto;
+            try {
+                var poll = Task.Run(() => _memoryFactory.GetLatestMemoryPollAsync()).Result as MemoryUsagePollDto;
 
-            if (poll == null) { return; }
+                if (poll == null) { return; }
 
-            UpdateCurrentStats(poll);
+                UpdateCurrentStats(poll);
 
-            UsagePolls.Add(poll);
+                UsagePolls.Add(poll);
 
-            if (!UsagePolls.Any()) { return; }
+                if (!UsagePolls.Any()) { return; }
 
-            if (UsagePolls.Count > MMConstants.PollBufferSize) { UsagePolls.RemoveRange(0, 1); }
+                if (UsagePolls.Count > MMConstants.PollBufferSize) { UsagePolls.RemoveRange(0, 1); }
 
-            UpdateGraphs();
+                UpdateGraphs();
+            }catch(Exception ex) {
+                _logger.Error(ex);
+                Alert("An error occurred updating the Memory screen.");
+            }
+          
 
         }
 

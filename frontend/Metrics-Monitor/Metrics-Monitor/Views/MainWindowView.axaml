@@ -104,17 +104,7 @@
 	<Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-			<DockPanel Grid.Row="1" LastChildFill="True">
-				<!--<Border Height="25" Background="{DynamicResource MM-Orange}" BorderBrush="Transparent" BorderThickness="0" DockPanel.Dock="Bottom">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width=".5*"/>
-							<ColumnDefinition Width=".5*"/>
-						</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black">Metrics Monitor v0.1</TextBlock>
-					<TextBlock Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black">Created by: Kyle R.L., Caleb R., and Sam A.</TextBlock>
-					</Grid>
-				</Border>-->
+			<DockPanel LastChildFill="True">
 					<Grid>
 						<Grid.RowDefinitions>
 							<RowDefinition Height=".1*"/>
@@ -126,30 +116,57 @@
 								<ColumnDefinition Width="Auto"/>
 								<ColumnDefinition Width=".12*"/>
 							</Grid.ColumnDefinitions>
-							
-							<Button Command="{Binding TogglePolling}"
-							Classes.IsClockEnabled="{Binding ClockEnabled, Mode=OneWay}"
-							Classes.NotClockEnabled="{Binding !ClockEnabled, Mode=OneWay}"
-									HorizontalAlignment="Left"
-								 Margin="10,0,0,0"
-							Grid.Column="0" >
-								<Button.Styles>
-									<Style Selector="Button.IsClockEnabled">
-										<Style.Setters>
-											<Setter Property="Background" Value="{DynamicResource MM-Orange}"/>
-											<Setter Property="Content" Value="Stop Polling"/>
-										</Style.Setters>
-									</Style>
-									<Style Selector="Button.NotClockEnabled">
-										<Style.Setters>
-											<Setter Property="Background" Value="Green"/>
-											<Setter Property="Content" Value="Start Polling"/>
-										</Style.Setters>
-									</Style>
-								</Button.Styles>
-							</Button>
-								<TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Classes="TitleText" Text="{Binding ResourceText}"/>
-
+							<Grid Grid.Column="0">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width=".4*"/>
+									<ColumnDefinition Width=".4*"/>
+								</Grid.ColumnDefinitions>
+								<Button Command="{Binding TogglePolling}"
+										Classes.IsClockEnabled="{Binding ClockEnabled, Mode=OneWay}"
+										Classes.NotClockEnabled="{Binding !ClockEnabled, Mode=OneWay}"
+										Grid.Column="0"
+										HorizontalAlignment="Left"
+										VerticalAlignment="Center"
+										Margin="10,0,0,0">
+									<Button.Styles>
+										<Style Selector="Button.IsClockEnabled">
+											<Style.Setters>
+												<Setter Property="Background" Value="{DynamicResource MM-Orange}"/>
+												<Setter Property="Content" Value="Pause Polling"/>
+											</Style.Setters>
+										</Style>
+										<Style Selector="Button.NotClockEnabled">
+											<Style.Setters>
+												<Setter Property="Background" Value="Green"/>
+												<Setter Property="Content" Value="Resume Polling"/>
+											</Style.Setters>
+										</Style>
+									</Button.Styles>
+								</Button>
+								<Grid Grid.Column="1" HorizontalAlignment="Left">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="80"/>
+										<ColumnDefinition Width="120"/>
+										<ColumnDefinition Width="60"/>
+									</Grid.ColumnDefinitions>
+									<TextBlock  VerticalAlignment="Center"
+												HorizontalAlignment="Left"
+												TextAlignment="Left"
+												Grid.Column="0">Polling Rate (sec):</TextBlock>
+									<NumericUpDown  Height="20" Value="{Binding PollRate, Mode=TwoWay}" Grid.Column="1" Increment=".1" Minimum=".5" Maximum="120.0"/>
+									<Button Command="{Binding SetPollRate}"
+										Grid.Column="2"
+										Content="Set"
+										HorizontalAlignment="Left"
+										VerticalAlignment="Center"
+										Margin="10,0,0,0"/>
+								</Grid>
+							</Grid>
+							<TextBlock Grid.Column="1" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Classes="TitleText" Text="{Binding ResourceText}"/>
+							<TextBlock  VerticalAlignment="Center"
+												TextAlignment="Left"
+												HorizontalAlignment="Left"
+												Grid.Column="3" Text="{Binding CurrentRateText, Mode=OneWay}"/>
 						</Grid>
 						<TabControl Grid.Row="1" SelectedIndex="{Binding SelectedResourceIndex}" TabStripPlacement="Left">
 							<TabItem Header="Overview" Classes="NavButton" VerticalContentAlignment="Center">
