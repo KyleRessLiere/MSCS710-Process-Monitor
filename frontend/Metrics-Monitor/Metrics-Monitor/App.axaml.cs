@@ -22,7 +22,6 @@ namespace MetricsMonitorClient {
                 desktopLifetime.MainWindow = new MainWindowView {
                     DataContext = WorkspaceFactory.CreateWorkspace<MainWindowViewModel>()
                 };
-
                 Locator.CurrentMutable.RegisterConstant(new AvaloniaActivationForViewFetcher(), typeof(IActivationForViewFetcher));
                 Locator.CurrentMutable.RegisterConstant(new AutoDataTemplateBindingHook(), typeof(IPropertyBindingHook));
                 RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;

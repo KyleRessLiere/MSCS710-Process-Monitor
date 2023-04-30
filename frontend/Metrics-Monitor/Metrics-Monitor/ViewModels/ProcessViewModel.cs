@@ -72,6 +72,7 @@ namespace MetricsMonitorClient.ViewModels
 
             } catch (Exception ex) {
                 _logger.Error(ex);
+                Error("An error occurred while updating the Process screen.", ex);
             }
         }
         /// <summary>

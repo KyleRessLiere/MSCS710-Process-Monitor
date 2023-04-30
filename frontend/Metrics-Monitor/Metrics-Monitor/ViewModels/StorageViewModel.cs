@@ -111,6 +111,7 @@ namespace MetricsMonitorClient.ViewModels {
 
             }catch(Exception ex) {
                 _logger.Error(ex);
+                Error("An error occured while updating the Storage Screen", ex);
             }
         }
 

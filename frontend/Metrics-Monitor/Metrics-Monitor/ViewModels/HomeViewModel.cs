@@ -131,7 +131,7 @@ namespace MetricsMonitorClient.ViewModels
 
             }catch(Exception ex) {
                 _logger.Error(ex);
-                Alert("An error occurred refreshing the Overview screen.");
+                Error("An error occurred refreshing the Overview screen.", ex);
 
             }
         }

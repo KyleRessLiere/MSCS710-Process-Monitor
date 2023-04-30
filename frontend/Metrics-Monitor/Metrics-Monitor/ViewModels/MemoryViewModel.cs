@@ -149,7 +149,7 @@ namespace MetricsMonitorClient.ViewModels
                 UpdateGraphs();
             }catch(Exception ex) {
                 _logger.Error(ex);
-                Alert("An error occurred updating the Memory screen.");
+                Error("An error occurred updating the Memory screen.", ex);
             }
         }
 
@@ -210,23 +210,9 @@ namespace MetricsMonitorClient.ViewModels
                 TotalMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
                 UsedMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
 
-                PreloadGraphsAndLabels();
             }catch(Exception ex) {
                 _logger.Error(ex);
             }
-        }
-
-        public void PreloadGraphsAndLabels() {
-            var polls = Task.Run(() => _memoryFactory.GetAllMemoryPollsAsync()).Result;
-            var pollDataSelection = polls.Take(MMConstants.PollBufferSize);
-
-            UsagePercentageGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.percentage_used });
-            AvailableMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.available_memory });
-            TotalMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.total_memory });
-            UsedMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.used_memory });
-
-            UpdateCurrentStats(pollDataSelection.FirstOrDefault());
-
         }
         public void UpdateCurrentStats(MemoryUsagePollDto poll) {
             CurrentUsedPct = $"Memory Usage: {(poll.percentage_used / 100.0).ToString("P", CultureInfo.InvariantCulture)}";

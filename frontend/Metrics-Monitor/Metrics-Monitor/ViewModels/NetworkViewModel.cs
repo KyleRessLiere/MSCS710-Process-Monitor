@@ -70,7 +70,7 @@ namespace MetricsMonitorClient.ViewModels
                 UpdateDataSets(pollList);
             }catch(Exception ex) {
                 _logger.Error(ex);
-                Alert("An error occurred updating the Network screen.");
+                Error("An error occurred updating the Network screen.", ex);
             }
         }
 

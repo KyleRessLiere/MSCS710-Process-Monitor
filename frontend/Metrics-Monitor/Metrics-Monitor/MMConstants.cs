@@ -4,9 +4,9 @@ using System.Linq;
 namespace MetricsMonitorClient {
     public static class MMConstants {
         /// <summary>
-        /// sleep period between clock ticks in milliseconds
+        /// sleep period between clock ticks in seconds
         /// </summary>
-        public const int DefaultSystemClockInterval = 500;
+        public const double DefaultSystemClockInterval = .7;
         public const int PollBufferSize = 15;
         public const string BaseApiUrl = "http://127.0.0.1:5000/api";
         public const int StatsContainerMaxBuffer = 100;

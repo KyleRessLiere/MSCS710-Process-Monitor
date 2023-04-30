@@ -102,7 +102,8 @@ namespace MetricsMonitorClient.Models.Overview
 
             Values.Add(newVal);
 
-            Graph[0].Values = Values;
+            //displaying values in the correct order
+            Graph[0].Values = Values.Reverse();
             var currentMax = Values.Max(v => v.Value);
             YAxis[0].MaxLimit = currentMax * 1.2;
             CurrentValue = newValue;
