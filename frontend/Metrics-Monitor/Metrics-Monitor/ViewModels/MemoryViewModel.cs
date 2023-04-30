@@ -209,8 +209,8 @@ namespace MetricsMonitorClient.ViewModels
                 AvailableMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
                 TotalMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
                 UsedMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
-
-            }catch(Exception ex) {
+                PreloadGraphsAndLabels();
+            } catch(Exception ex) {
                 _logger.Error(ex);
             }
         }
@@ -226,6 +226,20 @@ namespace MetricsMonitorClient.ViewModels
             AvailableMemoryGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id).Select(u => new ObservableValue { Value = u.available_memory });
             TotalMemoryGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id).Select(u => new ObservableValue { Value = u.total_memory });
             UsedMemoryGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id).Select(u => new ObservableValue { Value = u.used_memory });
+
+        }
+
+
+        public void PreloadGraphsAndLabels() {
+            var polls = Task.Run(() => _memoryFactory.GetAllMemoryPollsAsync()).Result;
+            var pollDataSelection = polls.Take(MMConstants.PollBufferSize);
+
+            UsagePercentageGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.percentage_used });
+            AvailableMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.available_memory });
+            TotalMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.total_memory });
+            UsedMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.used_memory });
+
+            UpdateCurrentStats(pollDataSelection.FirstOrDefault());
 
         }
         #endregion Methods
