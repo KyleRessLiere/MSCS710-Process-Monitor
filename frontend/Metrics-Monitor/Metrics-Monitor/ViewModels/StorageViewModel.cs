@@ -21,6 +21,7 @@ namespace MetricsMonitorClient.ViewModels {
         private readonly ILog _logger;
         private readonly SemaphoreSlim _clockLock;
 
+        #region Constructor
         public StorageViewModel(IStorageFactory factory, ILog logger) {
             this._factory = factory;
             this._logger = logger;
@@ -30,14 +31,19 @@ namespace MetricsMonitorClient.ViewModels {
             InitChart();
             this.PropertyChanged += StorageViewModel_PropertyChanged;
         }
+        #endregion Constructor
 
+        #region Change Handling
         private void StorageViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
-            if(e.PropertyName == nameof(Clock)) {
+            if (e.PropertyName == nameof(Clock)) {
                 Refresh();
             }
         }
 
+        #endregion Change Handling
+
         #region Properties
+
 
         private long _clock;
         public long Clock {
@@ -89,7 +95,6 @@ namespace MetricsMonitorClient.ViewModels {
 
         #endregion Properties
 
-
         #region Methods
         public void Refresh() {
             try {
@@ -115,7 +120,6 @@ namespace MetricsMonitorClient.ViewModels {
             _clockLock.Release();
         }
 
-
         public void InitChart() {
             DiskFree.Value = 100;
             StorageUsagePieChart = new AvaloniaList<ISeries> {
@@ -125,6 +129,5 @@ namespace MetricsMonitorClient.ViewModels {
         }
 
         #endregion Methods
-      
     }
 }

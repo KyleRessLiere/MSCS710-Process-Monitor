@@ -1,4 +1,5 @@
 ﻿using MetricsMonitorClient.DataServices.Network.Dtos;
+using MetricsMonitorClient.Models.Network;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;

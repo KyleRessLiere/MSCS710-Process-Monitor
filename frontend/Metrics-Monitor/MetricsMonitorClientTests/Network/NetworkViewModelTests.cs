@@ -2,6 +2,7 @@
 using log4net;
 using MetricsMonitorClient;
 using MetricsMonitorClient.DataServices.Network;
+using MetricsMonitorClient.Models.Network;
 using MetricsMonitorClient.ViewModels;
 using Moq;
 using System;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MetricsMonitorClient.DataServices.CPU.Dtos
 {
-    public class CPUDto : IDto {
+    public class CPUDto {
         public int cpu_count_physical { get; set; }
         public double[] cpu_count_virtual { get; set; }
         public long cpu_ctx_switches { get; set; }

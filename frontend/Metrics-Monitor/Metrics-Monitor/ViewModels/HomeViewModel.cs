@@ -29,13 +29,16 @@ namespace MetricsMonitorClient.ViewModels
             InitCharts();
             ProcessDataRows = new List<ProcessPollSlim>();
         }
-
+        #endregion Constructor
+        
+        #region Change Handling
         private void HomeViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
             if(string.Equals(e.PropertyName, nameof(ClockCycle))){
                 UpdateData();
             }
         }
-        #endregion Constructor
+        #endregion Change Handling
+       
         #region Properties
         private ChartContainer _cpuChart;
         public ChartContainer CpuChart {
@@ -80,6 +83,12 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref _currentPollRate, value); }
         }
 
+        private double _clientCurrentPollRate;
+        public double ClientCurrentPollRate {
+            get { return _clientCurrentPollRate; }
+            set { this.RaiseAndSetIfChanged(ref _clientCurrentPollRate, value); }
+        }
+
         private long _clockCycle;
         public long ClockCycle {
             get { return _clockCycle; }
@@ -117,9 +126,7 @@ namespace MetricsMonitorClient.ViewModels
                 ProcessDataRows.Clear();
                 ProcessDataRows.AddRange(procSelection);
                 this.RaisePropertyChanged(nameof(ProcessDataRows));
-                
 
-                //this will not change very often
                 UpdateSystemData(); 
 
             }catch(Exception ex) {
@@ -127,10 +134,7 @@ namespace MetricsMonitorClient.ViewModels
                 Alert("An error occurred refreshing the Overview screen.");
 
             }
-
-
         }
-
 
         public void UpdateSystemData() {
             try {
@@ -143,8 +147,6 @@ namespace MetricsMonitorClient.ViewModels
                 _logger.Error(ex);
                 Alert("An error occurred refreshing information about the host computer.");
             }
-           
-
         }
 
         /// <summary>
@@ -176,9 +178,6 @@ namespace MetricsMonitorClient.ViewModels
             MemoryChart = new ChartContainer("Memory Usage", "Percent Usage", "Time", 100);
             StorageData = new StorageGraphContainer();
         }
-        
-
         #endregion Methods
-
     }
 }

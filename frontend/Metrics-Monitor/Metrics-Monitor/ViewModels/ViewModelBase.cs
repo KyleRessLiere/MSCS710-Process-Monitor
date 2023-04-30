@@ -12,7 +12,7 @@ namespace MetricsMonitorClient.ViewModels {
             if (string.IsNullOrEmpty(message)) { return; }
 
             var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
-                       .GetMessageBoxStandardWindow("Alert", message);
+                       .GetMessageBoxStandardWindow("Alert", message, windowStartupLocation: Avalonia.Controls.WindowStartupLocation.CenterScreen, icon: MessageBox.Avalonia.Enums.Icon.Warning);
             messageBoxStandardWindow.Show();
         }
 
@@ -20,7 +20,7 @@ namespace MetricsMonitorClient.ViewModels {
             if (string.IsNullOrEmpty(message)) { return; }
 
             var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
-                           .GetMessageBoxStandardWindow((title ?? "Alert"), message);
+                           .GetMessageBoxStandardWindow((title ?? "Alert"), message, windowStartupLocation: Avalonia.Controls.WindowStartupLocation.CenterScreen, icon: MessageBox.Avalonia.Enums.Icon.Info);
             messageBoxStandardWindow.Show();
         }
 
@@ -35,7 +35,23 @@ namespace MetricsMonitorClient.ViewModels {
             sb.AppendLine(ex.ToString());
 
             var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
-                       .GetMessageBoxStandardWindow("Error", sb.ToString());
+                       .GetMessageBoxStandardWindow("Error", sb.ToString(), windowStartupLocation: Avalonia.Controls.WindowStartupLocation.CenterScreen, icon: MessageBox.Avalonia.Enums.Icon.Error);
+            ;
+            messageBoxStandardWindow.Show();
+        }
+
+        public void Error(string message, string title, Exception ex) {
+            if (string.IsNullOrEmpty(message)) { return; }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("Metrics Monitor encountered an error.");
+            sb.AppendLine(message);
+            sb.AppendLine($"Error Text: {ex.Message}");
+            sb.AppendLine(ex.ToString());
+
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                       .GetMessageBoxStandardWindow((title ?? "Error"), sb.ToString(), windowStartupLocation: Avalonia.Controls.WindowStartupLocation.CenterScreen, icon: MessageBox.Avalonia.Enums.Icon.Error);
             ;
             messageBoxStandardWindow.Show();
         }

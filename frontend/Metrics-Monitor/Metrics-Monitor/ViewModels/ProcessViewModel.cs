@@ -20,52 +20,49 @@ namespace MetricsMonitorClient.ViewModels
         private readonly ILog _logger;
         private readonly SemaphoreSlim _clockLock;
 
+        #region Constructor
         public ProcessViewModel(IProcessFactory factory, ILog logger) {
             _factory = factory;
             _logger = logger;
             _clockLock = new SemaphoreSlim(1, 1);
             ProcessDataRows = new AvaloniaList<ProcessPoll>();
-           // SetupTreeGridSource();
             this.PropertyChanged += ProcessViewModel_PropertyChanged;
         }
+        #endregion Constructor
 
+        #region Change Handling
         private void ProcessViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
             if (string.Equals(e.PropertyName, nameof(ClockCycle))) {
                 UpdateUiData();
             }
         }
-       
+        #endregion Change Handling
 
+        #region Properties
         public HierarchicalTreeDataGridSource<ProcessPoll> TreeGridDataSource { get; set; }
-
         public AvaloniaList<ProcessPoll> ProcessDataRows { get; set; }
-
-
         public bool IsInitialized { get; set; }
-
+        
         private long _clockCycle;
         public long ClockCycle {
             get { return _clockCycle; }
             set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
         }
+        #endregion Properties
 
-
+        #region Methods
         public void TickClock() {
             _clockLock.Wait();
             ClockCycle = ClockCycle + 1;
             _clockLock.Release();
         }
 
-
         public void UpdateUiData() {
             try {
                 var procSet = Task.Run(() => _factory.GetRunningProcessesAsync()).Result;
                 if(procSet == null || !procSet.Any()) { return; }
 
-                
-
                 UpdateDataSets(procSet);
-
 
                 if (!IsInitialized) {
                     SetupTreeGridSource();
@@ -77,13 +74,13 @@ namespace MetricsMonitorClient.ViewModels
                 _logger.Error(ex);
             }
         }
-
-     
-
+        /// <summary>
+        /// Loads data from a set of processes into the grid data set
+        /// </summary>
+        /// <param name="procList">list of process DTOs returned from the service</param>
         public void UpdateDataSets(List<ProcessPoll> procList) {
             try {
                 if (procList == null || !procList.Any()) { return; };
-
 
             var treeItems = new List<ProcessPoll>();
             var treeItemMap = new Dictionary<string, int>();
@@ -110,6 +107,9 @@ namespace MetricsMonitorClient.ViewModels
            
         }
 
+        /// <summary>
+        /// Initializes the structure of the treelist grid
+        /// </summary>
         public void SetupTreeGridSource() {
             TreeGridDataSource = new HierarchicalTreeDataGridSource<ProcessPoll>(ProcessDataRows) {
                 Columns = {
@@ -129,6 +129,6 @@ namespace MetricsMonitorClient.ViewModels
             this.RaisePropertyChanged(nameof(TreeGridDataSource));
         }
 
-
+        #endregion Methods
     }
 }

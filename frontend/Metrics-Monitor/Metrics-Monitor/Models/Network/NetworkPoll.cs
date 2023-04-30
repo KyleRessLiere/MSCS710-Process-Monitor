@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClient.DataServices.Network
+namespace MetricsMonitorClient.Models.Network
 {
     public class NetworkPoll
     {

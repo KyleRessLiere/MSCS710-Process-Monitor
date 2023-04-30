@@ -11,8 +11,6 @@ namespace MetricsMonitorClient.DataServices.Process
 {
     public static class ProcessMapper {
 
-
-
         public static ProcessPoll ToModel(this ProcessDto source) {
             ProcessPoll target = new ProcessPoll();
             target.CpuPercent = source.cpu_percent;
@@ -27,7 +25,6 @@ namespace MetricsMonitorClient.DataServices.Process
 
         }
 
-
         public static int ProcessStatNameToId(string status) {
             if(status == null) return MMConstants.ProcessStatusId_Unknown;
             
@@ -35,8 +32,5 @@ namespace MetricsMonitorClient.DataServices.Process
         }
 
         public static string ProcessStatIdToName(int id) => MMConstants.ProcessStatus_IdToName_Map.TryGetValue(id, out var procStatus) ? procStatus : MMConstants.ProcessStatus_Unknown;
-
-
-
     }
 }

@@ -6,7 +6,7 @@ namespace MetricsMonitorClient.Models.Process
 {
     public class ProcessPoll : ReactiveObject
     {
-
+        #region Constructors
         public ProcessPoll()
         {
             Processes = new AvaloniaList<ProcessPoll>();
@@ -22,7 +22,9 @@ namespace MetricsMonitorClient.Models.Process
             CpuUsagePctTotal = proc.CpuUsagePctTotal;
             MemoryUsagePctTotal = proc.MemoryUsagePctTotal;
         }
+        #endregion Constructors
 
+        #region Properties
         public int Id { get; set; }
 
         private string _processName;
@@ -31,7 +33,6 @@ namespace MetricsMonitorClient.Models.Process
             get { return _processName; }
             set { this.RaiseAndSetIfChanged(ref _processName, value); }
         }
-
 
         private int _processStatus;
         public int ProcessStatus
@@ -43,7 +44,6 @@ namespace MetricsMonitorClient.Models.Process
                 ProcessStatusText = ProcessMapper.ProcessStatIdToName(value);
             }
         }
-
 
         private string _processStatusText;
         public string ProcessStatusText
@@ -92,5 +92,7 @@ namespace MetricsMonitorClient.Models.Process
         public int PollId { get; set; }
 
         public AvaloniaList<ProcessPoll> Processes { get; set; }
+
+        #endregion Properties
     }
 }

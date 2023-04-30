@@ -1,11 +1,8 @@
 ﻿using log4net;
-using MetricsMonitorClient.DataServices.Memory;
 using Splat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
 
 namespace MetricsMonitorClient {
     public class WorkspaceFactory {

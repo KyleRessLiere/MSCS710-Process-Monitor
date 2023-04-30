@@ -9,8 +9,19 @@ using System.Threading.Tasks;
 namespace MetricsMonitorClient.Models {
     public class StatsContainerBase : ReactiveObject {
 
+        #region Constructor
+        public StatsContainerBase() {
+            Min = double.MaxValue;
+            Max = double.MinValue;
+        }
+        #endregion Constructor
+
+        #region Fields
         protected virtual int _MaxBufferSize => MMConstants.StatsContainerMaxBuffer;
-        
+
+        #endregion Fields
+        #region Properties
+
         public double FirstQ { get; set; }
      
         public double SecondQ { get; set; }
@@ -25,6 +36,10 @@ namespace MetricsMonitorClient.Models {
         public double Current { get; set; }
 
         public int Id { get; set; }
+        public virtual List<double> PollList { get; protected set; }
+        #endregion Properties
+      
+        #region Methods
         public virtual void AddAndUpdate(double poll) {
             
             AddPoll(poll);
@@ -40,7 +55,7 @@ namespace MetricsMonitorClient.Models {
 
             Current = poll;
 
-             NotifyUi();
+            NotifyUi();
             
         }
         
@@ -52,26 +67,11 @@ namespace MetricsMonitorClient.Models {
             PollList.Add(poll);
         }
 
-
         protected virtual void NotifyUi() {
             foreach(var property in propertiesToTrack) {
                 this.RaisePropertyChanged(property);
             }
         }
-
-
-
-        protected static string[] propertiesToTrack = new string[] {
-            nameof(FirstQ),
-            nameof(SecondQ),
-            nameof(ThirdQ),
-            nameof(Min),
-            nameof(Max),
-            nameof(Avg),
-            nameof(Current)
-        };
-
-
 
         protected static double Percentile(IEnumerable<double> seq, double percentile) {
             var elements = seq.ToArray();
@@ -84,13 +84,23 @@ namespace MetricsMonitorClient.Models {
             else
                 return elements[index];
         }
+        #endregion Methods
 
-        public virtual List<double> PollList { get; protected set; }
+        #region Change Tracking
+
+        protected static string[] propertiesToTrack = new string[] {
+            nameof(FirstQ),
+            nameof(SecondQ),
+            nameof(ThirdQ),
+            nameof(Min),
+            nameof(Max),
+            nameof(Avg),
+            nameof(Current)
+        };
+
+        #endregion Change Tracking
 
 
-        public StatsContainerBase() {
-            Min = double.MaxValue;
-            Max = double.MinValue;
-        }
+
     }
 }

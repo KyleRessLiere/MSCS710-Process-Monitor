@@ -21,6 +21,7 @@ namespace MetricsMonitorClient.Models.Overview
     {
         public static readonly int BufferSize = MMConstants.PollBufferSize;
 
+        #region Constructors
         /// <param name="graphName">Title to display for the graph</param>
         /// <param name="yAxisName">Label to show for the Y axis</param>
         /// <param name="xAxisName">Label to show for the X axis</param>
@@ -38,6 +39,10 @@ namespace MetricsMonitorClient.Models.Overview
         {
             Values = new AvaloniaList<ObservableValue>();
         }
+
+        #endregion Constructors
+
+        #region Properties
 
         public string GraphName { get; set; }
         public string YAxisName { get; set; }
@@ -86,7 +91,9 @@ namespace MetricsMonitorClient.Models.Overview
         /// </summary>
         public AvaloniaList<ObservableValue> Values { get; set; }
 
-        //update
+        #endregion Properties
+
+        #region Methods
         public void Update(double newValue)
         {
             if (Values.Count >= BufferSize) { Values.RemoveRange(0, 1); }
@@ -146,6 +153,7 @@ namespace MetricsMonitorClient.Models.Overview
             };
 
         }
+        #endregion Methods
 
     }
 }
