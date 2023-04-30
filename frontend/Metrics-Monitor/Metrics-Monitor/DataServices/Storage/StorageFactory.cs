@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace MetricsMonitorClient.DataServices.Storage {
     public class StorageFactory : IStorageFactory {
-
         private readonly ILog _logger;
 
         public StorageFactory(ILog logger) {

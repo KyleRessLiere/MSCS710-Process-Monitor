@@ -15,26 +15,25 @@ namespace MetricsMonitorClient.ViewModels {
         private readonly IMonitorSystemFactory _factory;
         #region Constructor
         public MainWindowViewModel() {
-
+            _logger = log4net.LogManager.GetLogger(typeof(MainWindowViewModel));
+            _factory = Locator.Current.GetService<IMonitorSystemFactory>();
+           
             CPUViewModel =  WorkspaceFactory.CreateWorkspace<CPUViewModel>();
             MemoryViewModel = WorkspaceFactory.CreateWorkspace<MemoryViewModel>();
             StorageViewModel = WorkspaceFactory.CreateWorkspace<StorageViewModel>();
             HomeViewModel = WorkspaceFactory.CreateWorkspace<HomeViewModel>();
             NetworkViewModel = WorkspaceFactory.CreateWorkspace<NetworkViewModel>();
             ProcessViewModel = WorkspaceFactory.CreateWorkspace<ProcessViewModel>();
+           
             ResourceText = "Overview";
-            SystemClockInterval = MMConstants.DefaultSystemClockInterval;
-            uiClock = new Timer(SystemClockInterval);
-            uiClock.Elapsed += RunClock;
-            uiClock.Start();
-            //SingleCycleLock = new SemaphoreSlim(1, 1);
-            _logger =  log4net.LogManager.GetLogger(typeof(MainWindowViewModel));
-            _factory = Locator.Current.GetService<IMonitorSystemFactory>();
-            ClockEnabled = true;
+
+            // StartPolling();
+            SetPollRateFromCurrentServiceRate();
+            HomeViewModel.ClientCurrentPollRate = SystemClockInterval;
+            PollRate = SystemClockInterval;
+            
+            
         }
-
-       
-
 
         #endregion Constructor
         #region Properties
@@ -44,6 +43,9 @@ namespace MetricsMonitorClient.ViewModels {
             get { return _clockCycle; }
             private set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
         }
+        /// <summary>
+        /// Poll Interval in seconds
+        /// </summary>
         public double SystemClockInterval { get; private set; } 
 
         CPUViewModel CPUViewModel { get; set; }
@@ -53,17 +55,10 @@ namespace MetricsMonitorClient.ViewModels {
         NetworkViewModel NetworkViewModel { get; set; }
         HomeViewModel HomeViewModel { get; set; }
 
-
         private string resourceText;
         public string ResourceText {
             get { return resourceText; }
             set { this.RaiseAndSetIfChanged(ref resourceText, value); }
-        }
-
-        private string currentRateText;
-        public string CurrentRateText {
-            get { return currentRateText; }
-            set { this.RaiseAndSetIfChanged(ref currentRateText, value); }
         }
 
         private int selecetedResourceIndex;
@@ -82,9 +77,9 @@ namespace MetricsMonitorClient.ViewModels {
                 this.RaiseAndSetIfChanged(ref _pollRate, value);
             }
         }
-
-
+      
         private Timer uiClock { get; set; }
+      
         #endregion Properties
         #region Methods
         public void UpdateUI() {
@@ -159,19 +154,18 @@ namespace MetricsMonitorClient.ViewModels {
                
             }
         }
-           private bool _clockEnabled;
-           public bool ClockEnabled {
-            get { return _clockEnabled; }
-            set { this.RaiseAndSetIfChanged(ref _clockEnabled, value); }
-           }
-            private readonly object pollingToggleLock = new object(); 
+
+        private bool _clockEnabled;
+        public bool ClockEnabled {
+         get { return _clockEnabled; }
+         set { this.RaiseAndSetIfChanged(ref _clockEnabled, value); }
+        }
+        
+        private readonly object pollingLock = new object(); 
            public void TogglePolling() {
-            lock( pollingToggleLock ) {
+            lock(pollingLock) {
                 if (ClockEnabled) {
                     uiClock.Stop();
-                    //if (SingleCycleLock.CurrentCount == 0) {
-                    //    SingleCycleLock.Release();
-                    //}
                     ClockEnabled = false;
                 } else {
                     uiClock.Start();
@@ -179,50 +173,92 @@ namespace MetricsMonitorClient.ViewModels {
                 }
             }
         }
+
         public void SetPollRate() {
-            try {
+            lock (pollingLock) {
+                try {
 
-                if (PollRate < .5) {
-                    Alert("Poll rate must be at least .5");
-                    return;
+                    if(PollRate == SystemClockInterval) { return; }
+
+                    if (PollRate < .5) {
+                        Alert("Poll rate must be at least .5");
+                        return;
+                    }
+
+                    var updateSuccessful = Task.Run(() => _factory.SetPollRate(PollRate)).Result;
+
+                    if (updateSuccessful) {
+                        SystemClockInterval = PollRate;
+
+                    } else {
+                        Alert("An error occurred while attempting to update the poll rate", "Poll Adjustment Error");
+                    }
+
+                    RestartPolling();
+                } catch (Exception ex) {
+                    Error("An error occurred while attempting to update the poll rate. Resetting to Default rate.", "Poll Adjustment Error", ex);
+                    _logger.Error(ex);
+                    RestartPolling(true);
                 }
-                
-                if (ClockEnabled) { uiClock.Stop(); }
-
-                var updateSuccessful = Task.Run(() => _factory.SetPollRate(PollRate)).Result;
-
-                if (!updateSuccessful) {
-                    Alert("An error occurred while attempting to update the poll rate", "Poll Adjustment Error");
-                    uiClock.Start();
-                    return;
-                }
-              
-                SystemClockInterval = PollRate;
-                RestartPolling();
-                CurrentRateText = $"Poll Rate: {SystemClockInterval.ToString("N4", CultureInfo.InvariantCulture)} s";
-            
-            } catch (Exception ex) {
-                Alert("An error occurred while attempting to update the poll rate", "Poll Adjustment Error");
-                _logger.Error(ex);
-                RestartPolling(true);
             }
         }
 
+
+        public void SetPollRateFromCurrentServiceRate() {
+            try {
+                lock (pollingLock) {
+                    var pollData = Task.Run(() => _factory.GetLatestServiceInfoAsync()).Result;
+                    if (pollData == null) {
+                        StartPolling();
+                        return;
+                    }
+                    StartPolling(pollData.poll_rate);
+                }
+            }catch(Exception ex) {
+                Error("An error occurred while attempting to set the poll rate. Please restart and try again.", "Poll Adjustment Error", ex);
+                _logger.Error(ex);
+            }
+        }
+    
+        /// <summary>
+        /// Restarts the polling interval timer and sets the interval to the value of the SystemClockInterval property.
+        /// </summary>
+        /// <param name="defaultRate">if <code>defaultRate == true</code>, the default polling rate will be used after restarting</param>
         private void RestartPolling(bool defaultRate = false) {
+            if(uiClock == null) {
+                Alert("An error occurred resetting polling.");
+                return;
+            }
+            
+            
             if (ClockEnabled) {
                 uiClock.Stop();
+                ClockEnabled = false;
             }
 
             uiClock.Elapsed -= RunClock;
+        
+            SystemClockInterval = defaultRate ? MMConstants.DefaultSystemClockInterval : SystemClockInterval;
 
-            var pollRate = defaultRate ? MMConstants.DefaultSystemClockInterval : SystemClockInterval;
+            var intervalInMiliseconds = SystemClockInterval * 1000;
 
-            uiClock = new Timer(pollRate);
-            
+            uiClock = new Timer(intervalInMiliseconds);
             uiClock.Elapsed += RunClock;
-            
             uiClock.Start();
+            ClockEnabled = true;
         }
+
+        private void StartPolling(double startingRate = MMConstants.DefaultSystemClockInterval) {
+            SystemClockInterval = startingRate;
+
+            var intervalInMiliseconds = SystemClockInterval * 1000;
+
+            uiClock = new Timer(intervalInMiliseconds);
+            uiClock.Elapsed += RunClock;
+            uiClock.Start();
+            ClockEnabled = true;
+        }
+
         #endregion
 
     }

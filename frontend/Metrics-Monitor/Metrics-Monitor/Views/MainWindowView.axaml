@@ -152,7 +152,7 @@
 									<TextBlock  VerticalAlignment="Center"
 												HorizontalAlignment="Left"
 												TextAlignment="Left"
-												Grid.Column="0">Polling Rate (sec):</TextBlock>
+												Grid.Column="0">Polling Interval in Seconds (Client):</TextBlock>
 									<NumericUpDown  Height="20" Value="{Binding PollRate, Mode=TwoWay}" Grid.Column="1" Increment=".1" Minimum=".5" Maximum="120.0"/>
 									<Button Command="{Binding SetPollRate}"
 										Grid.Column="2"
@@ -163,10 +163,6 @@
 								</Grid>
 							</Grid>
 							<TextBlock Grid.Column="1" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Classes="TitleText" Text="{Binding ResourceText}"/>
-							<TextBlock  VerticalAlignment="Center"
-												TextAlignment="Left"
-												HorizontalAlignment="Left"
-												Grid.Column="3" Text="{Binding CurrentRateText, Mode=OneWay}"/>
 						</Grid>
 						<TabControl Grid.Row="1" SelectedIndex="{Binding SelectedResourceIndex}" TabStripPlacement="Left">
 							<TabItem Header="Overview" Classes="NavButton" VerticalContentAlignment="Center">

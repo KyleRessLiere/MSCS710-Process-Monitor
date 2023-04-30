@@ -29,16 +29,16 @@ namespace MetricsMonitorClient.ViewModels {
             StatsContainers = new List<CpuStatsContainer>();
             this.PropertyChanged += CPUViewModel_PropertyChanged;
         }
-
+        #endregion Constructor
+        #region Change Handling
         private void CPUViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
            if(string.Equals(e.PropertyName, nameof(ClockCycle))){
                 UpdateUiData();
            }
         }
-        #endregion Constructor
+        #endregion Change Handling
 
         #region Properties
-
 
         public List<CPUDto> CPUPolls { get; }
 
@@ -77,11 +77,8 @@ namespace MetricsMonitorClient.ViewModels {
             get { return _currentUsagePercentage; }
             set { this.RaiseAndSetIfChanged(ref _currentUsagePercentage, value); }
         }
-
         public List<CpuStatsContainer> StatsContainers { get; private set; }
-
         public bool IsInitialized { get; set; }
-
         public int CoreCount { get; set; }
 
         private long _clockCycle;
@@ -90,35 +87,31 @@ namespace MetricsMonitorClient.ViewModels {
             set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
         }
 
-        public Axis[] YAxesPct { get; set; } =
-{
-        new Axis
-        {
-            Name = "Percentage",
-            NamePadding = new LiveChartsCore.Drawing.Padding(0, 5),
-            LabelsPaint = new SolidColorPaint
-            {
-                Color = SKColors.AliceBlue,
-            },
-            Labeler = Labelers.SevenRepresentativeDigits,
-            MinLimit = 0.0,
-            MaxLimit = 100
-        }
-    };
+        public Axis[] YAxesPct { get; set; } = {
+            new Axis {
+                Name = "Percentage",
+                NamePadding = new LiveChartsCore.Drawing.Padding(0, 5),
+                LabelsPaint = new SolidColorPaint
+                {
+                    Color = SKColors.AliceBlue,
+                },
+                Labeler = Labelers.SevenRepresentativeDigits,
+                MinLimit = 0.0,
+                MaxLimit = 100
+            }
+        };
 
-        public Axis[] XAxes { get; set; } =
-{
-        new Axis
-        {
-            LabelsPaint = new SolidColorPaint
-            {
-                Color = SKColors.AliceBlue,
-            },
+        public Axis[] XAxes { get; set; } = {
+            new Axis {
+                LabelsPaint = new SolidColorPaint
+                {
+                    Color = SKColors.AliceBlue,
+                },
 
-            Labeler = Labelers.SevenRepresentativeDigits,
-            IsInverted = true
-        }
-    };
+                Labeler = Labelers.SevenRepresentativeDigits,
+                IsInverted = true
+            }
+        };
 
         #endregion Properties
         public void TickClock() {
@@ -136,7 +129,6 @@ namespace MetricsMonitorClient.ViewModels {
                     IsInitialized = true;
                 }
 
-
                 UpdateCurrentStats(poll);
                 UpdateDataSets(poll);
                 
@@ -148,14 +140,11 @@ namespace MetricsMonitorClient.ViewModels {
 
             }catch(Exception ex) {
                 _logger.Error(ex);
-                Alert("An error occurred refreshing the CPU screen.");
+                Error("An error occurred refreshing the CPU screen.", ex);
 
             }
 
-
         }
-
-       
 
         public void InitData(CPUDto poll) {
             CoreCountPhysical = $"Physical Cores: {poll.cpu_count_physical}";

@@ -29,7 +29,6 @@ namespace MetricsMonitorClient.ViewModels
         private readonly IMemoryFactory _memoryFactory;
         private readonly ILog _logger;
         #region Constructor
-
         public MemoryViewModel(IMemoryFactory memoryFactory, ILog logger) {
             _memoryFactory = memoryFactory;
             _logger = logger;
@@ -39,11 +38,8 @@ namespace MetricsMonitorClient.ViewModels
         }
         #endregion Constructor
         #region Properties
-
         public SemaphoreSlim ClockLock { get; private set; }
         public AvaloniaList<MemoryUsagePollDto> UsagePolls { get; }
-
-
 
         //Current usage values
         private string _currentUsedPct;
@@ -70,7 +66,6 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref _currentUsedAmt, value); }
         }
 
-
         //graph data
         private ObservableCollection<ISeries> _usagePercentageGraph;
         public ObservableCollection<ISeries> UsagePercentageGraph {
@@ -96,57 +91,47 @@ namespace MetricsMonitorClient.ViewModels
             set { this.RaiseAndSetIfChanged(ref _usedMemoryGraph, value); }
         }
 
-        public Axis[] YAxesPct { get; set; } =
-        {
-        new Axis
-        {
-            Name = "Percentage",
-            NamePadding = new LiveChartsCore.Drawing.Padding(0, 5),
-            LabelsPaint = new SolidColorPaint
+        public Axis[] YAxesPct { get; set; } = {
+            new Axis{
+                Name = "Percentage",
+                NamePadding = new LiveChartsCore.Drawing.Padding(0, 5),
+                LabelsPaint = new SolidColorPaint{
+                    Color = SKColors.AliceBlue
+                },
+                Labeler = Labelers.SevenRepresentativeDigits,
+                MinLimit = 0.0,
+                MaxLimit = 100
+            }
+        };
+
+        public Axis[] YAxesGb { get; set; } = {
+            new Axis
             {
-                Color = SKColors.AliceBlue,
-            },
-            Labeler = Labelers.SevenRepresentativeDigits,
-            MinLimit = 0.0,
-            MaxLimit = 100
-        }
-    };
+                Name = "Amount (Gb)",
+                NamePadding = new LiveChartsCore.Drawing.Padding(0, 5),
+                LabelsPaint = new SolidColorPaint{
+                    Color = SKColors.AliceBlue
+                },
+                Labeler = Labelers.SevenRepresentativeDigits,
+                MinLimit = 0.0,
+                MaxLimit = 50
+            }
+        };
 
-
-        public Axis[] YAxesGb { get; set; } =
-        {
-        new Axis
-        {
-            Name = "Amount (Gb)",
-            NamePadding = new LiveChartsCore.Drawing.Padding(0, 5),
-            LabelsPaint = new SolidColorPaint
+        public Axis[] XAxes { get; set; } = {
+            new Axis
             {
-                Color = SKColors.AliceBlue,
-            },
-            Labeler = Labelers.SevenRepresentativeDigits,
-            MinLimit = 0.0,
-            MaxLimit = 50
-        }
-    };
+                LabelsPaint = new SolidColorPaint
+                {
+                    Color = SKColors.AliceBlue
+                },
 
-
-        public Axis[] XAxes { get; set; } =
-    {
-        new Axis
-        {
-            LabelsPaint = new SolidColorPaint
-            {
-                Color = SKColors.AliceBlue,
-            },
-
-            Labeler = Labelers.SevenRepresentativeDigits,
-            IsInverted = true
-        }
-    };
+                Labeler = Labelers.SevenRepresentativeDigits,
+                IsInverted = true
+            }
+        };
         #endregion Properties
         #region Methods
-
-
         private void UpdateUIData() {
             try {
                 var poll = Task.Run(() => _memoryFactory.GetLatestMemoryPollAsync()).Result as MemoryUsagePollDto;
@@ -164,10 +149,8 @@ namespace MetricsMonitorClient.ViewModels
                 UpdateGraphs();
             }catch(Exception ex) {
                 _logger.Error(ex);
-                Alert("An error occurred updating the Memory screen.");
+                Error("An error occurred updating the Memory screen.", ex);
             }
-          
-
         }
 
         public void  TickClock() {
@@ -178,78 +161,58 @@ namespace MetricsMonitorClient.ViewModels
 
         public void InitGraph() {
             try {
-                UsagePercentageGraph = new ObservableCollection<ISeries>
-          {
-                new LineSeries<ObservableValue>
-                {
-                    Name = "Memory Usage Percentage",
-                    Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 0 },
-                    ZIndex = 0,
-                    LineSmoothness = 0,
-                    EasingFunction = null,
-                    AnimationsSpeed = TimeSpan.Zero
-                }
-
-            };
+                UsagePercentageGraph = new ObservableCollection<ISeries> {
+                    new LineSeries<ObservableValue> {
+                        Name = "Memory Usage Percentage",
+                        Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 0 },
+                        ZIndex = 0,
+                        LineSmoothness = 0,
+                        EasingFunction = null,
+                        AnimationsSpeed = TimeSpan.Zero
+                    }
+                };
 
                 AvailableMemoryGraph = new ObservableCollection<ISeries> {
-                new LineSeries<ObservableValue>
-                {
-                    Name = "Available Memory",
-                    Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 0 },
-                    ZIndex = 2,
-                    LineSmoothness = 0,
-                    EasingFunction = null,
-                    AnimationsSpeed = TimeSpan.Zero
-                },
-            };
+                    new LineSeries<ObservableValue> {
+                        Name = "Available Memory",
+                        Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 0 },
+                        ZIndex = 2,
+                        LineSmoothness = 0,
+                        EasingFunction = null,
+                        AnimationsSpeed = TimeSpan.Zero
+                    },
+                };
 
                 TotalMemoryGraph = new ObservableCollection<ISeries> {
-                   new LineSeries<ObservableValue>
-                {
-                    Name = "Total Memory",
-                    Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 0 },
-                    ZIndex = 1,
-                    LineSmoothness = 0,
-                    EasingFunction = null,
-                    AnimationsSpeed = TimeSpan.Zero
-                }
-            };
+                   new LineSeries<ObservableValue> {
+                        Name = "Total Memory",
+                        Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 0 },
+                        ZIndex = 1,
+                        LineSmoothness = 0,
+                        EasingFunction = null,
+                        AnimationsSpeed = TimeSpan.Zero
+                   }
+                };
 
                 UsedMemoryGraph = new ObservableCollection<ISeries> {
-                new LineSeries<ObservableValue>
-                {
-                    Name = "Used Memory",
-                    Stroke = new SolidColorPaint(SKColors.Yellow) { StrokeThickness = 0 },
-                    ZIndex = 3,
-                    LineSmoothness = 0,
-                    EasingFunction = null,
-                    AnimationsSpeed = TimeSpan.Zero
-                }
-            };
+                    new LineSeries<ObservableValue> {
+                        Name = "Used Memory",
+                        Stroke = new SolidColorPaint(SKColors.Yellow) { StrokeThickness = 0 },
+                        ZIndex = 3,
+                        LineSmoothness = 0,
+                        EasingFunction = null,
+                        AnimationsSpeed = TimeSpan.Zero
+                    }
+                };
+
                 UsagePercentageGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
                 AvailableMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
                 TotalMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
                 UsedMemoryGraph[0].Values = new ObservableValue[MMConstants.PollBufferSize].AsEnumerable();
-
                 PreloadGraphsAndLabels();
-            }catch(Exception ex) {
+            } catch(Exception ex) {
                 _logger.Error(ex);
             }
-
-
-        }
-        public void PreloadGraphsAndLabels() {
-            var polls = Task.Run(() => _memoryFactory.GetAllMemoryPollsAsync()).Result;
-            var pollDataSelection = polls.Take(MMConstants.PollBufferSize);
-
-            UsagePercentageGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.percentage_used });
-            AvailableMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.available_memory });
-            TotalMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.total_memory });
-            UsedMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.used_memory });
-
-            UpdateCurrentStats(pollDataSelection.FirstOrDefault());
-
         }
         public void UpdateCurrentStats(MemoryUsagePollDto poll) {
             CurrentUsedPct = $"Memory Usage: {(poll.percentage_used / 100.0).ToString("P", CultureInfo.InvariantCulture)}";
@@ -263,6 +226,20 @@ namespace MetricsMonitorClient.ViewModels
             AvailableMemoryGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id).Select(u => new ObservableValue { Value = u.available_memory });
             TotalMemoryGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id).Select(u => new ObservableValue { Value = u.total_memory });
             UsedMemoryGraph[0].Values = UsagePolls.OrderByDescending(m => m.memory_id).Select(u => new ObservableValue { Value = u.used_memory });
+
+        }
+
+
+        public void PreloadGraphsAndLabels() {
+            var polls = Task.Run(() => _memoryFactory.GetAllMemoryPollsAsync()).Result;
+            var pollDataSelection = polls.Take(MMConstants.PollBufferSize);
+
+            UsagePercentageGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.percentage_used });
+            AvailableMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.available_memory });
+            TotalMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.total_memory });
+            UsedMemoryGraph[0].Values = pollDataSelection.Select(u => new ObservableValue { Value = u.used_memory });
+
+            UpdateCurrentStats(pollDataSelection.FirstOrDefault());
 
         }
         #endregion Methods

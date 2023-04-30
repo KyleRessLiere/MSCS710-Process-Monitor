@@ -39,8 +39,6 @@ namespace MetricsMonitorClient.DataServices.Memory {
             }
         }
 
-
-
         public async Task<IEnumerable<MemoryUsagePollDto>> GetAllMemoryPollsAsync() {
             try {
                 using (var client = new HttpClient()) {

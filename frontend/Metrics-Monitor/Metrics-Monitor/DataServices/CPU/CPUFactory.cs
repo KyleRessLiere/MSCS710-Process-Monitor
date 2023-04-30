@@ -15,8 +15,6 @@ namespace MetricsMonitorClient.DataServices.CPU {
         public CPUFactory(ILog logger) {
             this._logger = logger;
         }
-
-
         public async Task<CPUDto> GetLatestCPUPollAsync() {
             try {
                 using (var client = new HttpClient()) {

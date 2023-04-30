@@ -1,5 +1,6 @@
 ﻿using log4net;
 using MetricsMonitorClient.DataServices.Network.Dtos;
+using MetricsMonitorClient.Models.Network;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -76,7 +76,7 @@ namespace MetricsMonitorClient.DataServices.MonitorSystem {
                 double roundedRate = Math.Round(pollRateInMinutes, 4);
 
                 using (var client = new HttpClient()) {
-                    var response = await client.PostAsJsonAsync(MMConstants.BaseApiUrl + "/polling_rate", new PollAdjustmentDto { polling_rate = roundedRate });
+                    var response = await client.PostAsJsonAsync(MMConstants.BaseApiUrl + "/polling_rate", new { polling_rate = roundedRate });
 
                     if (response?.IsSuccessStatusCode ?? false) {
                         return true;

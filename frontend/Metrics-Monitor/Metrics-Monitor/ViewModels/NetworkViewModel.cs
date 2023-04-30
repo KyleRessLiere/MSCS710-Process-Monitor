@@ -13,11 +13,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MetricsMonitorClient.ViewModels {
+namespace MetricsMonitorClient.ViewModels
+{
     public class NetworkViewModel : ViewModelBase {
         private readonly INetworkFactory _factory;
         private readonly ILog _logger;
         private readonly SemaphoreSlim _clockLock;
+
+        #region Constructor
         public NetworkViewModel(INetworkFactory factory, ILog logger) {
             _factory = factory;
             _logger = logger;
@@ -25,13 +28,15 @@ namespace MetricsMonitorClient.ViewModels {
             _clockLock = new SemaphoreSlim(1, 1);
             this.PropertyChanged += NetworkViewModel_PropertyChanged;
         }
-
+        #endregion Constructor
+        #region Change Handling
         private void NetworkViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
             if (string.Equals(e.PropertyName, nameof(ClockCycle))) {
                 UpdateUiData();
             }
         }
-
+        #endregion Change Handling
+        #region Properties
         public AvaloniaList<NetworkStatsContainer> StatsContainers { get; private set; }
         public bool IsInitialized { get; set; }
         public int InterfaceCount { get; set; }
@@ -43,7 +48,8 @@ namespace MetricsMonitorClient.ViewModels {
             get { return _clockCycle; }
             set { this.RaiseAndSetIfChanged(ref _clockCycle, value); }
         }
-
+        #endregion Properties
+        #region Methods
         public void TickClock() {
             _clockLock.Wait();
             ClockCycle = ClockCycle + 1;
@@ -64,9 +70,8 @@ namespace MetricsMonitorClient.ViewModels {
                 UpdateDataSets(pollList);
             }catch(Exception ex) {
                 _logger.Error(ex);
-                Alert("An error occurred updating the Network screen.");
+                Error("An error occurred updating the Network screen.", ex);
             }
-
         }
 
         public void InitData(List<NetworkPoll> pollSet) {
@@ -82,8 +87,10 @@ namespace MetricsMonitorClient.ViewModels {
             }
             this.RaisePropertyChanged(nameof(StatsContainers));
         }
-
-
+        /// <summary>
+        /// Updates the network data table with new data while making placeholder records for missing information
+        /// </summary>
+        /// <param name="pollSet"></param>
         public void UpdateDataSets(List<NetworkPoll> pollSet) {
             var pollSetInterfaces = pollSet.Select(p => p.Interface).ToHashSet();
             var missingInterfaces = InterfaceStatsIndexDict.Keys.Where(ifc => !pollSetInterfaces.Contains(ifc)).ToList();
@@ -101,16 +108,8 @@ namespace MetricsMonitorClient.ViewModels {
                 StatsContainers[idx].AddAndUpdate(0.0);
                 StatsContainers[idx].StatusId = MMConstants.NetworkStatus_Unknown_Id;
             }
-
             this.RaisePropertyChanged(nameof(StatsContainers));
         }
-
-
-
-        public NetworkPoll GetPlaceholderPollForInterface(string interfaceName, int pollId, int networkId) {
-            if(interfaceName == null || pollId < 0 || networkId < 0) { return null; }
-            return new NetworkPoll { Id = networkId, Interface = interfaceName, Speed = 0, Status = MMConstants.NetworkStatus_Unknown_Id, PollId = pollId };
-        }
-        
+        #endregion Methods
     }
 }

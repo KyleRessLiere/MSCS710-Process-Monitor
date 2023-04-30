@@ -21,11 +21,17 @@ namespace MetricsMonitorClient.Models.Overview
     /// </summary>
     public class StorageGraphContainer : ReactiveObject
     {
+        #region Fields
         protected readonly int _bufferSize;
+        #endregion Fields
+        #region Constructor
         public StorageGraphContainer()
         {
             Init();
         }
+
+        #endregion Constructor
+        #region Properties
         public AvaloniaList<ISeries> Graph { get; set; }
         public ObservableValue FreeAmount { get; set; }
         public ObservableValue UsedAmount { get; set; }
@@ -46,6 +52,10 @@ namespace MetricsMonitorClient.Models.Overview
             get { return _diskUsageInfo; }
             set { this.RaiseAndSetIfChanged(ref _diskUsageInfo, value); }
         }
+
+        #endregion Properties
+
+        #region Methods
 
         public void Update(StorageDto poll)
         {
@@ -77,5 +87,6 @@ namespace MetricsMonitorClient.Models.Overview
             };
         }
 
+        #endregion Methods
     }
 }
