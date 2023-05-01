@@ -145,18 +145,16 @@
 								</Button>
 								<Grid Grid.Column="1" HorizontalAlignment="Left">
 									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="80"/>
 										<ColumnDefinition Width="120"/>
-										<ColumnDefinition Width="60"/>
+										<ColumnDefinition Width="190"/>
 									</Grid.ColumnDefinitions>
-									<TextBlock  VerticalAlignment="Center"
-												HorizontalAlignment="Left"
-												TextAlignment="Left"
-												Grid.Column="0">Polling Interval in Seconds (Client):</TextBlock>
-									<NumericUpDown  Height="20" Value="{Binding PollRate, Mode=TwoWay}" Grid.Column="1" Increment=".1" Minimum=".5" Maximum="120.0"/>
+									<NumericUpDown  Height="20" Value="{Binding PollRate, Mode=TwoWay}" Grid.Column="0" Increment=".1" Minimum=".5" Maximum="120.0"/>
 									<Button Command="{Binding SetPollRate}"
-										Grid.Column="2"
-										Content="Set"
+										Grid.Column="1"
+										Content="Set New Polling Rate"
+										Background="LightBlue"
+										BorderBrush="Blue"
+										BorderThickness="1"
 										HorizontalAlignment="Left"
 										VerticalAlignment="Center"
 										Margin="10,0,0,0"/>
