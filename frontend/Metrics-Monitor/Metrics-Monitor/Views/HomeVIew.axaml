@@ -6,6 +6,7 @@
              xmlns:vm="using:MetricsMonitorClient.ViewModels.HomeViewModel"
 			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:vms="using:ViewModelsSamples.Pies.Basic"
+			 xmlns:localconverter="using:MetricsMonitorClient.Views.Converters"
              x:Class="MetricsMonitorClient.Views.HomeView">
 
 	<UserControl.Styles>
@@ -18,6 +19,10 @@
 			<Setter Property="VerticalAlignment" Value="Top"/>
 		</Style>
 	</UserControl.Styles>
+	<UserControl.Resources>
+		<localconverter:DoubleToPercentStringConverter x:Key="D2PString"/>
+	</UserControl.Resources>
+
 	<Grid  Classes="ContentGrid">
 
 		<!--
@@ -132,8 +137,8 @@
 						Items="{Binding ProcessDataRows, Mode=OneWay}">
 						<DataGrid.Columns>
 							<DataGridTextColumn  IsReadOnly="True" Header="Process" Binding="{Binding ProcessName, Mode=OneWay}"/>
-							<DataGridTextColumn IsReadOnly="True" Header="CPU Usage Percent" Binding="{Binding CpuUsagePctTotal, Mode=OneWay}"/>
-							<DataGridTextColumn IsReadOnly="True" Header="Memory Usage Amount" Binding="{Binding MemoryUsagePctTotal, Mode=OneWay}"/>
+							<DataGridTextColumn IsReadOnly="True" Header="CPU Usage Percent" Binding="{Binding CpuUsagePctTotal, Converter={StaticResource D2PString}, Mode=OneWay}"/>
+							<DataGridTextColumn IsReadOnly="True" Header="Memory Usage Amount" Binding="{Binding MemoryUsagePctTotal, Converter={StaticResource D2PString}, Mode=OneWay}"/>
 						</DataGrid.Columns>
 					</DataGrid>	   
 			</Grid>

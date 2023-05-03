@@ -11,6 +11,7 @@
 		xmlns:local="clr-namespace:MetricsMonitorClient.Views"
         Title="Metrics Monitor">
 	<Window.Styles>
+		
 		<Style Selector="ComboBox">
 			<Setter Property="FontSize" Value="26"/>
 			<Setter Property="Foreground" Value="DarkSlateGray"/>
