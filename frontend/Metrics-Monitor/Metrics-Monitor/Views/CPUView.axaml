@@ -3,15 +3,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="550"
-             xmlns:vm="using:MetricsMonitorClient.ViewModels.NetworkViewMoel"
-			 			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             x:Class="MetricsMonitorClient.Views.CPUView">
-
+			 xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+			 xmlns:localconverter="using:MetricsMonitorClient.Views.Converters"
+			 x:Class="MetricsMonitorClient.Views.CPUView">
+            
+	<UserControl.Resources>
+		<localconverter:DoubleToPercentStringConverter x:Key="D2PString"/>
+	</UserControl.Resources>
 
 	<Grid Classes="ContentGrid">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="250"/>
-			<RowDefinition Height="32"/>
+			<RowDefinition Height="72"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<Grid Grid.Row="0">
@@ -30,7 +33,7 @@
 			<TextBlock Grid.Row="4" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding SysCalls, Mode=OneWay}"/>
 			<TextBlock Grid.Row="5" VerticalAlignment="Center" TextAlignment="Left" FontSize="32" Foreground="Black" Text="{Binding CoreCountPhysical, Mode=OneWay}"/>
 		</Grid>
-		<TextBlock Padding="0,0,10,0" Grid.Row="1" VerticalAlignment="Center"  TextAlignment="Center" FontSize="20" Foreground="Black" Text="Usage Percentage By Core"/>
+		<TextBlock Grid.Row="1" VerticalAlignment="Bottom"  Classes="h6" TextAlignment="Center"   Text="Usage Percentage By Core"/>
 		<DataGrid
 			Grid.Row="2"
 			FontSize="18"
@@ -44,14 +47,14 @@
 			AutoGenerateColumns="False"
 			Items="{Binding StatsContainers, Mode=OneWay}">
 				<DataGrid.Columns>
-					<DataGridTextColumn  IsReadOnly="True" Header="Core" Binding="{Binding Id, Mode=OneWay}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="Current" Binding="{Binding Current, Mode=OneWay}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="Average" Binding="{Binding Avg, Mode=OneWay}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="Min" Binding="{Binding Min, Mode=OneWay}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="Max" Binding="{Binding Max, Mode=OneWay}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="25th Percentile" Binding="{Binding FirstQ, Mode=OneWay}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="50th Percentile" Binding="{Binding SecondQ, Mode=OneWay}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="75th Percentile" Binding="{Binding ThirdQ, Mode=OneWay}"/>
+					<DataGridTextColumn IsReadOnly="True"  Header="Core" Binding="{Binding Id, Mode=OneWay}" />
+					<DataGridTextColumn IsReadOnly="True"  Header="Current" Binding="{Binding Current, Converter={StaticResource D2PString}, Mode=OneWay}"/>
+					<DataGridTextColumn IsReadOnly="True"  Header="Average" Binding="{Binding Avg, Converter={StaticResource D2PString}, Mode=OneWay}"/>
+					<DataGridTextColumn IsReadOnly="True"  Header="Min" Binding="{Binding Min, Converter={StaticResource D2PString}, Mode=OneWay}"/>
+					<DataGridTextColumn IsReadOnly="True"  Header="Max" Binding="{Binding Max, Converter={StaticResource D2PString}, Mode=OneWay}"/>
+					<DataGridTextColumn IsReadOnly="True"  Header="25th Percentile" Binding="{Binding FirstQ, Converter={StaticResource D2PString}, Mode=OneWay}"/>
+					<DataGridTextColumn IsReadOnly="True"  Header="50th Percentile" Binding="{Binding SecondQ, Converter={StaticResource D2PString}, Mode=OneWay}"/>
+					<DataGridTextColumn IsReadOnly="True"  Header="75th Percentile" Binding="{Binding ThirdQ, Converter={StaticResource D2PString}, Mode=OneWay}"/>
 				</DataGrid.Columns>
 			</DataGrid>
 			

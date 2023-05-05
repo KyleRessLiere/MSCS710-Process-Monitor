@@ -212,7 +212,8 @@ namespace MetricsMonitorClient.ViewModels {
                         StartPolling();
                         return;
                     }
-                    StartPolling(pollData.poll_rate);
+                    SystemClockInterval = pollData.poll_rate * 100;
+                    StartPolling();
                 }
             }catch(Exception ex) {
                 Error("An error occurred while attempting to set the poll rate. Please restart and try again.", "Poll Adjustment Error", ex);

@@ -1,4 +1,5 @@
-﻿using Avalonia.Collections;
+﻿using Avalonia;
+using Avalonia.Threading;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -155,12 +156,14 @@ namespace MetricsMonitorClient.ViewModels {
 
         public void InitDataSets(CPUDto poll) {
             var usageList = poll.cpu_percentage_per_core;
+            var containerSet = new List<CpuStatsContainer>();
             for (int i = 0; i < CoreCount; i++) {
                 var container = new CpuStatsContainer();
                 container.AddAndUpdate(usageList[i]);
                 container.Id = i;
-                StatsContainers.Add(container);
+                containerSet.Add(container);
             }
+            StatsContainers = containerSet ?? StatsContainers;
             this.RaisePropertyChanged(nameof(StatsContainers));
         }
         public void UpdateDataSets(CPUDto poll) {

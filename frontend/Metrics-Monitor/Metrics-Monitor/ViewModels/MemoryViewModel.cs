@@ -216,9 +216,9 @@ namespace MetricsMonitorClient.ViewModels
         }
         public void UpdateCurrentStats(MemoryUsagePollDto poll) {
             CurrentUsedPct = $"Memory Usage: {(poll.percentage_used / 100.0).ToString("P", CultureInfo.InvariantCulture)}";
-            CurrentMemoryAvailable = $"Available Memory: {poll.available_memory}";
-            CurrentTotal = $"Total Memory: {poll.total_memory}";
-            CurrentUsedAmt = $"Used Memory: {poll.used_memory}";
+            CurrentMemoryAvailable = $"Available Memory: {poll.available_memory} Gb";
+            CurrentTotal = $"Total Memory: {poll.total_memory} Gb";
+            CurrentUsedAmt = $"Used Memory: {poll.used_memory} Gb";
         }
        
         public void UpdateGraphs() {

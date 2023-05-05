@@ -112,7 +112,7 @@ namespace MetricsMonitorClient.ViewModels
 
                 //take the fastest network speed
                 //TODO: add a title so you know which one it is
-                var netVal = data?.network?.Where(n => n.network_status == MMConstants.NetworkStatus_Up).OrderByDescending(n => n.network_speed).FirstOrDefault().network_speed ?? 0.0;
+                var netVal = data?.network?.Where(n => n.network_status == MMConstants.NetworkStatus_Up).OrderByDescending(n => n.network_speed).FirstOrDefault()?.network_speed ?? 0.0;
                 netVal = netVal > 0? netVal / 1000 : 0.0;
                 NetworkChart.Update(netVal);
 
@@ -123,8 +123,12 @@ namespace MetricsMonitorClient.ViewModels
 
 
                 IEnumerable<ProcessPollSlim> procSelection = GetProcessSummaryList(data?.processes);
-                ProcessDataRows.Clear();
-                ProcessDataRows.AddRange(procSelection);
+                if(ProcessDataRows.Any()) {
+                    ProcessDataRows.Clear();
+                    ProcessDataRows.AddRange(procSelection);
+                } else {
+                    ProcessDataRows = procSelection.ToList();
+                }
                 this.RaisePropertyChanged(nameof(ProcessDataRows));
 
                 UpdateSystemData(); 
@@ -142,7 +146,7 @@ namespace MetricsMonitorClient.ViewModels
                 if (data == null) { return; }
                 OS = data.operating_system;
                 OSVersion = data.operating_system_version;
-                CurrentPollRate = (data.poll_rate * 60);
+                CurrentPollRate = Math.Round((data.poll_rate * 10), 1);
             }catch(Exception ex) {
                 _logger.Error(ex);
                 Alert("An error occurred refreshing information about the host computer.");
