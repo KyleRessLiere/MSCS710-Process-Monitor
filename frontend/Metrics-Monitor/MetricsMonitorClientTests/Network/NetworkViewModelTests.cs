@@ -44,7 +44,7 @@ namespace MetricsMonitorClientTests.Network
 
             var vm = new NetworkViewModel(_factory.Object, _logger.Object);
 
-            vm.TickClock();
+            vm.UpdateUiData();
 
             var netPolls1 = new List<NetworkPoll> {
                 new NetworkPoll { Id = 6, Interface = "c", Speed = 10, Status = MMConstants.NetworkStatus_Up_Id, PollId = 2 },
@@ -78,7 +78,7 @@ namespace MetricsMonitorClientTests.Network
 
             var vm = new NetworkViewModel(_factory.Object, _logger.Object);
 
-            vm.TickClock();
+            vm.UpdateUiData();
 
             var netPolls1 = new List<NetworkPoll> {
                 new NetworkPoll { Id = 6, Interface = "c", Speed = 10, Status = MMConstants.NetworkStatus_Up_Id, PollId = 2 },
