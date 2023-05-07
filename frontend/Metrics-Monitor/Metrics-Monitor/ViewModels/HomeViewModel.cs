@@ -146,7 +146,7 @@ namespace MetricsMonitorClient.ViewModels
                 if (data == null) { return; }
                 OS = data.operating_system;
                 OSVersion = data.operating_system_version;
-                CurrentPollRate = Math.Round((data.poll_rate * 10), 1);
+                CurrentPollRate = Math.Round((data.poll_rate * 60), 1);
             }catch(Exception ex) {
                 _logger.Error(ex);
                 Alert("An error occurred refreshing information about the host computer.");

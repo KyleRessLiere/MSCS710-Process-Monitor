@@ -27,10 +27,8 @@ namespace MetricsMonitorClient.ViewModels {
            
             ResourceText = "Overview";
 
-            // StartPolling();
             SetPollRateFromCurrentServiceRate();
-            HomeViewModel.ClientCurrentPollRate = SystemClockInterval;
-            PollRate = SystemClockInterval;
+          
             
             
         }
@@ -212,8 +210,8 @@ namespace MetricsMonitorClient.ViewModels {
                         StartPolling();
                         return;
                     }
-                    SystemClockInterval = pollData.poll_rate * 100;
-                    StartPolling();
+                    SystemClockInterval = pollData.poll_rate * 60;
+                    StartPolling(SystemClockInterval);
                 }
             }catch(Exception ex) {
                 Error("An error occurred while attempting to set the poll rate. Please restart and try again.", "Poll Adjustment Error", ex);
@@ -247,6 +245,8 @@ namespace MetricsMonitorClient.ViewModels {
             uiClock.Elapsed += RunClock;
             uiClock.Start();
             ClockEnabled = true;
+            HomeViewModel.ClientCurrentPollRate = SystemClockInterval;
+            PollRate = SystemClockInterval;
         }
 
         private void StartPolling(double startingRate = MMConstants.DefaultSystemClockInterval) {
@@ -258,6 +258,8 @@ namespace MetricsMonitorClient.ViewModels {
             uiClock.Elapsed += RunClock;
             uiClock.Start();
             ClockEnabled = true;
+            HomeViewModel.ClientCurrentPollRate = SystemClockInterval;
+            PollRate = SystemClockInterval;
         }
 
         #endregion
