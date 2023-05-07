@@ -99,6 +99,7 @@
 			<Setter Property="HorizontalAlignment" Value="Center"/>
 			<Setter Property="VerticalAlignment" Value="Top"/>
 			<Setter Property="Foreground" Value="{DynamicResource MM-Red}"/>
+			<Setter Property="Margin" Value="350,0,0,0" />
 		</Style>
 	</Window.Styles>
     
@@ -159,6 +160,7 @@
 										HorizontalAlignment="Left"
 										VerticalAlignment="Center"
 										Margin="10,0,0,0"/>
+										
 								</Grid>
 							</Grid>
 							<TextBlock Grid.Column="1" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Classes="TitleText" Text="{Binding ResourceText}"/>
