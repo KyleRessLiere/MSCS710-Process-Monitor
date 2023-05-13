@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Metrics-Monitor/App.axaml" value="Metrics-Monitor/MetricsMonitorClient.csproj" />
+        <entry key="Metrics-Monitor/Views/CPUView.axaml" value="Metrics-Monitor/MetricsMonitorClient.csproj" />
+        <entry key="Metrics-Monitor/Views/HomeVIew.axaml" value="Metrics-Monitor/MetricsMonitorClient.csproj" />
+        <entry key="Metrics-Monitor/Views/MainWindowView.axaml" value="Metrics-Monitor/MetricsMonitorClient.csproj" />
+        <entry key="Metrics-Monitor/Views/MemoryView.axaml" value="Metrics-Monitor/MetricsMonitorClient.csproj" />
+        <entry key="Metrics-Monitor/Views/NetworkView.axaml" value="Metrics-Monitor/MetricsMonitorClient.csproj" />
+        <entry key="Metrics-Monitor/Views/ProcessView.axaml" value="Metrics-Monitor/MetricsMonitorClient.csproj" />
+        <entry key="Metrics-Monitor/Views/StorageView.axaml" value="Metrics-Monitor/MetricsMonitorClient.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
